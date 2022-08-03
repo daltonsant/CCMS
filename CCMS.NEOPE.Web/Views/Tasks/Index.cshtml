@@ -1,0 +1,44 @@
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+@section datatableStyle
+{
+  <link href="lib/datatables/datatables.css" rel="stylesheet">
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+          <h3 class="section-title">Atividades</h3>
+    
+          <div class="card">
+            <table id="table-custom-elements" class="row-border" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th><label><input class="filled-in select-all" name="select_all" value="1" type="checkbox" /><span></span></label></th>
+                  <th>Chave</th>
+                  <th>Título</th>
+                  <th>Status</th>
+                  <th>Prazo</th>
+                  <th>Data Início</th>
+                  <th>Prioridade</th>
+                  <!--<th>Tipo</th> -->
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+    
+        </div>
+      </div>
+</div>
+
+@section Scripts
+{
+  <script src="lib/datatables/datatables.js"></script>
+  <script src="js/table-custom-elements.js"></script>
+}

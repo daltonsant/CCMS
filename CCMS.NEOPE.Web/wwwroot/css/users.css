@@ -1,0 +1,46 @@
+
+.body {
+    background-color: #5c881a;
+    width: 40%;
+    height: 60%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+@media only screen and (max-width: 600px) {
+    .body{
+        width: 60%;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .body{
+        width: 70%;
+    }
+}
+
+.registerForm{
+    width: 100%;
+    z-index: 15;
+    top: 40%;
+    background-color: white;
+    padding-bottom: 65px;
+    padding-top: 35px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.loginForm {
+    width: 100%;
+    z-index: 15;
+    top: 40%;
+    background-color: white;
+    padding-bottom: 65px;
+    padding-top: 35px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.principal-color{
+    background: #5c881a;
+}
