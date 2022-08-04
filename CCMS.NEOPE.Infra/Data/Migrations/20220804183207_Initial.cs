@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CCMS.NEOPE.Infra.Data.Migrations
 {
-    public partial class addCheckListItems : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     Code = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    FullName = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 32, nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
                     Photo = table.Column<string>(type: "TEXT", nullable: true),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsFirstAccess = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -55,19 +56,19 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Assets",
+                name: "AssetType",
                 columns: table => new
                 {
                     Id = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    Code = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Assets", x => x.Id);
+                    table.PrimaryKey("PK_AssetType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,27 +88,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LinkedTasks",
-                columns: table => new
-                {
-                    Id = table.Column<ulong>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LinkedTasks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
                     Id = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Code = table.Column<string>(type: "TEXT", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
@@ -129,6 +116,21 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TaskSteps", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TaskType",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,25 +240,24 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssetProject",
+                name: "Assets",
                 columns: table => new
                 {
-                    AssetsId = table.Column<ulong>(type: "INTEGER", nullable: false),
-                    ProjectsId = table.Column<ulong>(type: "INTEGER", nullable: false)
+                    Id = table.Column<ulong>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    Code = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
+                    TypeId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssetProject", x => new { x.AssetsId, x.ProjectsId });
+                    table.PrimaryKey("PK_Assets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AssetProject_Assets_AssetsId",
-                        column: x => x.AssetsId,
-                        principalTable: "Assets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AssetProject_Projects_ProjectsId",
-                        column: x => x.ProjectsId,
-                        principalTable: "Projects",
+                        name: "FK_Assets_AssetType_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "AssetType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -267,10 +268,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     Id = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Key = table.Column<ulong>(type: "INTEGER", nullable: false),
                     ProjectId = table.Column<ulong>(type: "INTEGER", nullable: true),
                     Title = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Priority = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 512, nullable: false),
+                    TypeId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
                     StepId = table.Column<int>(type: "INTEGER", nullable: true),
                     ParentTaskId = table.Column<ulong>(type: "INTEGER", nullable: true),
                     StartDate = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -304,6 +308,36 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         column: x => x.StepId,
                         principalTable: "TaskSteps",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TaskItems_TaskType_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "TaskType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AssetProject",
+                columns: table => new
+                {
+                    AssetsId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    ProjectsId = table.Column<ulong>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssetProject", x => new { x.AssetsId, x.ProjectsId });
+                    table.ForeignKey(
+                        name: "FK_AssetProject_Assets_AssetsId",
+                        column: x => x.AssetsId,
+                        principalTable: "Assets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AssetProject_Projects_ProjectsId",
+                        column: x => x.ProjectsId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -378,12 +412,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CheckListItem",
+                name: "CheckListItems",
                 columns: table => new
                 {
                     Id = table.Column<ulong>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Value = table.Column<bool>(type: "INTEGER", nullable: false),
                     TaskId = table.Column<ulong>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -391,9 +425,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CheckListItem", x => x.Id);
+                    table.PrimaryKey("PK_CheckListItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CheckListItem_TaskItems_TaskId",
+                        name: "FK_CheckListItems_TaskItems_TaskId",
                         column: x => x.TaskId,
                         principalTable: "TaskItems",
                         principalColumn: "Id",
@@ -452,24 +486,29 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LinkedTasksTaskItem",
+                name: "LinkedTasks",
                 columns: table => new
                 {
-                    LinkedTasksId = table.Column<ulong>(type: "INTEGER", nullable: false),
-                    TasksId = table.Column<ulong>(type: "INTEGER", nullable: false)
+                    Id = table.Column<ulong>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SubjectTaskId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    ObjectTaskId = table.Column<ulong>(type: "INTEGER", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LinkedTasksTaskItem", x => new { x.LinkedTasksId, x.TasksId });
+                    table.PrimaryKey("PK_LinkedTasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LinkedTasksTaskItem_LinkedTasks_LinkedTasksId",
-                        column: x => x.LinkedTasksId,
-                        principalTable: "LinkedTasks",
+                        name: "FK_LinkedTasks_TaskItems_ObjectTaskId",
+                        column: x => x.ObjectTaskId,
+                        principalTable: "TaskItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_LinkedTasksTaskItem_TaskItems_TasksId",
-                        column: x => x.TasksId,
+                        name: "FK_LinkedTasks_TaskItems_SubjectTaskId",
+                        column: x => x.SubjectTaskId,
                         principalTable: "TaskItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -505,12 +544,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
             migrationBuilder.InsertData(
                 table: "ApplicationRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
-                values: new object[] { "5792c89d-b4f8-4abb-af6f-9ff9838fa117", "f034545d-4838-42a5-a6ca-814c32a1e519", "Administrador do sistema", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "09abc425-76d2-4c70-a079-b12c6f3e013e", "8f2ed7df-fd6c-4ce3-9346-034b4f5d6f6f", "Administrador do sistema", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.InsertData(
                 table: "ApplicationRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
-                values: new object[] { "8a6ad7d5-b3a9-43fb-9e72-19892a40c213", "e8d458da-c1dd-4752-805e-df1fe18ccf4f", "Usuário comum do sistema", "User", "USER" });
+                values: new object[] { "8a7dde35-6381-4a69-8d33-a2f0fdc3e2cc", "64171b49-33d6-4028-bdfd-41c759b19abc", "Usuário comum do sistema", "User", "USER" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -572,9 +611,20 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Assets_TypeId",
+                table: "Assets",
+                column: "TypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AssetTaskItem_TasksId",
                 table: "AssetTaskItem",
                 column: "TasksId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssetType_Name",
+                table: "AssetType",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attachments_TaskId",
@@ -582,8 +632,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CheckListItem_TaskId",
-                table: "CheckListItem",
+                name: "IX_CheckListItems_TaskId",
+                table: "CheckListItems",
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
@@ -602,9 +652,20 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "TasksId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkedTasksTaskItem_TasksId",
-                table: "LinkedTasksTaskItem",
-                column: "TasksId");
+                name: "IX_LinkedTasks_ObjectTaskId",
+                table: "LinkedTasks",
+                column: "ObjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LinkedTasks_SubjectTaskId",
+                table: "LinkedTasks",
+                column: "SubjectTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskItems_Key",
+                table: "TaskItems",
+                column: "Key",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaskItems_ParentTaskId",
@@ -625,6 +686,11 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "IX_TaskItems_StepId",
                 table: "TaskItems",
                 column: "StepId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskItems_TypeId",
+                table: "TaskItems",
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaskLogs_TaskId",
@@ -673,7 +739,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "Attachments");
 
             migrationBuilder.DropTable(
-                name: "CheckListItem");
+                name: "CheckListItems");
 
             migrationBuilder.DropTable(
                 name: "Comments");
@@ -682,7 +748,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "LabelTaskItem");
 
             migrationBuilder.DropTable(
-                name: "LinkedTasksTaskItem");
+                name: "LinkedTasks");
 
             migrationBuilder.DropTable(
                 name: "TaskLogs");
@@ -697,10 +763,10 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "Labels");
 
             migrationBuilder.DropTable(
-                name: "LinkedTasks");
+                name: "TaskItems");
 
             migrationBuilder.DropTable(
-                name: "TaskItems");
+                name: "AssetType");
 
             migrationBuilder.DropTable(
                 name: "ApplicationUsers");
@@ -710,6 +776,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "TaskSteps");
+
+            migrationBuilder.DropTable(
+                name: "TaskType");
         }
     }
 }

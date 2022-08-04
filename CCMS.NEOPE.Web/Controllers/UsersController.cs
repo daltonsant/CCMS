@@ -1,8 +1,10 @@
 using CCMS.NEOPE.Application.ViewModels;
 using CCMS.NEOPE.Infra.Identity;
 using CCMS.NEOPE.Infra.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 
 namespace CCMS.NEOPE.Web.Controllers;
 
@@ -39,18 +41,16 @@ public class UsersController : Controller
         
         if(photo != null)
         {
-            var imageFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
-            var photoName = Guid.NewGuid().ToString() + photo.FileName;
-            await using FileStream fileStream = new FileStream(Path.Combine(imageFolder, photoName), FileMode.Create);
-            await photo.CopyToAsync(fileStream);
-            viewModel.Photo = "~/Images/" + photoName;
+            viewModel.Photo = await CreatePhoto(photo);
         }
         
         ApplicationUser user = new ApplicationUser();
         IdentityResult userCreated;
             
         user.UserName = viewModel.UserName;
-        user.FullName = viewModel.FullName;
+        user.FirstName = viewModel.FirstName;
+        user.LastName = viewModel.LastName;
+        user.Email = viewModel.Email;
         user.Code = viewModel.UserName;
         user.Photo = viewModel.Photo;
         user.IsActive = true;
@@ -123,8 +123,65 @@ public class UsersController : Controller
         return RedirectToAction("Login");
     }
 
+    [Authorize]
+    [HttpGet]
     public async Task<IActionResult> Profile()
     {
         return View();
+    }
+    
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Profile(EditProfileViewModel viewModel, IFormFile? photo)
+    {
+        if (!string.IsNullOrEmpty(viewModel.Password) && string.IsNullOrEmpty(viewModel.OldPassword))
+        {
+            ModelState.AddModelError("OldPassword","A senha atual é obrigatória");
+        }
+
+        if (!ModelState.IsValid) return View(viewModel);
+        
+        var currentUser = await _userService.GetUserByUserName(User.Identity?.Name ?? string.Empty);
+
+        if (currentUser == null) return View(viewModel);
+
+        if (!string.IsNullOrEmpty(viewModel.Password) && !string.IsNullOrEmpty(viewModel.OldPassword))
+        {
+            var result =
+                await _userService.ChangePasswordAsync(currentUser, viewModel.OldPassword,
+                    viewModel.Password);
+            if (!result.Succeeded)
+            {
+                foreach(IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("", " * " +error.Description);
+                }
+                return View(viewModel);
+            }
+        }
+
+        if (photo == null) return RedirectToAction("Index", "Home");
+        
+        if (string.IsNullOrEmpty(currentUser.Photo))
+        {
+            currentUser.Photo = await CreatePhoto(photo);
+            await _userService.UpdateUser(currentUser);
+        }
+        else
+        {
+            await using FileStream fileStream = new FileStream(Path.Combine("",currentUser.Photo), FileMode.Create);
+            await photo.CopyToAsync(fileStream);
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+    
+    private async Task<string> CreatePhoto(IFormFile? photo)
+    {
+        var imageFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
+        var photoName = Guid.NewGuid().ToString() + photo.FileName;
+        await using FileStream fileStream = new FileStream(Path.Combine(imageFolder, photoName), FileMode.Create);
+        await photo.CopyToAsync(fileStream);
+        return "/Images/" + photoName;
     }
 }

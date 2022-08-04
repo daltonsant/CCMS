@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CCMS.NEOPE.Infra.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220803105139_addAssetTypes")]
-    partial class addAssetTypes
+    [Migration("20220804183207_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,6 +110,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -120,6 +121,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("AssetType");
                 });
@@ -168,6 +172,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<ulong>("TaskId")
@@ -183,7 +188,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("CheckListItem");
+                    b.ToTable("CheckListItems", (string)null);
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Comment", b =>
@@ -253,6 +258,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<ulong>("ObjectTaskId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<ulong>("SubjectTaskId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
@@ -260,6 +271,10 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ObjectTaskId");
+
+                    b.HasIndex("SubjectTaskId");
 
                     b.ToTable("LinkedTasks", (string)null);
                 });
@@ -332,6 +347,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("StepId")
                         .HasColumnType("INTEGER");
 
@@ -339,6 +357,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("TEXT");
+
+                    b.Property<ulong>("TypeId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("TEXT");
@@ -355,6 +376,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasIndex("ReporterId");
 
                     b.HasIndex("StepId");
+
+                    b.HasIndex("TypeId");
 
                     b.ToTable("TaskItems", (string)null);
                 });
@@ -415,6 +438,27 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.ToTable("TaskSteps", (string)null);
                 });
 
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskType", b =>
+                {
+                    b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TaskType");
+                });
+
             modelBuilder.Entity("CCMS.NEOPE.Infra.Identity.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
@@ -449,16 +493,16 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "446d57c9-9842-48da-87e7-d0b32d1c4127",
-                            ConcurrencyStamp = "84897595-6635-4f54-a776-7781cc05ba4e",
+                            Id = "09abc425-76d2-4c70-a079-b12c6f3e013e",
+                            ConcurrencyStamp = "8f2ed7df-fd6c-4ce3-9346-034b4f5d6f6f",
                             Description = "Administrador do sistema",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "40ced6eb-62ba-4ebb-9af1-cc953e01c537",
-                            ConcurrencyStamp = "6dfd11aa-dd9e-49ca-91be-cdee055ec44a",
+                            Id = "8a7dde35-6381-4a69-8d33-a2f0fdc3e2cc",
+                            ConcurrencyStamp = "64171b49-33d6-4028-bdfd-41c759b19abc",
                             Description = "Usuário comum do sistema",
                             Name = "User",
                             NormalizedName = "USER"
@@ -490,9 +534,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(128)
+                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
@@ -500,6 +544,11 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.Property<bool>("IsFirstAccess")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
@@ -565,21 +614,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasIndex("TasksId");
 
                     b.ToTable("LabelTaskItem");
-                });
-
-            modelBuilder.Entity("LinkedTasksTaskItem", b =>
-                {
-                    b.Property<ulong>("LinkedTasksId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<ulong>("TasksId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("LinkedTasksId", "TasksId");
-
-                    b.HasIndex("TasksId");
-
-                    b.ToTable("LinkedTasksTaskItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -779,6 +813,25 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.LinkedTasks", b =>
+                {
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskItem", "ObjectTask")
+                        .WithMany("LinkedObjectTasks")
+                        .HasForeignKey("ObjectTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskItem", "SubjectTask")
+                        .WithMany("LinkedSubjectTasks")
+                        .HasForeignKey("SubjectTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ObjectTask");
+
+                    b.Navigation("SubjectTask");
+                });
+
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskItem", b =>
                 {
                     b.HasOne("CCMS.NEOPE.Domain.Entities.TaskItem", "ParentTask")
@@ -797,6 +850,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .WithMany()
                         .HasForeignKey("StepId");
 
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskType", "Type")
+                        .WithMany("TaskItemsByType")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ParentTask");
 
                     b.Navigation("Project");
@@ -804,6 +863,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Navigation("Reporter");
 
                     b.Navigation("Step");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskLog", b =>
@@ -826,21 +887,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasOne("CCMS.NEOPE.Domain.Entities.Label", null)
                         .WithMany()
                         .HasForeignKey("LabelsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskItem", null)
-                        .WithMany()
-                        .HasForeignKey("TasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LinkedTasksTaskItem", b =>
-                {
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.LinkedTasks", null)
-                        .WithMany()
-                        .HasForeignKey("LinkedTasksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -922,7 +968,16 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.Navigation("Comments");
 
+                    b.Navigation("LinkedObjectTasks");
+
+                    b.Navigation("LinkedSubjectTasks");
+
                     b.Navigation("Logs");
+                });
+
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskType", b =>
+                {
+                    b.Navigation("TaskItemsByType");
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Infra.Identity.ApplicationUser", b =>

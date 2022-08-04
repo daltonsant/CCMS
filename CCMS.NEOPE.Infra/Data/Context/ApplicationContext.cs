@@ -39,6 +39,7 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
         builder.ApplyConfiguration(new TaskLogMap());
 
         builder.ApplyConfiguration(new AssetMap());
+        builder.ApplyConfiguration(new AssetTypeMap());
         builder.ApplyConfiguration(new ApplicationRoleMap());
         builder.ApplyConfiguration(new ApplicationUserMap());
         builder.ApplyConfiguration(new AttachmentMap());
@@ -46,6 +47,7 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
         builder.ApplyConfiguration(new TaskStepMap());
         builder.ApplyConfiguration(new TaskItemMap());
         builder.ApplyConfiguration(new LinkedTasksMap());
+        builder.ApplyConfiguration(new CheckListItemMap());
 
     }
 }

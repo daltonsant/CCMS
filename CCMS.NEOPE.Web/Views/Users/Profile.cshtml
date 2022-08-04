@@ -1,17 +1,140 @@
-
+@model EditProfileViewModel
+@using CCMS.NEOPE.Infra.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
-    Layout = null;
+    ViewData["Title"] = "Início";
+    Layout = "_Layout";
+
+    var currentUser = await UserManager.FindByNameAsync(@User.Identity?.Name ?? string.Empty);
+
+    var fullName = currentUser?.FirstName + " " + currentUser?.LastName ?? string.Empty;
+    var userName = currentUser?.UserName ?? string.Empty;
+    var userEmail = currentUser?.Email ?? string.Empty;
+    var photo = currentUser?.Photo ?? string.Empty;
 }
 
-<!DOCTYPE html>
+<div class="section container">
+    <form asp-controller="Users" asp-action="Profile"  method="Post" enctype="multipart/form-data">
+        <div class="row">
+                <div class="col s12 m4">
+                    <span class="settings-title">Dados Pessoais</span>
+                    <p> Olá! Aqui você poderá alterar algumas informações pessoais como sua foto ou sua senha. Lembre-se sempre! Sua senha é de uso pessoal e instransferível.  </p>
+                </div>
+                <div class="col s12 m8">
+        
+                    <div class="settings-group">
+                        <div class="fields">
+                            <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+                        </div>
+                        <div class="setting">
+                            Nome
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+                            <div class="right">
+                                <label>
+                                    <span class="lever">@fullName</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="setting">
+                            Email
+
+                            <div class="right">
+                                <label>
+                                    <span class="lever">@userEmail</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="setting">
+                            Login
+
+                            <div class="right">
+                                <label>
+                                    <span class="lever">@userName</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <ul class="collapsible setting">
+                            <li class="">
+                                <div class="collapsible-header" tabindex="0">
+                                    <span>Foto</span>
+                                    <i class="material-icons caret right">keyboard_arrow_right</i>
+                                </div>
+                                <div class="collapsible-body" style="">
+                                    <div class="row center-align">
+                                        @if (string.IsNullOrEmpty(photo))
+                                        {
+                                            <img src="/Icons/account_circle.svg" class="circle responsive-img" alt="" style="width: 128px; height: 128px;border: 3px solid #D9D9D9;"/>
+                                        }
+                                        else
+                                        {
+                                            <img src="@photo" class="medium circle responsive-img" alt="" style="width:128px;height:128px;border: 3px solid #D9D9D9;"/>
+                                        }
+                                    </div>
+                                    <div class="row">
+                                        <div class="file-field input-field col s12">
+                                            <div class="btn-small">
+                                                <span>Selecione sua foto</span>
+                                                <input asp-for="Photo" type="file" class="validate" id="photo"/>
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="">
+                                <div class="collapsible-header" tabindex="0">
+                                    <span>Senha</span>
+                                    <i class="material-icons caret right">keyboard_arrow_right</i>
+                                </div>
+                                <div class="collapsible-body" style="">
+
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <input asp-for="OldPassword" class="validate" id="OldPassword"/>
+                                            <label asp-for="OldPassword" id="OldPassword"></label>
+                                            <span asp-validation-for="OldPassword" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <input asp-for="Password" class="validate" id="Password"/>
+                                            <label asp-for="Password" id="Password"></label>
+                                            <span asp-validation-for="Password" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <input asp-for="ConfirmPassword" class="validate" id="ConfirmPassword"/>
+                                            <label asp-for="ConfirmPassword" id="ConfirmPassword"></label>
+                                            <span asp-validation-for="ConfirmPassword" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                        <div class="setting">
+                            Salvar alterações?
+
+                            <label class="right">
+                                <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+    </form>
 </div>
-</body>
-</html>

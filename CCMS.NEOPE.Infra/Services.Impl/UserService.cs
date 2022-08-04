@@ -41,7 +41,7 @@ public class UserService : IUserService
         await _signInManager.SignInAsync(user, isToRemember);
     }
 
-    public async Task<ApplicationUser> GetUserByUserName(string username)
+    public async Task<ApplicationUser?> GetUserByUserName(string username)
     {
         return await _userManager.FindByNameAsync(username);
     }
@@ -49,5 +49,15 @@ public class UserService : IUserService
     public async Task Logout()
     {
         await _signInManager.SignOutAsync();
+    }
+
+    public Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
+    {
+        return _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+    }
+
+    public Task<IdentityResult> UpdateUser(ApplicationUser user)
+    {
+        return _userManager.UpdateAsync(user);
     }
 }

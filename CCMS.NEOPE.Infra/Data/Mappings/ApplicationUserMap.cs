@@ -14,7 +14,8 @@ public class ApplicationUserMap : IEntityTypeConfiguration<ApplicationUser>
         builder.Property(e => e.Photo);
         builder.Property(e => e.IsActive).IsRequired();
         builder.Property(e => e.IsFirstAccess).IsRequired();
-        builder.Property(e => e.FullName).IsRequired().HasMaxLength(128);
+        builder.Property(e => e.FirstName).IsRequired().HasMaxLength(32);
+        builder.Property(e => e.LastName).IsRequired().HasMaxLength(64);
 
         builder.HasMany(e => e.Comments).WithOne(c => c.User as ApplicationUser);
         builder.HasMany(e => e.Logs).WithOne(l => l.User as ApplicationUser);

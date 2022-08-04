@@ -9,6 +9,8 @@ public interface IUserService
     Task AddUserInRole(ApplicationUser user, string role);
     bool VerifyIfHasRegisteredUsers();
     Task LoginUser(ApplicationUser user, bool isToRemember);
-    Task<ApplicationUser> GetUserByUserName(string username);
+    Task<ApplicationUser?> GetUserByUserName(string username);
     Task Logout();
+    Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword);
+    Task<IdentityResult> UpdateUser(ApplicationUser user);
 }

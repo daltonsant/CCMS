@@ -13,7 +13,13 @@ public class LinkedTasksMap : IEntityTypeConfiguration<LinkedTasks>
         builder.Property(e => e.UpdateDate);
         builder.Property(e => e.Type).IsRequired();
 
-        builder.HasMany(e => e.Tasks).WithMany(e => e.LinkedTasks);
+        builder.HasOne(e => e.SubjectTask)
+            .WithMany(e => e.LinkedSubjectTasks)
+            .HasForeignKey(e => e.SubjectTaskId);
+
+        builder.HasOne(e => e.ObjectTask)
+            .WithMany(e => e.LinkedObjectTasks)
+            .HasForeignKey(e => e.ObjectTaskId);
         
         builder.ToTable("LinkedTasks");
     }

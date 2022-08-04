@@ -17,6 +17,7 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.Property(e => e.Title).IsRequired().HasMaxLength(128);
         builder.Property(e => e.Description).HasMaxLength(512);
         builder.Property(e => e.Priority).IsRequired();
+        builder.Property(e => e.Status);
         builder.Property(e => e.StartDate);
         builder.Property(e => e.DueDate);
         builder.Property(e => e.PlannedDate);
@@ -33,11 +34,15 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.HasOne(e => e.Reporter as ApplicationUser).WithMany(e => e.ReportedTasks);
         builder.HasMany(e => e.Comments).WithOne(e => e.Task);
         builder.HasMany(e => e.Attachments).WithOne(e => e.Task);
-        builder.HasMany(e => e.LinkedTasks).WithMany(e => e.Tasks);
+        
         builder.HasMany(e => e.CheckListItems).WithOne(e => e.Task);
         
         builder.Property(e => e.Key).IsRequired().ValueGeneratedOnAdd();
         builder.HasIndex(e => e.Key).IsUnique();
+
+        builder.HasOne(e => e.Type)
+            .WithMany(e =>e.TaskItemsByType)
+            .HasForeignKey("TypeId");
         
         builder.ToTable("TaskItems");
     }

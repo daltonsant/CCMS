@@ -1,3 +1,5 @@
+using System.Reflection;
+using CCMS.NEOPE.Application.AutoMapper.MapProfiles;
 using CCMS.NEOPE.Infra;
 using CCMS.NEOPE.Web.Extensions;
 
@@ -16,6 +18,7 @@ public class Startup : IStartup
     public void ConfigureServices(IServiceCollection services)
     {
         services.RegisterServices(Configuration);
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(ProjectProfile)));
         services.AddMvcConfiguration();
     }
 

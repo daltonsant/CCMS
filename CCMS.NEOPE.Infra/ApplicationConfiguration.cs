@@ -1,4 +1,6 @@
-﻿using CCMS.NEOPE.Infra.Data.Context;
+﻿using CCMS.NEOPE.Domain.Core.Interfaces;
+using CCMS.NEOPE.Infra.Data.Context;
+using CCMS.NEOPE.Infra.Data.UoW;
 using CCMS.NEOPE.Infra.Extensions;
 using CCMS.NEOPE.Infra.Identity;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +40,8 @@ public static class ApplicationConfiguration
             options.Password.RequireUppercase = true;
             options.Password.RequiredUniqueChars = 0;
         });
+        
+        services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
         services.ConfigureRepository()
             .ConfigureApplicationServices();

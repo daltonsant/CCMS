@@ -5,7 +5,8 @@ namespace CCMS.NEOPE.Domain.Interfaces;
 public interface IUser
 {
     string Code { get; set; }
-    string FullName { get; set; }
+    string FirstName { get; set; }
+    string LastName { get; set; }
     string? Photo { get; set; }
     
     bool IsActive { get; set; }

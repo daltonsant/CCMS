@@ -5,9 +5,14 @@ namespace CCMS.NEOPE.Application.ViewModels;
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [StringLength(80, ErrorMessage = "Use menos caracteres")]
-    [Display(Name = "Nome completo")]
-    public string FullName { get; set; }
+    [StringLength(32, ErrorMessage = "Use menos caracteres")]
+    [Display(Name = "Nome")]
+    public string FirstName { get; set; }
+    
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [StringLength(64, ErrorMessage = "Use menos caracteres")]
+    [Display(Name = "Sobrenome")]
+    public string LastName { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [StringLength(10, ErrorMessage = "Use menos caracteres")]
@@ -33,10 +38,3 @@ public class RegisterViewModel
     public string ConfirmPassword { get; set; }
 }
 
-
-/* string Code { get; set; }
-    string FullName { get; set; }
-    string Photo { get; set; }
-    
-    bool IsActive { get; set; }
-    */

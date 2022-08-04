@@ -7,12 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Interfaces" />
-      <Folder Include="Services" />
+      <ProjectReference Include="..\CCMS.NEOPE.Infra\CCMS.NEOPE.Infra.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CCMS.NEOPE.Infra\CCMS.NEOPE.Infra.csproj" />
+      <Folder Include="Extensions" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="11.0.1" />
+      <PackageReference Include="AutoMapper.Collection" Version="8.0.0" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 using CCMS.NEOPE.Domain.Core.Models;
 using CCMS.NEOPE.Domain.Enums;
 using CCMS.NEOPE.Domain.Interfaces;
+using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
+
 
 namespace CCMS.NEOPE.Domain.Entities;
 
@@ -12,10 +14,13 @@ public class TaskItem : Entity<ulong>
     
     public TaskPriority Priority { get; set; }
     public string Description { get; set; } = string.Empty;
+    public TaskType Type { get; set; }
+    public TaskStatus Status { get; set; }
     public TaskStep? Step { get; set; } = null;
     public TaskItem? ParentTask { get; set; } = null;
     public virtual ICollection<TaskItem> ChildTasks { get; set; } = new List<TaskItem>();
-    public virtual ICollection<LinkedTasks> LinkedTasks { get; set; } = new List<LinkedTasks>();
+    public virtual ICollection<LinkedTasks> LinkedObjectTasks { get; set; } = new List<LinkedTasks>();
+    public virtual ICollection<LinkedTasks> LinkedSubjectTasks { get; set; } = new List<LinkedTasks>();
     public DateTime? StartDate { get; set; } = null;
     public DateTime? DueDate { get; set; } = null;
     public virtual DateTime? PlannedDate { get; set; } = null;

@@ -9,11 +9,11 @@
   var currentUser = await UserManager.FindByNameAsync(@User.Identity?.Name ?? string.Empty);
   var name = string.Empty;
   var photoPath = string.Empty;
-  var isAdmin = User.Identity.IsAuthenticated && await UserManager.IsInRoleAsync(currentUser, "Adminstrator");
+  var isAdmin = User.Identity.IsAuthenticated && await UserManager.IsInRoleAsync(currentUser, "Administrator");
   
   if (currentUser != null)
   {
-    name = currentUser.FullName.Split(" ").FirstOrDefault() ?? string.Empty;
+    name = currentUser.FirstName ?? string.Empty;
     photoPath = currentUser.Photo;
   }
   
@@ -27,16 +27,16 @@
     
     <environment include="Development">
       @await RenderSectionAsync("datatableStyle", required:false)
-      <link href="lib/materialize/css/materialize.css" rel="stylesheet"/>
+      <link href="/lib/materialize/css/materialize.css" rel="stylesheet"/>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-      <link href="css/site.css" rel="stylesheet"/>
+      <link href="/css/site.css" rel="stylesheet"/>
       @await RenderSectionAsync("Styles", required: false)
     </environment>
     
     <environment exclude="Development">
-        <link href="lib/materialize/css/materialize.min.css" rel="stylesheet"/>
+        <link href="/lib/materialize/css/materialize.min.css" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-        <link href="css/site.css" rel="stylesheet"/>
+        <link href="/css/site.css" rel="stylesheet"/>
          @await RenderSectionAsync("Styles", required:false)
     </environment>
     
@@ -57,7 +57,7 @@
                 <div class="col s6">
                   @if (string.IsNullOrEmpty(photoPath))
                   {
-                    <i class="small material-icons">account_circle</i>
+                    <img src="/Icons/account_circle.svg" class="circle responsive-img" alt="" style="width: 32px; height: 32px; top: 15%;"/>
                   }
                   else
                   {
@@ -99,6 +99,7 @@
     <li><a asp-action="Index" asp-controller="Home" class="logo-container center"> <img src="~/Images/logo neo.PNG" class="center" alt="Neoenergia"  /></a></li>
     <li class="no-padding">
       <ul class="collapsible collapsible-accordion">
+        <li id="projects"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Projetos<i class="material-icons">list</i></a></li>
         <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Backlog<i class="material-icons">list</i></a></li>
         <li id="painel"><a asp-action="Index" asp-controller="Board" class="waves-effect">Painel<i class="material-icons">dashboard</i></a></li>
         <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Cronograma<i class="material-icons">cloud</i></a></li>
@@ -129,10 +130,10 @@
 
 <environment include="Development">
     
-    <script src="lib/jquery/dist/jquery.js"></script>
-    <script src="lib/materialize/js/materialize.js"></script>
-    <script src="js/init.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="/lib/jquery/dist/jquery.js"></script>
+    <script src="/lib/materialize/js/materialize.js"></script>
+    <script src="/js/init.js"></script>
+    <script src="/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </environment>
 
