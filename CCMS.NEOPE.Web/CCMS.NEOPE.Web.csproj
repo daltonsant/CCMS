@@ -24,4 +24,9 @@
       <Folder Include="wwwroot\Images" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="wwwroot\Images\c878408d-fb4c-4d9d-ad81-f08100a2d0eddalton.jpg" />
+      <Content Remove="wwwroot\Images\8ee312a2-8fb4-47cc-9722-d298856d6574dalton.jpg" />
+    </ItemGroup>
+
 </Project>
