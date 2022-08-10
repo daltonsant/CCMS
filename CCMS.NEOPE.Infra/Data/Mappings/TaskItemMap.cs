@@ -37,7 +37,7 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         
         builder.HasMany(e => e.CheckListItems).WithOne(e => e.Task);
         
-        builder.Property(e => e.Key).IsRequired().ValueGeneratedOnAdd();
+        builder.Property(e => e.Key).IsRequired().ValueGeneratedNever();
         builder.HasIndex(e => e.Key).IsUnique();
 
         builder.HasOne(e => e.Type)

@@ -53,10 +53,12 @@
             });
             $('#table-custom-elements').on('click','tbody tr', function (){
                 let data = table.row(this).data();
-                let taskId = data['id'];
-                //inicialmente iremos abrir outra pagina, mas é possivel abrir um modal para atualização na mesma tela
-                console.log(taskId);
-                fnAClickLink(taskId);
+                if(data !== undefined){
+                    let taskId = data['id'];
+                    //inicialmente iremos abrir outra pagina, mas é possivel abrir um modal para atualização na mesma tela
+                    fnAClickLink(taskId);
+                }
+                
             });
         }
     });

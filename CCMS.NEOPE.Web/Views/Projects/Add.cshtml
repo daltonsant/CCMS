@@ -1,0 +1,34 @@
+@model CCMS.NEOPE.Application.ViewModels.Project.AddProjectModel
+@{
+    Layout = "_Layout";
+}
+
+<div class="section container">
+    <h5>Criar novo projeto de comissionamento</h5>
+    <form class="card" asp-controller="Projects" asp-action="Add" method="POST">
+        <div>
+            <div class="fields">
+                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+            </div>
+
+            <div class="row">
+                  <div class="input-field col s6">
+                    <input asp-for="Code" class="validate" id="Code"/>
+                    <label asp-for="Code" id="Code"></label>
+                    <span asp-validation-for="Code" class="red-text text-darken-4"></span>
+                </div>
+                <div class="input-field col s6">
+                    <input asp-for="Name" class="validate" id="Name"/>
+                    <label asp-for="Name" id="Name"></label>
+                    <span asp-validation-for="Name" class="red-text text-darken-4"></span>
+                </div>
+            </div>
+
+            <div class="buttons right">
+                <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+            </div>            
+        
+        </div>
+    </form>
+</div>

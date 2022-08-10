@@ -9,7 +9,7 @@ public class ApplicationUserMap : IEntityTypeConfiguration<ApplicationUser>
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
         builder.Property(e => e.Id).ValueGeneratedOnAdd();
-        builder.Property(e => e.Code).IsRequired().HasMaxLength(8);
+        builder.Property(e => e.Code).IsRequired().HasMaxLength(12);
         builder.HasIndex(e => e.Code).IsUnique();
         builder.Property(e => e.Photo);
         builder.Property(e => e.IsActive).IsRequired();

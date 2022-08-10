@@ -13,7 +13,7 @@ public static class OrmConfigurationExtension
     {
         services.AddDbContext<ApplicationContext>(options =>
             {
-                options.UseSqlite(configuration.GetConnectionString("DefaultConnection"), 
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), 
                     b => 
                         b.MigrationsAssembly(Assembly.GetAssembly(typeof(ApplicationConfiguration))?.ToString()));
             }

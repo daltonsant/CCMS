@@ -8,7 +8,7 @@ public class Asset : Entity<ulong>
     public string Code { get; set; } = string.Empty;
     
     public AssetType Type { get; set; }
-    
-    public ICollection<TaskItem> Tasks { get; set; }
-    public ICollection<Project> Projects { get; set; }
+
+    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+    public ICollection<Project> Projects { get; set; } = new List<Project>();
 }

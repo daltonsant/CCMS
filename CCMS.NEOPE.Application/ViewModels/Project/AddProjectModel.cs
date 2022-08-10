@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CCMS.NEOPE.Application.ViewModels.Project;
 
-public class CreateProjectViewModel
+public class AddProjectModel
 {
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [StringLength(32, ErrorMessage = "Use menos caracteres")]

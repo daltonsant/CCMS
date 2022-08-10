@@ -8,6 +8,8 @@ public class  ProjectProfile : Profile
 {
     public ProjectProfile()
     {
-        CreateMap<Project, CreateProjectViewModel>().ReverseMap();
+        CreateMap<AddProjectModel, Project>().ReverseMap();
+        CreateMap<Project, ViewProjectModel>().ReverseMap();
+        CreateMap<Project, EditProjectModel>().ReverseMap();
     }
 }

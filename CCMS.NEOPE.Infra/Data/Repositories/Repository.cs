@@ -39,5 +39,13 @@ public class Repository<T, TKey> : IGenericRepository<T, TKey> where T : Entity<
         _context.Set<T>().Update(entity);
     }
 
+    public void Delete(TKey id)
+    {
+        var entities = _context.Set<T>();
+        var entityToRemove = entities.FirstOrDefault(x => x.Id != null && x.Id.Equals(id));
+        if(entityToRemove != null)
+            entities.Remove(entityToRemove);
+    }
     public IQueryable<T> Entities => _context.Set<T>().AsQueryable();
+
 }

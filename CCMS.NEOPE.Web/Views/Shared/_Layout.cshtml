@@ -1,21 +1,20 @@
-﻿
-@using CCMS.NEOPE.Infra.Identity
+﻿@using CCMS.NEOPE.Infra.Identity
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-  var currentUser = await UserManager.FindByNameAsync(@User.Identity?.Name ?? string.Empty);
-  var name = string.Empty;
-  var photoPath = string.Empty;
-  var isAdmin = User.Identity.IsAuthenticated && await UserManager.IsInRoleAsync(currentUser, "Administrator");
+    var currentUser = await UserManager.FindByNameAsync(@User.Identity?.Name ?? string.Empty);
+    var name = string.Empty;
+    var photoPath = string.Empty;
+    var isAdmin = User.Identity.IsAuthenticated && await UserManager.IsInRoleAsync(currentUser, "Administrator");
   
-  if (currentUser != null)
-  {
-    name = currentUser.FirstName ?? string.Empty;
-    photoPath = currentUser.Photo;
-  }
+    if (currentUser != null)
+    {
+        name = currentUser.FirstName ?? string.Empty;
+        photoPath = currentUser.Photo;
+    }
   
 }
 <!DOCTYPE html>
@@ -26,104 +25,148 @@
     <title>Portal do comissionamento</title>
     
     <environment include="Development">
-      @await RenderSectionAsync("datatableStyle", required:false)
-      <link href="/lib/materialize/css/materialize.css" rel="stylesheet"/>
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-      <link href="/css/site.css" rel="stylesheet"/>
-      @await RenderSectionAsync("Styles", required: false)
+        @await RenderSectionAsync("datatableStyle", required:false)
+        <link href="/lib/materialize/css/materialize.css" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+        <link href="/css/site.css" rel="stylesheet"/>
+        @await RenderSectionAsync("Styles", required: false)
     </environment>
     
     <environment exclude="Development">
         <link href="/lib/materialize/css/materialize.min.css" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
         <link href="/css/site.css" rel="stylesheet"/>
-         @await RenderSectionAsync("Styles", required:false)
+        @await RenderSectionAsync("Styles", required:false)
     </environment>
     
 </head>
 
-<body class="has-fixed-sidenav">
+<body style="overflow: auto;">
 <header>
-  <div class="navbar-fixed principal-color">
-    <nav class="navbar white">
-      <div class="nav-wrapper"><a asp-action="Index" asp-controller="Home" class="brand-logo grey-text text-darken-4">Início</a>
-        <ul id="nav-mobile" class="right">
-          <li>
-            <div class="row">
-              <a href="#!" data-target="chat-dropdown" class="dropdown-trigger waves-effect">
-                <div class="col s6">
-                  <span style="padding-right: 5px">@name </span>
-                </div>
-                <div class="col s6">
-                  @if (string.IsNullOrEmpty(photoPath))
-                  {
-                    <img src="/Icons/account_circle.svg" class="circle responsive-img" alt="" style="width: 32px; height: 32px; top: 15%;"/>
-                  }
-                  else
-                  {
-                    <img src="@photoPath" class="circle responsive-img" alt="" style="width: 32px; height: 32px; top: 15%;"/>
-                  }
-                </div>
-              </a>
-            </div>
+    <div class="navbar-fixed principal-color">
+        <nav class="navbar white">
+            <div class="nav-wrapper"><a asp-action="Index" asp-controller="Home" class="brand-logo grey-text text-darken-4">Início</a>
+                <ul id="nav-mobile" class="right">
+                    <li>
+                        <div class="row">
+                            <a href="#!" data-target="chat-dropdown" class="dropdown-trigger waves-effect">
+                                <div class="col s6">
+                                    <span style="padding-right: 5px">@name </span>
+                                </div>
+                                <div class="col s6">
+                                    @if (string.IsNullOrEmpty(photoPath))
+                                    {
+                                        <img src="/Icons/account_circle.svg" class="circle responsive-img" alt="" style="width: 32px; height: 32px; top: 15%;"/>
+                                    }
+                                    else
+                                    {
+                                        <img src="@photoPath" class="circle responsive-img" alt="" style="width: 32px; height: 32px; top: 15%;"/>
+                                    }
+                                </div>
+                            </a>
+                        </div>
                                                                                                                                           
-            <div id="chat-dropdown" class="dropdown-content dropdown-tabbed" tabindex="0" style="">
-              <div id="settings" class="col s12 active" tabindex="0" style="display: block;">
-                <div class="settings-group">
+                        <div id="chat-dropdown" class="dropdown-content dropdown-tabbed" tabindex="0" style="">
+                            <div id="settings" class="col s12 active" tabindex="0" style="display: block;">
+                                <div class="settings-group">
                   
-                  <div  class="setting">
-                    <a asp-controller="Users" asp-action="Profile" >Meu perfil</a>
-                  </div>
+                                    <div  class="setting">
+                                        <a asp-controller="Users" asp-action="Profile" >Meu perfil</a>
+                                    </div>
 
-                  @if (isAdmin)
-                  {
-                    <div  class="setting">
-                      <a asp-controller="Admin" asp-action="Index">Configurações</a>
-                    </div>
-                  }
+                                    @if (isAdmin)
+                                    {
+                                        <div  class="setting">
+                                            <a asp-controller="Admin" asp-action="Index">Configurações</a>
+                                        </div>
+                                    }
 
-                  <div  class="setting">
-                    <a asp-controller="Users" asp-action="Logout" >Logout</a>
-                  </div>
+                                    <div  class="setting">
+                                        <a asp-controller="Users" asp-action="Logout" >Logout</a>
+                                    </div>
 
-                </div>
-              </div>
-            </div>
+                                </div>
+                            </div>
+                        </div>
             
-          </li>
-        </ul><a href="#!" data-target="sidenav-left" class="sidenav-trigger left"><i class="material-icons black-text">menu</i></a>
-      </div>
-    </nav>
-  </div>
-  <ul id="sidenav-left" class="sidenav sidenav-fixed" style="transform: translateX(-105%);">
-    <li><a asp-action="Index" asp-controller="Home" class="logo-container center"> <img src="~/Images/logo neo.PNG" class="center" alt="Neoenergia"  /></a></li>
-    <li class="no-padding">
-      <ul class="collapsible collapsible-accordion">
-        <li id="projects"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Projetos<i class="material-icons">list</i></a></li>
-        <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Backlog<i class="material-icons">list</i></a></li>
-        <li id="painel"><a asp-action="Index" asp-controller="Board" class="waves-effect">Painel<i class="material-icons">dashboard</i></a></li>
-        <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Cronograma<i class="material-icons">cloud</i></a></li>
+                    </li>
+                </ul><a href="#!" data-target="sidenav-left" class="sidenav-trigger left"><i class="material-icons black-text">menu</i></a>
+            </div>
+        </nav>
+    </div>
+    <ul id="sidenav-left" class="sidenav">
+        <li><a asp-action="Index" asp-controller="Home" class="logo-container center"> <img src="~/Images/nst.PNG" class="center" alt="Neoenergia"  /></a></li>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li class="waves-effect"><a class="collapsible-header" tabindex="0">Comissionamentos<i class="material-icons chevron">chevron_left</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a asp-action="Index" asp-controller="Projects" class="waves-effect">Listar<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Add" asp-controller="Projects" class="waves-effect">Criar novo<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Add" asp-controller="Tasks" class="waves-effect">Criar atividade<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Index" asp-controller="TaskTypes" class="waves-effect">Tipos de atividade<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Add" asp-controller="TaskTypes" class="waves-effect">Criar tipo de atividade<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Index" asp-controller="TaskSteps" class="waves-effect">Listar etapas<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Add" asp-controller="TaskSteps" class="waves-effect">Criar etapa<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="EditType" asp-controller="Tasks" class="waves-effect">Criar roteiro<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                    </div>
+                </li>
+        
+                <li class="waves-effect"><a class="collapsible-header" tabindex="0">Ativos<i class="material-icons chevron">chevron_left</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a asp-action="Index" asp-controller="Assets" class="waves-effect">Listar<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Add" asp-controller="Assets" class="waves-effect">Criar Novo<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Index" asp-controller="AssetTypes" class="waves-effect">Tipos<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                        <ul>
+                            <li><a asp-action="Add" asp-controller="AssetTypes" class="waves-effect">Criar Tipo<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                    </div>
+                </li>
+        
+                <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Backlog<i class="material-icons">list</i></a></li>
+                <li id="painel"><a asp-action="Index" asp-controller="Board" class="waves-effect">Painel<i class="material-icons">dashboard</i></a></li>
+                <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Cronograma<i class="material-icons">cloud</i></a></li>
+                <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Linha do tempo<i class="material-icons">cloud</i></a></li>
 
-        <li class="bold waves-effect"><a class="collapsible-header" tabindex="0">Dashboards<i class="material-icons chevron">chevron_left</i></a>
-          <div class="collapsible-body">
-            <ul>
-              <li><a asp-action="Index" asp-controller="Dashboards" class="waves-effect">Fullscreen with Chart<i class="material-icons">show_chart</i></a></li>
+                <li class="bold waves-effect"><a class="collapsible-header" tabindex="0">Dashboards<i class="material-icons chevron">chevron_left</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a asp-action="Index" asp-controller="Dashboards" class="waves-effect">Fullscreen with Chart<i class="material-icons">show_chart</i></a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
-          </div>
         </li>
-      </ul>
-    </li>
-  </ul>
-      
-      
+    </ul>
 </header>
 
 <main>
-  @RenderBody()
+    @RenderBody()
 </main>
 
 <footer>
-    <div class="container">
+    <div class="no-padding page-footer">
         &copy; 2022 - Portal do Comissionamento - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>

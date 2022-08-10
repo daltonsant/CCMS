@@ -1,0 +1,36 @@
+@model CCMS.NEOPE.Application.ViewModels.AssetTypes.EditAssetTypeModel
+
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="section container">
+    <h5>Editar ativo</h5>
+    <form class="card" asp-controller="AssetTypes" asp-action="Edit" method="POST">
+        <div>
+            <div class="fields">
+                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+            </div>
+            @Html.HiddenFor(m => m.Id)
+            <div class="row">
+                <div class="input-field col s6">
+                    <input asp-for="Name" class="validate" id="Name"/>
+                    <label asp-for="Name" id="Name"></label>
+                    <span asp-validation-for="Name" class="red-text text-darken-4"></span>
+                </div>
+                <div class="input-field col s6">
+                    <textarea asp-for="Description" class="validate" id="Description" rows="4"></textarea>
+                    <label asp-for="Description" id="Description"></label>
+                    <span asp-validation-for="Description" class="red-text text-darken-4"></span>
+                </div>
+            </div>
+
+            <div class="buttons right">
+                <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+            </div>            
+        
+        </div>
+    </form>
+</div>

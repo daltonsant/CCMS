@@ -1,0 +1,41 @@
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+@section datatableStyle
+{
+    <link href="lib/datatables/datatables.css" rel="stylesheet">
+    <link href="lib/datatables/Responsive-2.3.0/css/responsive.dataTables.min.css" rel="stylesheet" />
+}
+<div class="section container">
+    <div class="no-padding white">
+        <div class="row">
+            <div class="col s12">
+                <h4 class="section-title">Etapas do Comissionamento</h4>
+        
+                <div class="card">
+                    <table id="table-tasksteps" class="row-border hover nowrap" style="width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="display: none;">Id</th>
+                            <th>Nome</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="lib/datatables/datatables.js"></script>
+    <script src="lib/datatables/Responsive-2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="js/tasksteps-index.js"></script>
+}

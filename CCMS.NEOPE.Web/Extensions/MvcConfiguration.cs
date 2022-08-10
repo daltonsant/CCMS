@@ -14,7 +14,7 @@ public static class MvcConfiguration
             options.ExpireTimeSpan = TimeSpan.FromMinutes(180);
             options.LoginPath = new PathString("/Users/Login");
             options.LogoutPath = new PathString("/Users/Logout");
-            options.AccessDeniedPath = new PathString("/Error/403");
+            options.AccessDeniedPath = new PathString("/Error/");
         });
         
         services.AddControllersWithViews()
@@ -28,13 +28,13 @@ public static class MvcConfiguration
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/error/500");
-            app.UseStatusCodePagesWithRedirects("/error/{0}");
+            app.UseExceptionHandler("/Error");
+            app.UseStatusCodePagesWithRedirects("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
         else
-        {
+        {   
             app.UseDeveloperExceptionPage();
         }
 

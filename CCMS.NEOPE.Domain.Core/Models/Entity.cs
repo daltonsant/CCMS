@@ -1,4 +1,6 @@
-﻿namespace CCMS.NEOPE.Domain.Core.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CCMS.NEOPE.Domain.Core.Models;
 
 public abstract class Entity<TKey>
 {
@@ -6,4 +8,7 @@ public abstract class Entity<TKey>
     public virtual DateTime CreateDate { get; set; }
 
     public virtual DateTime? UpdateDate { get; set; }
+    
+    [Timestamp]
+    public byte[] RowVersion { get; set; }
 }

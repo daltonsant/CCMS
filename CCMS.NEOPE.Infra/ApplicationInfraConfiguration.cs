@@ -1,4 +1,5 @@
 ﻿using CCMS.NEOPE.Domain.Core.Interfaces;
+using CCMS.NEOPE.Infra.Customs;
 using CCMS.NEOPE.Infra.Data.Context;
 using CCMS.NEOPE.Infra.Data.UoW;
 using CCMS.NEOPE.Infra.Extensions;
@@ -42,8 +43,8 @@ public static class ApplicationConfiguration
         });
         
         services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
-
-        services.ConfigureRepository()
-            .ConfigureApplicationServices();
+        services.AddTransient(typeof(IPagedList<>), typeof(PagedList<>));
+        
+        services.ConfigureRepository();
     }
 }

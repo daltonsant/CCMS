@@ -15,11 +15,11 @@ public class LinkedTasksMap : IEntityTypeConfiguration<LinkedTasks>
 
         builder.HasOne(e => e.SubjectTask)
             .WithMany(e => e.LinkedSubjectTasks)
-            .HasForeignKey(e => e.SubjectTaskId);
+            .HasForeignKey(e => e.SubjectTaskId).OnDelete(DeleteBehavior.ClientCascade);
 
         builder.HasOne(e => e.ObjectTask)
             .WithMany(e => e.LinkedObjectTasks)
-            .HasForeignKey(e => e.ObjectTaskId);
+            .HasForeignKey(e => e.ObjectTaskId).OnDelete(DeleteBehavior.ClientCascade);
         
         builder.ToTable("LinkedTasks");
     }

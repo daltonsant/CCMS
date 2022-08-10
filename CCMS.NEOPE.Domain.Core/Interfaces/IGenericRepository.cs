@@ -9,5 +9,6 @@ public interface IGenericRepository<T, in TKey> where T : Entity<TKey>
     void Save(T entity);
     Task SaveAsync(T entity);
     void Update(T entity);
+    void Delete(TKey id);
     IQueryable<T> Entities { get; }
 }
