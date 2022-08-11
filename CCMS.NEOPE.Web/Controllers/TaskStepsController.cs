@@ -71,4 +71,11 @@ public class TaskStepsController : Controller
         _taskStepService.Edit(model);
         return RedirectToAction("Index", "TaskSteps");
     }
+
+    [HttpDelete]
+    public IActionResult Delete(int id)
+    {
+        _taskStepService.Delete(id);
+        return Ok();
+    }
 }

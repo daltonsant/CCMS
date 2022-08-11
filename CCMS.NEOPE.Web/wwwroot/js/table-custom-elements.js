@@ -11,7 +11,7 @@
             let table = tasksTable.DataTable({
                 serverSide: true,
                 ajax: {
-                    url: "Tasks/GetTasks/",
+                    url: "/Tasks/GetTasks/",
                     type: 'POST'
                 }, 
                 responsive: {
@@ -29,7 +29,6 @@
                 ],
                 columns: [
                     { data: "id", name: "Id" },
-                    { data: "key", name: "Key" },
                     { data: "title", name: "Title" },
                     { data: "projectName", name: "ProjectName" },
                     { data: "priority", name: "Priority"},
@@ -38,7 +37,7 @@
                 ],
                 'language': {
                     'searchPlaceholder': 'Pesquise aqui',
-                    url: 'js/datatable.pt_br.json'
+                    url: '/js/datatable.pt_br.json'
                 },
                 'dom': 'ft<"footer-wrapper"l<"paging-info"ip>>',
                 'pagingType': 'full',

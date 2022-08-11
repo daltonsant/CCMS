@@ -8,7 +8,10 @@
     var currentUser = await UserManager.FindByNameAsync(@User.Identity?.Name ?? string.Empty);
     var name = string.Empty;
     var photoPath = string.Empty;
-    var isAdmin = User.Identity.IsAuthenticated && await UserManager.IsInRoleAsync(currentUser, "Administrator");
+    var isAdmin = User?.Identity?.IsAuthenticated;
+    
+    if(isAdmin != null && currentUser != null)
+        isAdmin = isAdmin.Value && await UserManager.IsInRoleAsync(currentUser, "Administrator");
   
     if (currentUser != null)
     {
@@ -26,17 +29,20 @@
     
     <environment include="Development">
         @await RenderSectionAsync("datatableStyle", required:false)
-        <link href="/lib/materialize/css/materialize.css" rel="stylesheet"/>
+        <link href="~/lib/fullcalendar-3.10.5/fullcalendar.min.css" rel="stylesheet">
+        <link href="~/lib/materialize/css/materialize.css" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-        <link href="/css/site.css" rel="stylesheet"/>
+        <link href="~/css/site.css" rel="stylesheet"/>
         @await RenderSectionAsync("Styles", required: false)
     </environment>
     
     <environment exclude="Development">
-        <link href="/lib/materialize/css/materialize.min.css" rel="stylesheet"/>
+        @await RenderSectionAsync("datatableStyle", required:false)
+        <link href="~/lib/fullcalendar-3.10.5/fullcalendar.min.css" rel="stylesheet">
+        <link href="~/lib/materialize/css/materialize.min.css" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-        <link href="/css/site.css" rel="stylesheet"/>
-        @await RenderSectionAsync("Styles", required:false)
+        <link href="~/css/site.css" rel="stylesheet"/>
+        @await RenderSectionAsync("Styles", required: false)
     </environment>
     
 </head>
@@ -56,7 +62,7 @@
                                 <div class="col s6">
                                     @if (string.IsNullOrEmpty(photoPath))
                                     {
-                                        <img src="/Icons/account_circle.svg" class="circle responsive-img" alt="" style="width: 32px; height: 32px; top: 15%;"/>
+                                        <img src="~/Icons/account_circle.svg" class="circle responsive-img" alt="" style="width: 32px; height: 32px; top: 15%;"/>
                                     }
                                     else
                                     {
@@ -74,7 +80,7 @@
                                         <a asp-controller="Users" asp-action="Profile" >Meu perfil</a>
                                     </div>
 
-                                    @if (isAdmin)
+                                    @if (isAdmin.HasValue && isAdmin.Value)
                                     {
                                         <div  class="setting">
                                             <a asp-controller="Admin" asp-action="Index">Configurações</a>
@@ -122,7 +128,7 @@
                             <li><a asp-action="Add" asp-controller="TaskSteps" class="waves-effect">Criar etapa<i class="material-icons">show_chart</i></a></li>
                         </ul>
                         <ul>
-                            <li><a asp-action="EditType" asp-controller="Tasks" class="waves-effect">Criar roteiro<i class="material-icons">show_chart</i></a></li>
+                            <li><a asp-action="Add" asp-controller="Tasks" class="waves-effect">Criar roteiro<i class="material-icons">show_chart</i></a></li>
                         </ul>
                     </div>
                 </li>
@@ -173,19 +179,30 @@
 
 <environment include="Development">
     
-    <script src="/lib/jquery/dist/jquery.js"></script>
-    <script src="/lib/materialize/js/materialize.js"></script>
-    <script src="/js/init.js"></script>
-    <script src="/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/moment.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/lib/fullcalendar-3.10.5/fullcalendar.min.js"></script>
+    <script src="~/lib/fullcalendar-3.10.5/locale/pt-br.js"></script>
+
+    <script src="~/lib/materialize/js/materialize.js"></script>
+    <script src="~/js/init.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </environment>
 
 
 <environment exclude="Development">
     
-    <script src="lib/jquery/dist/jquery.min.js"></script>
-    <script src="lib/materialize/js/materialize.min.js"></script>
-    <script src="js/init.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script src="~/js/moment.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/lib/fullcalendar-3.10.5/fullcalendar.min.js"></script>
+    <script src="~/lib/fullcalendar-3.10.5/locale/pt-br.js"></script>
+
+    <script src="~/lib/materialize/js/materialize.min.js"></script>
+    <script src="~/js/init.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </environment>

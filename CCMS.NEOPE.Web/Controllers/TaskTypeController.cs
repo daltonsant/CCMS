@@ -65,11 +65,15 @@ public class TaskTypesController : Controller
     [HttpPost]
     public IActionResult Edit(EditTaskTypeModel model)
     {
-        if (ModelState.IsValid)
-        {
-            _taskTypeService.Edit(model);
-            return RedirectToAction("Index", "TaskTypes");
-        }
-        return View(model);
+        if (!ModelState.IsValid) return View(model);
+        _taskTypeService.Edit(model);
+        return RedirectToAction("Index", "TaskTypes");
+    }
+
+    [HttpDelete]
+    public IActionResult Delete(ulong id)
+    {
+        _taskTypeService.Delete(id);
+        return Ok();
     }
 }

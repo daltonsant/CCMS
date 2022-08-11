@@ -8,15 +8,13 @@ namespace CCMS.NEOPE.Domain.Entities;
 
 public class TaskItem : Entity<ulong>
 {
-    public ulong Key { get; protected set; }
     public Project? Project { get; set; } = null;
     public string? Title { get; set; } = null;
-    
-    public TaskPriority Priority { get; set; }
-    public string Description { get; set; } = string.Empty;
+    public TaskPriority? Priority { get; set; }
+    public string? Description { get; set; } = string.Empty;
     public TaskType Type { get; set; }
     public TaskStatus Status { get; set; }
-    public TaskStep? Step { get; set; } = null;
+    public TaskStep Step { get; set; } = null;
     public TaskItem? ParentTask { get; set; } = null;
     public virtual ICollection<TaskItem> ChildTasks { get; set; } = new List<TaskItem>();
     public virtual ICollection<LinkedTasks> LinkedObjectTasks { get; set; } = new List<LinkedTasks>();

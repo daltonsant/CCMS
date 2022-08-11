@@ -20,7 +20,7 @@
                     <span asp-validation-for="Name" class="red-text text-darken-4"></span>
                 </div>
                 <div class="input-field col s6">
-                    <textarea asp-for="Description" class="validate" id="Description" rows="4"></textarea>
+                    <textarea asp-for="Description" class="validate" id="Description" style="resize:none; height: 200px;" rows="6" ></textarea>
                     <label asp-for="Description" id="Description"></label>
                     <span asp-validation-for="Description" class="red-text text-darken-4"></span>
                 </div>
@@ -28,9 +28,28 @@
 
             <div class="buttons right">
                 <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                <a class="waves-effect waves-light btn red modal-trigger" href="#cancelModal">Deletar</a>
+                <a id="deleteLink" asp-action="Delete" asp-route-id="@Model.Id" style="display: none;"></a>
                 <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
             </div>            
         
         </div>
     </form>
 </div>
+
+
+<!-- Modal Structure -->
+<div id="cancelModal" class="modal">
+    <div class="modal-content">
+        <p>Tem certeza que deseja deletar?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="modal-close waves-effect waves-light btn grey">Cancelar</a>
+        <a id="ok" asp-action="Index" asp-controller="AssetTypes" class="modal-close waves-effect waves-light btn green darken-4">Sim</a>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/delete-modal.js"></script>
+}

@@ -1,4 +1,7 @@
+using AutoMapper;
 using CCMS.NEOPE.Application.Interfaces;
+using CCMS.NEOPE.Application.ViewModels.Assets;
+using CCMS.NEOPE.Application.ViewModels.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +10,14 @@ namespace CCMS.NEOPE.Web.Controllers;
 public class TasksController : Controller
 {
     private readonly ITaskService _taskService;
+    private readonly IMapper _mapper;
 
-    public TasksController(ITaskService taskService)
+    public TasksController(
+        ITaskService taskService,
+        IMapper mapper)
     {
         _taskService = taskService;
+        _mapper = mapper;
     }
     
     // GET
@@ -31,54 +38,67 @@ public class TasksController : Controller
         var pageSize = Convert.ToInt32(Request.Form["length"].FirstOrDefault() ?? "0");
         var skip = Convert.ToInt32(Request.Form["start"].FirstOrDefault() ?? "0");
         
-        var data = /*_context.Set < Employees > ()*/_taskService.GetTasks(searchValue, skip, pageSize).AsQueryable();
-        //get total count of data in table
-        totalRecord = data.Count();
-        
-        // search data when search value found
-       /* if (!string.IsNullOrEmpty(searchValue)) {
-            data = data.Where(x => 
-                x.EmployeeFirstName.ToLower().Contains(searchValue.ToLower()) || 
-                x.EmployeeLastName.ToLower().Contains(searchValue.ToLower()) || 
-                x.Designation.ToLower().Contains(searchValue.ToLower()) || 
-                x.Salary.ToString().ToLower().Contains(searchValue.ToLower()));
-        }*/
-        
-        // get total count of records after search
-        filterRecord = data.Count();
-        
-        //sort data
-        /*if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection)) 
-            data = data.OrderBy(sortColumn + " " + sortColumnDirection);*/
-        /*
-         *inputs: skip, pagesize, string searchValue, sort expressions
-         * outputs: total records, filteredRecords, list
-         */
-        
-        //pagination
-        var empList = data.Skip(skip).Take(pageSize).ToList();
-        
+        var data = _taskService.List(searchValue, skip, pageSize);
+
         var returnObj = new {
-            draw = draw, recordsTotal = totalRecord, recordsFiltered = filterRecord, data = empList
+            draw = draw, recordsTotal = data.TotalCount, recordsFiltered = data.FilteredCount, data = data.ToList()
         };
         
         return Json(returnObj);
     }
 
-    public IActionResult Edit(int id)
+    public IActionResult Edit(ulong id)
     {
-        return View();
+        var model = _taskService.Get(id);
+        
+        if (model != null)
+            return View(model);
+
+        return NotFound();
     }
+    
+    [HttpPost]
+    public IActionResult Edit(EditTaskModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            _taskService.Edit(model);
+            return RedirectToAction("Index", "Tasks");
+        }
+        
+        var dbmodel = _taskService.Get(model.Id);
+
+        if (dbmodel == null) NotFound();
+        
+        _mapper.Map<EditTaskModel, EditTaskModel>(model, dbmodel);
+        
+        return View(dbmodel);
+    }
+    
     public IActionResult Add()
     {
-        return Json("");
+        return View(_taskService.Get());
     }
-    public IActionResult EditType()
+    
+    [HttpPost]
+    public IActionResult Add(AddTaskModel model)
     {
-        return Json("");
+        if(ModelState.IsValid)
+        {
+            _taskService.Add(model);
+            return RedirectToAction("Index", "Tasks");
+        }
+        
+        var dbmodel = _taskService.Get();
+        _mapper.Map<AddTaskModel, AddTaskModel>(model, dbmodel);
+        
+        return View(dbmodel);
     }
-    public IActionResult AddType()
+
+    [HttpDelete]
+    public IActionResult Delete(ulong id)
     {
-        return Json("");
+        _taskService.Delete(id);
+        return Ok();
     }
 }

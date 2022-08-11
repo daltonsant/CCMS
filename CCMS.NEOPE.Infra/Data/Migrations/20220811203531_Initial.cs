@@ -274,14 +274,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Key = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
-                    ProjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    ProjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Priority = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     TypeId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    StepId = table.Column<int>(type: "int", nullable: true),
+                    StepId = table.Column<int>(type: "int", nullable: false),
                     ParentTaskId = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -304,7 +303,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         name: "FK_TaskItems_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TaskItems_TaskItems_ParentTaskId",
                         column: x => x.ParentTaskId,
@@ -314,7 +314,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         name: "FK_TaskItems_TaskSteps_StepId",
                         column: x => x.StepId,
                         principalTable: "TaskSteps",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TaskItems_TaskType_TypeId",
                         column: x => x.TypeId,
@@ -554,12 +555,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
             migrationBuilder.InsertData(
                 table: "ApplicationRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
-                values: new object[] { "4439b27b-96c6-40d8-b0ce-07f5e749274d", "12e2960d-3e20-4d76-aefb-2f85f477132b", "Usuário comum do sistema", "User", "USER" });
+                values: new object[] { "a2ceac7b-0835-48cd-8dc6-aab4113de849", "1b562d6c-d798-4a3f-8b71-e6521cb651b1", "Usuário comum do sistema", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "ApplicationRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
-                values: new object[] { "a82f5a69-0c74-440a-8281-ac7ef85f0418", "b537d11c-ef44-4e8e-8fe0-504adcb332a3", "Administrador do sistema", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "ae0f52b9-298b-4bc2-9795-9989fbe971b5", "0a064d21-448e-471c-ae62-760633b6c6f3", "Administrador do sistema", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -672,12 +673,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "IX_LinkedTasks_SubjectTaskId",
                 table: "LinkedTasks",
                 column: "SubjectTaskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskItems_Key",
-                table: "TaskItems",
-                column: "Key",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaskItems_ParentTaskId",

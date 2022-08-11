@@ -1,6 +1,6 @@
 (function ($) {
     function fnAClickLink(projectId){
-        let url = 'Projects/Edit/'+projectId;
+        let url = '/Projects/Edit/'+projectId;
         window.location.replace(url);
     }
 
@@ -11,7 +11,7 @@
             let table = tasksTable.DataTable({
                 serverSide: true,
                 ajax: {
-                    url: "Projects/List/",
+                    url: "/Projects/List/",
                     type: 'POST'
                 },
                 responsive: {
@@ -34,7 +34,7 @@
                 ],
                 'language': {
                     'searchPlaceholder': 'Pesquise aqui',
-                    url: 'js/datatable.pt_br.json'
+                    url: '/js/datatable.pt_br.json'
                 },
                 'dom': 'ft<"footer-wrapper"l<"paging-info"ip>>',
                 'pagingType': 'full',

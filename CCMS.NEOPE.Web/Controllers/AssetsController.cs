@@ -33,14 +33,16 @@ public class AssetsController : Controller
     [HttpPost]
     public IActionResult Add(AddAssetModel model)
     {
-        if(ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            _assetService.Add(model);
+            var dbmodel = _assetService.GetAddAssetModel();
+            _mapper.Map<AddAssetModel, AddAssetModel>(model, dbmodel);
+
+            return View(dbmodel);
         }
-        var dbmodel = _assetService.GetAddAssetModel();
-        _mapper.Map<AddAssetModel, AddAssetModel>(model, dbmodel);
-        
-        return View(dbmodel);
+
+        _assetService.Add(model);
+        return RedirectToAction("Index","Assets");
     }
     
     public IActionResult List()
@@ -75,8 +77,24 @@ public class AssetsController : Controller
     [HttpPost]
     public IActionResult Edit(EditAssetModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+        {
+            var dbmodel = _assetService.Get(model.Id);
+
+            if (dbmodel == null) return NotFound();
+            
+            _mapper.Map<EditAssetModel, EditAssetModel>(model, dbmodel);
+            
+            return View(dbmodel);
+        }
         _assetService.Edit(model);
         return RedirectToAction("Index", "Assets");
+    }
+
+    [HttpDelete]
+    public IActionResult Delete(ulong id)
+    {
+        _assetService.Delete(id);
+        return Ok();
     }
 }

@@ -1,18 +1,157 @@
-
+@model CCMS.NEOPE.Application.ViewModels.Tasks.EditTaskModel
 
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+<div class="section container">
+    <h5>Atualizar atividade de comissionamento</h5>
+    <form class="card" asp-controller="Tasks" asp-action="Edit" method="POST">
+        <div>
+            <div class="fields">
+                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+            </div>
+            @Html.HiddenFor(x => x.Id)
+            <div class="row">
+                <div class="col m9">
+                    <div class="row">
+                        <div class="input-field col s3">
+                            <select asp-for="TypeId" asp-items="@Model.Types" class="validate" id="TypeId"></select>
+                            <label asp-for="TypeId" id="TypeIdLabel"></label>
+                            <span asp-validation-for="TypeId" class="red-text text-darken-4"></span> 
+                        </div>
+                        <div class="input-field col s9">
+                            <input asp-for="Title" class="validate" id="Title"/>
+                            <label asp-for="Title" id="TitleLabel"></label>
+                            <span asp-validation-for="Title" class="red-text text-darken-4"></span> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea asp-for="Description" class="validate" id="Description" style="resize:vertical; height: 155px;" rows="6"></textarea>
+                            <label asp-for="Description" id="Description"></label>
+                            <span asp-validation-for="Description" class="red-text text-darken-4"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h6 class="col s12">
+                            Atividades associadas
+                            <div class="divider"></div>
+                        </h6>
+                        
+                    </div>
+                    <div class="row">
+                        <h6 class="col s12">
+                            Etiquetas
+                            <div class="divider"></div>
+                        </h6>
+                    </div>
+                    <div class="row">
+                        <h6 class="col s12">
+                            Lista de pontos
+                            <div class="divider"></div>
+                        </h6>
+                        
+                    </div>
+                    <div class="row" style="display: none;">
+                        <h6 class="col s12">
+                            Comentário
+                            <div class="divider"></div>
+                        </h6>
+                        
+                    </div>
+                    <div class="row" style="display: none;">
+                        <h6 class="col s12">
+                            Logs
+                            <div class="divider"></div>
+                        </h6>
+                        
+                    </div>
+                </div>
+                
+                <div class="col m3">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <select asp-for="SelectedStatus" asp-items="@Model.Status" class="validate" id="SelectedStatus">Selecione um status</select>
+                            <label asp-for="SelectedStatus" id="SelectedStatusLabel"></label>
+                            <span asp-validation-for="SelectedStatus" class="red-text text-darken-4"></span>
+                        </div>
+                        <div class="input-field col s6">
+                            <select asp-for="StepId" asp-items="@Model.Steps" class="validate" id="StepId">Selecione uma etapa</select>
+                            <label asp-for="StepId" id="StepIdLabel"></label>
+                            <span asp-validation-for="StepId" class="red-text text-darken-4"></span>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="input-field col s12">
+                            <select asp-for="ProjectId" asp-items="@Model.Projects" class="validate" id="ProjectId">Selecione um status</select>
+                            <label asp-for="ProjectId" id="ProjectIdLabel"></label>
+                            <span asp-validation-for="ProjectId" class="red-text text-darken-4"></span>
+                        </div>
+                     </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select asp-for="ReporterId" asp-items="@Model.Users" class="validate" id="ReporterId">Selecione um status</select>
+                            <label asp-for="ReporterId" id="ReporterIdLabel"></label>
+                            <span asp-validation-for="ReporterId" class="red-text text-darken-4"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select asp-for="AssigneeIds" asp-items="@Model.Assignees" class="validate" id="AssigneeIds">Selecione um status</select>
+                            <label asp-for="AssigneeIds" id="AssigneeIdsLabel"></label>
+                            <span asp-validation-for="AssigneeIds" class="red-text text-darken-4"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select asp-for="SelectedPriority" asp-items="@Model.Priorities" class="validate" id="SelectedPriority">Selecione uma prioridade</select>
+                            <label asp-for="SelectedPriority" id="SelectedPriorityLabel"></label>
+                            <span asp-validation-for="SelectedPriority" class="red-text text-darken-4"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="startdatefield" class="input-field col s12">
+                            <input asp-for="StartDate" type="date" class="validate" id="StartDate" />
+                            <label asp-for="StartDate" id="StartDateLabel"></label>
+                            <span asp-validation-for="StartDate" class="red-text text-darken-4"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input asp-for="DueDate" type="date" class="validate" id="DueDate" />
+                            <label asp-for="DueDate"  id="DueDateLabel"></label>
+                            <span asp-validation-for="DueDate" class="red-text text-darken-4"></span>
+                        </div>
+                     </div>
+                </div>
+            </div>
+
+            <div class="buttons right">
+                <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                <a class="waves-effect waves-light btn red modal-trigger" href="#cancelModal">Deletar</a>
+                <a id="deleteLink" asp-action="Delete" asp-route-id="@Model.Id" style="display: none;"></a>
+
+                <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+            </div>            
+        
+        </div>
+    </form>
 </div>
-</body>
-</html>
+
+<!-- Modal Structure -->
+<div id="cancelModal" class="modal">
+    <div class="modal-content">
+        <p>Tem certeza que deseja deletar?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="modal-close waves-effect waves-light btn grey">Cancelar</a>
+        <a id="ok" asp-action="Index" asp-controller="Tasks" class="modal-close waves-effect waves-light btn green darken-4">Sim</a>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/delete-modal.js"></script>
+}

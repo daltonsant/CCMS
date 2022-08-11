@@ -60,4 +60,12 @@ public class UserService : IUserService
     {
         return _userManager.UpdateAsync(user);
     }
+
+    public IQueryable<ApplicationUser> Users
+    {
+        get
+        {
+            return _context.Set<ApplicationUser>().AsQueryable();
+        }
+    }
 }

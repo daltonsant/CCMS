@@ -1,18 +1,25 @@
-
-
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
+@section Styles
+{
+    
+}
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h2>Calendário</h2>
+            <div class="card">
+                <div id="calendar" class="fc fc-unthemed fc-ltr">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
+
+@section Scripts {
+    <script src="js/admin.js"></script>
+}

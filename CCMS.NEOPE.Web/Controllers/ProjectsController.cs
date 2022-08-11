@@ -67,11 +67,15 @@ public class ProjectsController : Controller
     [HttpPost]
     public IActionResult Edit(EditProjectModel model)
     {
-        if (ModelState.IsValid)
-        {
-            _projectService.Edit(model);
-            return RedirectToAction("Index", "Projects");
-        }
-        return View(model);
+        if (!ModelState.IsValid) return View(model);
+        _projectService.Edit(model);
+        return RedirectToAction("Index", "Projects");
+    }
+
+    [HttpDelete]
+    public IActionResult Delete(ulong id)
+    {
+        _projectService.Delete(id);
+        return Ok();
     }
 }

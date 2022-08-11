@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CCMS.NEOPE.Web.Controllers;
 
-[Authorize(Roles = "Administrator,User")]
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

@@ -97,7 +97,12 @@ public class UsersController : Controller
         if (!ModelState.IsValid) return View();
         
         var user = await _userService.GetUserByUserName(viewModel.UserName);
-        if (user != null && !user.IsActive) return View();
+        
+        if (user == null)
+        {
+            ModelState.AddModelError("", "Usuário ou senha incorretos");
+            return View(viewModel);
+        }
         
         PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
 
@@ -110,11 +115,9 @@ public class UsersController : Controller
             await _userService.LoginUser(user, false);
             return RedirectToAction("Index", "Home");
         }
-        else
-        {
-            ModelState.AddModelError("", "Usuário ou senha incorretos");
-            return View(viewModel);
-        }
+        
+        ModelState.AddModelError("", "Usuário ou senha incorretos");
+        return View(viewModel);
     }
 
     public async Task<IActionResult> Logout()

@@ -47,6 +47,8 @@ public class AssetProfile : Profile
                 opt => opt.Ignore())
             .ForMember(asset => asset.Tasks,
                 opt => opt.Ignore())
+            .ForMember(asset => asset.Type,
+                opt => opt.Ignore())
             ;
 
     }

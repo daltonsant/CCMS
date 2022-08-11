@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CCMS.NEOPE.Infra.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220805193124_Initial")]
+    [Migration("20220811203531_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -389,15 +389,11 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Key")
-                        .HasColumnType("decimal(20,0)");
 
                     b.Property<decimal?>("ParentTaskId")
                         .HasColumnType("decimal(20,0)");
@@ -405,10 +401,10 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<DateTime?>("PlannedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Priority")
+                    b.Property<int?>("Priority")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("ProjectId")
+                    b.Property<decimal>("ProjectId")
                         .HasColumnType("decimal(20,0)");
 
                     b.Property<string>("ReporterId")
@@ -426,7 +422,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StepId")
+                    b.Property<int>("StepId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -441,9 +437,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
 
                     b.HasIndex("ParentTaskId");
 
@@ -594,16 +587,16 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a82f5a69-0c74-440a-8281-ac7ef85f0418",
-                            ConcurrencyStamp = "b537d11c-ef44-4e8e-8fe0-504adcb332a3",
+                            Id = "ae0f52b9-298b-4bc2-9795-9989fbe971b5",
+                            ConcurrencyStamp = "0a064d21-448e-471c-ae62-760633b6c6f3",
                             Description = "Administrador do sistema",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "4439b27b-96c6-40d8-b0ce-07f5e749274d",
-                            ConcurrencyStamp = "12e2960d-3e20-4d76-aefb-2f85f477132b",
+                            Id = "a2ceac7b-0835-48cd-8dc6-aab4113de849",
+                            ConcurrencyStamp = "1b562d6c-d798-4a3f-8b71-e6521cb651b1",
                             Description = "Usuário comum do sistema",
                             Name = "User",
                             NormalizedName = "USER"
@@ -946,7 +939,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.HasOne("CCMS.NEOPE.Domain.Entities.Project", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CCMS.NEOPE.Infra.Identity.ApplicationUser", "Reporter")
                         .WithMany("ReportedTasks")
@@ -954,7 +949,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.HasOne("CCMS.NEOPE.Domain.Entities.TaskStep", "Step")
                         .WithMany()
-                        .HasForeignKey("StepId");
+                        .HasForeignKey("StepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CCMS.NEOPE.Domain.Entities.TaskType", "Type")
                         .WithMany("TaskItemsByType")

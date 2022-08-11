@@ -67,11 +67,15 @@ public class AssetTypesController : Controller
     [HttpPost]
     public IActionResult Edit(EditAssetTypeModel model)
     {
-        if (ModelState.IsValid)
-        {
-            _assetTypeService.Edit(model);
-            return RedirectToAction("Index", "AssetTypes");
-        }
-        return View(model);
+        if (!ModelState.IsValid) return View(model);
+        _assetTypeService.Edit(model);
+        return RedirectToAction("Index", "AssetTypes");
+    }
+
+    [HttpDelete]
+    public IActionResult Delete(ulong id)
+    {
+        _assetTypeService.Delete(id);
+        return Ok();
     }
 }

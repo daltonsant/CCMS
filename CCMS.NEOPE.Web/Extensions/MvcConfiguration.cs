@@ -6,6 +6,8 @@ public static class MvcConfiguration
     {
         services.AddDistributedMemoryCache();
 
+        services.AddAuthentication();
+        services.AddAuthorization();
         services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.Name = "IdentityCookie";
