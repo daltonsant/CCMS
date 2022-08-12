@@ -9512,3 +9512,7 @@ nav.navbar ul a:focus {
 .buttons{
   margin-bottom: 10px;
 }
+
+.navbar.principal-color {
+  background: #5c881a;
+}

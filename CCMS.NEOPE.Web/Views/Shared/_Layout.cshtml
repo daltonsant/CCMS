@@ -49,15 +49,15 @@
 
 <body style="overflow: auto;">
 <header>
-    <div class="navbar-fixed principal-color">
-        <nav class="navbar white">
-            <div class="nav-wrapper"><a asp-action="Index" asp-controller="Home" class="brand-logo grey-text text-darken-4">Início</a>
+    <div class="navbar-fixed">
+        <nav class="navbar principal-color">
+            <div class="nav-wrapper"><a asp-action="Index" asp-controller="Home" class="brand-logo white-text ">Início</a>
                 <ul id="nav-mobile" class="right">
                     <li>
                         <div class="row">
                             <a href="#!" data-target="chat-dropdown" class="dropdown-trigger waves-effect">
                                 <div class="col s6">
-                                    <span style="padding-right: 5px">@name </span>
+                                    <span class="white-text" style="padding-right: 5px">@name </span>
                                 </div>
                                 <div class="col s6">
                                     @if (string.IsNullOrEmpty(photoPath))
@@ -96,7 +96,7 @@
                         </div>
             
                     </li>
-                </ul><a href="#!" data-target="sidenav-left" class="sidenav-trigger left"><i class="material-icons black-text">menu</i></a>
+                </ul><a href="#!" data-target="sidenav-left" class="sidenav-trigger left"><i class="material-icons white-text">menu</i></a>
             </div>
         </nav>
     </div>
