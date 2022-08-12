@@ -5,26 +5,39 @@
 }
 
 <div class="section container">
-    <h5>Criar nova etapa de comissionamento</h5>
-    <form class="card" asp-controller="TaskSteps" asp-action="Add" method="POST">
-        <div>
-            <div class="fields">
-                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
-            </div>
-
-            <div class="row">
-                <div class="input-field col s6">
-                    <input asp-for="Name" class="validate" id="Name"/>
-                    <label asp-for="Name" id="Name"></label>
-                    <span asp-validation-for="Name" class="red-text text-darken-4"></span>
+    <div class="no-padding white">
+        <div class="section-header">
+            <h5 class="section-title">Criar nova etapa de comissionamento</h5>    
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div>
+                    <form asp-controller="TaskSteps" asp-action="Add" method="POST">
+                        <div class="card">
+                            <div class="fields">
+                                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+                            </div>
+                
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input asp-for="Name" class="validate" id="Name"/>
+                                    <label asp-for="Name" id="Name"></label>
+                                    <span asp-validation-for="Name" class="red-text text-darken-4"></span>
+                                </div>
+                            </div>
+                
+                        </div>
+                                
+                        <div class="buttons right">
+                            <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                            <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+                        </div>
+                
+                    </form>
                 </div>
             </div>
-
-            <div class="buttons right">
-                <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
-                <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
-            </div>            
-        
         </div>
-    </form>
+        
+    </div>
+    
 </div>

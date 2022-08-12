@@ -6,31 +6,43 @@
 }
 
 <div class="section container">
-    <h5>Atualizar tipo de atividade</h5>
-    <form class="card" asp-controller="TaskTypes" asp-action="Edit" method="POST">
-        <div>
-            <div class="fields">
-                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
-            </div>
-            @Html.HiddenFor(m => m.Id)
+    <div class="no-padding white">
+        <div class="section-header">
+            <h5 class="section-title">Atualizar tipo de atividade</h5>    
+        </div>
+        <div class="row">
+            <div class="col s12">
+                
+                <form asp-controller="TaskTypes" asp-action="Edit" method="POST">
+                    <div class="card">
+                        <div>
+                            <div class="fields">
+                                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+                            </div>
+                            @Html.HiddenFor(m => m.Id)
 
-            <div class="row">
-                <div class="input-field col s6">
-                    <input asp-for="Name" class="validate" id="Name"/>
-                    <label asp-for="Name" id="Name"></label>
-                    <span asp-validation-for="Name" class="red-text text-darken-4"></span>
-                </div>
-            </div>
-
-            <div class="buttons right">
-                <!-- Modal Trigger -->
-                <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
-                <a class="waves-effect waves-light btn red modal-trigger" href="#cancelModal">Deletar</a>
-                <a id="deleteLink" asp-action="Delete" asp-route-id="@Model.Id" style="display: none;"></a>
-                <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input asp-for="Name" class="validate" id="Name"/>
+                                    <label asp-for="Name" id="Name"></label>
+                                    <span asp-validation-for="Name" class="red-text text-darken-4"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttons right">
+                        <!-- Modal Trigger -->
+                        <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                        <a class="waves-effect waves-light btn red modal-trigger" href="#cancelModal">Deletar</a>
+                        <a id="deleteLink" asp-action="Delete" asp-route-id="@Model.Id" style="display: none;"></a>
+                        <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+        
+    </div>
+    
 </div>
 
 <!-- Modal Structure -->

@@ -9382,7 +9382,7 @@ nav.navbar ul a:focus {
 }
 
 .section .section-title {
-  margin-bottom: 30px
+  margin-bottom: 10px
 }
 
 .section .caption {
@@ -9488,4 +9488,27 @@ nav.navbar ul a:focus {
 }
 .principal-color{
   background: #5c881a;
+}
+.section-header{
+  background: #5c881a;
+  color: #fff;
+  min-height: 70px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.section-header .section-title{
+  position: absolute;
+  bottom: 0;
+  left: 5px;  
+}
+.s12 .card
+{
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+.buttons{
+  margin-bottom: 10px;
 }

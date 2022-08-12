@@ -5,55 +5,67 @@
 }
 
 <div class="section container">
-    <h5>Criar novo ativo</h5>
-    <form class="card" asp-controller="Assets" asp-action="Edit" method="POST">
-        <div>
-            <div class="fields">
-                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
-            </div>
-
-            <div class="row">
-                <div class="input-field col s6">
-                    <input asp-for="Code" class="validate" id="Code"/>
-                    <label asp-for="Code" id="Code"></label>
-                    <span asp-validation-for="Code" class="red-text text-darken-4"></span>
-                </div>
-                <div class="input-field col s6">
-                    <input asp-for="Description" class="validate" id="Description"/>
-                    <label asp-for="Description" id="Description"></label>
-                    <span asp-validation-for="Description" class="red-text text-darken-4"></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s6">
-                    <select asp-for="ProjectIds" asp-items="@Model.Projects" class="validate" id="Projects">
-                    </select>
-                    <label asp-for="ProjectIds" id="Projects"></label>
-                    <span asp-validation-for="ProjectIds" class="red-text text-darken-4" ></span>
-                </div>
-                
-                <div class="input-field col s6">
-                    <select asp-for="TaskIds" asp-items="@Model.Tasks" class="validate" id="Tasks"></select>
-                    <label asp-for="TaskIds" id="Tasks"></label>
-                    <span asp-validation-for="TaskIds" class="red-text text-darken-4"></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s6">
-                    <select asp-for="TypeId" asp-items="@Model.Types" class="validate" id="Types"></select>
-                    <label asp-for="TypeId" id="Types"></label>
-                    <span asp-validation-for="TypeId" class="red-text text-darken-4"></span>
-                </div>
-            </div>
-            <div class="buttons right">
-                <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
-                 <a class="waves-effect waves-light btn red modal-trigger" href="#cancelModal">Deletar</a>
-                 <a id="deleteLink" asp-action="Delete" asp-route-id="@Model.Id" style="display: none;"></a>
-                <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
-            </div>            
-        
+    <div class="no-padding white">
+        <div class="section-header">
+            <h5 class="section-title">Atualizar ativo</h5>    
         </div>
-    </form>
+        <div class="row">
+            <div class="col s12">
+                <div >
+                    <form asp-controller="Assets" asp-action="Edit" method="POST">
+                        <div class="card">
+                            <div class="fields">
+                                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+                            </div>
+                
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input asp-for="Code" class="validate" id="Code"/>
+                                    <label asp-for="Code" id="Code"></label>
+                                    <span asp-validation-for="Code" class="red-text text-darken-4"></span>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input asp-for="Description" class="validate" id="Description"/>
+                                    <label asp-for="Description" id="Description"></label>
+                                    <span asp-validation-for="Description" class="red-text text-darken-4"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <select asp-for="ProjectIds" asp-items="@Model.Projects" class="validate" id="Projects">
+                                    </select>
+                                    <label asp-for="ProjectIds" id="Projects"></label>
+                                    <span asp-validation-for="ProjectIds" class="red-text text-darken-4"></span>
+                                </div>
+                
+                                <div class="input-field col s6">
+                                    <select asp-for="TaskIds" asp-items="@Model.Tasks" class="validate" id="Tasks"></select>
+                                    <label asp-for="TaskIds" id="Tasks"></label>
+                                    <span asp-validation-for="TaskIds" class="red-text text-darken-4"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <select asp-for="TypeId" asp-items="@Model.Types" class="validate" id="Types"></select>
+                                    <label asp-for="TypeId" id="Types"></label>
+                                    <span asp-validation-for="TypeId" class="red-text text-darken-4"></span>
+                                </div>
+                            </div>
+                
+                        </div>
+                        <div class="buttons right">
+                            <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                            <a class="waves-effect waves-light btn red modal-trigger" href="#cancelModal">Deletar</a>
+                            <a id="deleteLink" asp-action="Delete" asp-route-id="@Model.Id" style="display: none;"></a>
+                            <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+   
 </div>
 
 <!-- Modal Structure -->
