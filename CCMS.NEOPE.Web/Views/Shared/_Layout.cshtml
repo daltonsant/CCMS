@@ -18,7 +18,6 @@
         name = currentUser.FirstName ?? string.Empty;
         photoPath = currentUser.Photo;
     }
-  
 }
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -48,7 +47,7 @@
 </head>
 
 <body style="overflow: auto;">
-<header>
+<header class="no-print">
     <div class="navbar-fixed">
         <nav class="navbar principal-color">
             <div class="nav-wrapper"><a asp-action="Index" asp-controller="Home" class="brand-logo white-text ">Início</a>
@@ -151,9 +150,9 @@
                 </li>
         
                 <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Backlog<i class="material-icons">list</i></a></li>
-                <li id="painel"><a asp-action="Index" asp-controller="Board" class="waves-effect">Painel<i class="material-icons">dashboard</i></a></li>
-                <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Cronograma<i class="material-icons">cloud</i></a></li>
-                <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Linha do tempo<i class="material-icons">cloud</i></a></li>
+                <li id="painel"><a asp-action="Index" asp-controller="Board" class="waves-effect">Kanban<i class="material-icons">dashboard</i></a></li>
+                <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Calendário<i class="material-icons">cloud</i></a></li>
+                <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Gantt chart<i class="material-icons">cloud</i></a></li>
 
                 <li class="bold waves-effect"><a class="collapsible-header" tabindex="0">Dashboards<i class="material-icons chevron">chevron_left</i></a>
                     <div class="collapsible-body">

@@ -17,6 +17,8 @@ public static class ApplicationConfiguration
         services.AddScoped(typeof(ITaskStepService), typeof(TaskStepService));
         services.AddScoped(typeof(IAssetService), typeof(AssetService));
         services.AddScoped(typeof(IAssetTypeService), typeof(AssetTypeService));
+        services.AddScoped(typeof(IBoardService), typeof(BoardService));
+        services.AddScoped(typeof(ICalendarService), typeof(CalendarService));
 
         return services;
     }

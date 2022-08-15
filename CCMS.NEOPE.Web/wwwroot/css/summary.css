@@ -1,1 +1,21 @@
-.
+.kpi-header {
+    background: #5c881a;
+    height: 60px;
+    color: #fff;
+}
+
+.kpi-title {
+    font-size: 2vw;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.kpi-value {
+    height: 50px;
+    font-size: 2vw;
+    text-align: center;
+    color: #53672a;
+}
+.kpi{
+    min-width: 80px
+}

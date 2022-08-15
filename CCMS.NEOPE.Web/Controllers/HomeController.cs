@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using CCMS.NEOPE.Application.Interfaces;
 using CCMS.NEOPE.Application.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,12 @@ namespace CCMS.NEOPE.Web.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IBoardService _boardService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IBoardService boardSerice)
     {
         _logger = logger;
+        _boardService = boardSerice;
     }
 
     public IActionResult Index()
@@ -24,6 +27,18 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    [HttpPost]
+    public IActionResult GetProgress()
+    {
+        return Json(
+            new { 
+                totalProgress = _boardService.GetProgress(), 
+                totalConformity = _boardService.GetConformity(), 
+                totalAdherence = _boardService.GetAdherence() 
+            });
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
