@@ -6,8 +6,6 @@ public enum LinkType
 {
     [Display(Name="Bloqueia")]
     Blocks,
-    [Display(Name="Clona")]
-    Clones,
     [Display(Name="Duplica")]
     Duplicates,
     [Display(Name="Causa")]

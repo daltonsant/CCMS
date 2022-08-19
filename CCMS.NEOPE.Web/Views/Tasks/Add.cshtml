@@ -34,7 +34,7 @@
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <textarea asp-for="Description" class="validate" id="Description" style="resize:vertical; height: 155px;" rows="6"></textarea>
-                                            <label asp-for="Description" id="Description"></label>
+                                            <label asp-for="Description" id="DescriptionLabel"></label>
                                             <span asp-validation-for="Description" class="red-text text-darken-4"></span>
                                         </div>
                                     </div>
@@ -85,6 +85,13 @@
                                             <select asp-for="StepId" asp-items="@Model.Steps" class="validate" id="StepId">Selecione uma etapa</select>
                                             <label asp-for="StepId" id="StepIdLabel"></label>
                                             <span asp-validation-for="StepId" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <select asp-for="SelectedCategory" asp-items="@Model.Categories" class="validate" id="SelectedCategory">Selecione uma categoria</select>
+                                            <label asp-for="SelectedCategory" id="SelectedCategoryLabel"></label>
+                                            <span asp-validation-for="SelectedCategory" class="red-text text-darken-4"></span>
                                         </div>
                                     </div>
                                     <div class="row">

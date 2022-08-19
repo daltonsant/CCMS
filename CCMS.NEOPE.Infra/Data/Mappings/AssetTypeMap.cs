@@ -17,6 +17,7 @@ public class AssetTypeMap : IEntityTypeConfiguration<AssetType>
 
         builder.HasMany<Asset>(e => e.AssetsByType)
             .WithOne(e => e.Type);
-
+        
+        builder.ToTable("AssetTypes");
     }
 }

@@ -91,6 +91,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12">
+                                            <select asp-for="SelectedCategory" asp-items="@Model.Categories" class="validate" id="SelectedCategory">Selecione uma categoria</select>
+                                            <label asp-for="SelectedCategory" id="SelectedCategoryLabel"></label>
+                                            <span asp-validation-for="SelectedCategory" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s12">
                                             <select asp-for="ProjectId" asp-items="@Model.Projects" class="validate" id="ProjectId">Selecione um status</select>
                                             <label asp-for="ProjectId" id="ProjectIdLabel"></label>
                                             <span asp-validation-for="ProjectId" class="red-text text-darken-4"></span>

@@ -41,6 +41,7 @@ public class TaskProfile : Profile
             .ForMember(dest => dest.TaskType,
                 opt => 
                     opt.MapFrom(src => src.Type.Name))
+            .ForMember(dest => dest.Category, opt => opt.Ignore())
             ;
 
         CreateMap<TaskItem, AddTaskModel>()
@@ -75,6 +76,11 @@ public class TaskProfile : Profile
             .ForMember(model => model.ParentTaskId, 
                 opt => 
                     opt.MapFrom(source => source.ParentTask!.Id))
+            .ForMember(dest => dest.SelectedCategory, 
+                opt => 
+                    opt.MapFrom(src => src.Category.Id))
+            .ForMember(dest => dest.Categories, 
+                opt => opt.Ignore())
             .ReverseMap()
             .ForMember(item => item.Id, opt => opt.Ignore())
             .ForMember(item => item.ParentTask, opt => opt.Ignore())
@@ -82,6 +88,8 @@ public class TaskProfile : Profile
             .ForMember(item => item.Step, opt => opt.Ignore())
             .ForMember(item => item.Project, opt => opt.Ignore())
             .ForMember(item => item.Type, opt => opt.Ignore())
+            .ForMember(dest => dest.Category, opt => opt.Ignore())
+            
             ;
         
         CreateMap<TaskItem, EditTaskModel>()
@@ -116,6 +124,11 @@ public class TaskProfile : Profile
             .ForMember(model => model.ParentTaskId, 
                 opt => 
                     opt.MapFrom(source => source.ParentTask!.Id))
+            .ForMember(dest => dest.SelectedCategory, 
+                opt => 
+                    opt.MapFrom(src => src.Category.Id))
+            .ForMember(dest => dest.Categories, 
+                opt => opt.Ignore())
             .ReverseMap()
             .ForMember(x => x.Id, opt => opt.MapFrom(src =>
                 src.Id))
@@ -124,9 +137,9 @@ public class TaskProfile : Profile
             .ForMember(item => item.Step, opt => opt.Ignore())
             .ForMember(item => item.Project, opt => opt.Ignore())
             .ForMember(item => item.Type, opt => opt.Ignore())
+            .ForMember(dest => dest.Category, opt => opt.Ignore())
             ;
-
-
+        
         CreateMap<TaskItem, ViewCalendarModel>()
             .ForMember(ev => ev.id, opt => opt.MapFrom(src => src.Id.ToString()))
             .ForMember(ev => ev.title, opt => opt.MapFrom(src => src.Title))

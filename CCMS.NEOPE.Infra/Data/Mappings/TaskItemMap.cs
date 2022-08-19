@@ -15,6 +15,7 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.Property(e => e.UpdateDate);
 
         builder.Property(e => e.Title).IsRequired().HasMaxLength(128);
+        builder.Property(e => e.SapNoteNumber).HasMaxLength(128);
         builder.Property(e => e.Description).HasMaxLength(512);
         builder.Property(e => e.Priority);
         builder.Property(e => e.Status).IsRequired();
@@ -40,6 +41,10 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.HasOne(e => e.Type)
             .WithMany(e =>e.TaskItemsByType).IsRequired()
             .HasForeignKey("TypeId");
+        
+        builder.HasOne(e => e.Category)
+            .WithMany(e =>e.TaskItemsByCategory).IsRequired()
+            .HasForeignKey("CategoryId");
         
         builder.ToTable("TaskItems");
     }

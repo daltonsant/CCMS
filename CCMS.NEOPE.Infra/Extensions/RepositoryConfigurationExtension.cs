@@ -16,6 +16,7 @@ public static class RepositoryConfigurationExtension
         services.AddScoped(typeof(IProjectRepository), typeof(ProjectRepository));
         services.AddScoped(typeof(IAssetRepository), typeof(AssetRepository));
         services.AddScoped(typeof(IAssetTypeRepository), typeof(AssetTypeRepository));
+        services.AddScoped(typeof(ICategoryRepository), typeof(CategoryRepository));
         return services;
     }
 }

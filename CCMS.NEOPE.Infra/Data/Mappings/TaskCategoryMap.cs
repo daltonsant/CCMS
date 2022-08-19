@@ -4,56 +4,68 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CCMS.NEOPE.Infra.Data.Mappings;
 
-public class TaskStepMap : IEntityTypeConfiguration<TaskStep>
+public class TaskCategoryMap : IEntityTypeConfiguration<TaskCategory>
 {
-    public void Configure(EntityTypeBuilder<TaskStep> builder)
+    public void Configure(EntityTypeBuilder<TaskCategory> builder)
     {
         builder.Property(e => e.Id).ValueGeneratedOnAdd();
         builder.Property(e => e.CreateDate).IsRequired();
         builder.Property(e => e.UpdateDate);
-
         builder.Property(e => e.Name).IsRequired();
         builder.HasIndex(e => e.Name).IsUnique();
         
-        builder.ToTable("TaskSteps");
-
+        builder.ToTable("TaskCategories");
+        
         builder.HasData(
-            new TaskStep()
+            new TaskCategory()
             {
                 Id = 1,
                 CreateDate = DateTime.Now,
-                Name = "Planejamento"
+                Name = "Civil"
             },
-            new TaskStep()
+            new TaskCategory()
             {
                 Id = 2,
                 CreateDate = DateTime.Now,
-                Name = "TAC Equip. Interlig."
+                Name = "Eletromecânico"
             },
-            new TaskStep()
+            new TaskCategory()
             {
                 Id = 3,
                 CreateDate = DateTime.Now,
-                Name = "TAF SPCS"
+                Name = "Aterramento"
             },
-            new TaskStep()
+            new TaskCategory()
             {
                 Id = 4,
                 CreateDate = DateTime.Now,
-                Name = "TAC SPCS"
+                Name = "Projeto"
             },
-            new TaskStep()
+            new TaskCategory()
             {
                 Id = 5,
                 CreateDate = DateTime.Now,
-                Name = "Energização"
-            },
-            new TaskStep()
+                Name = "Painéis"
+            } ,
+            new TaskCategory()
             {
                 Id = 6,
                 CreateDate = DateTime.Now,
-                Name = "SAP"
+                Name = "Equipamentos"
+            } ,
+            new TaskCategory()
+            {
+                Id = 7,
+                CreateDate = DateTime.Now,
+                Name = "Interligações"
+            } ,
+            new TaskCategory()
+            {
+                Id = 8,
+                CreateDate = DateTime.Now,
+                Name = "SPCS"
             }
         );
     }
+    
 }

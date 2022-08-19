@@ -21,6 +21,11 @@ public class AddTaskModel
     public ulong? TypeId { get; set; }
     public SelectList? Types { get; set; }
     
+    [Display(Name = "Categoria")]
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    public int? SelectedCategory { get; set; }
+    public SelectList? Categories { get; set; }
+    
     [Display(Name = "Projeto")]
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public ulong? ProjectId { get; set; }
@@ -73,5 +78,6 @@ public class AddTaskModel
         Status = new SelectList(new List<SelectListItem>(), "", "", SelectedStatus);
         Projects = new SelectList(new List<SelectListItem>(),"Value","Text",ProjectId);
         Types = new SelectList(new List<SelectListItem>(), "Value", "Text", TypeId);
+        Categories = new SelectList(new List<SelectListItem>(), "Value", "Text", SelectedCategory);
     }
 }

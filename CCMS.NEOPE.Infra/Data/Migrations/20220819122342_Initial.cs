@@ -56,7 +56,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssetType",
+                name: "AssetTypes",
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
@@ -69,7 +69,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssetType", x => x.Id);
+                    table.PrimaryKey("PK_AssetTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,6 +107,22 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TaskCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TaskSteps",
                 columns: table => new
                 {
@@ -123,19 +139,19 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskType",
+                name: "TaskTypes",
                 columns: table => new
                 {
                     Id = table.Column<decimal>(type: "decimal(20,0)", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskType", x => x.Id);
+                    table.PrimaryKey("PK_TaskTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -261,9 +277,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_Assets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Assets_AssetType_TypeId",
+                        name: "FK_Assets_AssetTypes_TypeId",
                         column: x => x.TypeId,
-                        principalTable: "AssetType",
+                        principalTable: "AssetTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -276,6 +292,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProjectId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    SapNoteNumber = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
                     Priority = table.Column<int>(type: "int", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     TypeId = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
@@ -306,6 +324,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_TaskItems_TaskCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "TaskCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_TaskItems_TaskItems_ParentTaskId",
                         column: x => x.ParentTaskId,
                         principalTable: "TaskItems",
@@ -317,9 +341,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TaskItems_TaskType_TypeId",
+                        name: "FK_TaskItems_TaskTypes_TypeId",
                         column: x => x.TypeId,
-                        principalTable: "TaskType",
+                        principalTable: "TaskTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -555,12 +579,51 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
             migrationBuilder.InsertData(
                 table: "ApplicationRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
-                values: new object[] { "a2ceac7b-0835-48cd-8dc6-aab4113de849", "1b562d6c-d798-4a3f-8b71-e6521cb651b1", "Usuário comum do sistema", "User", "USER" });
+                values: new object[,]
+                {
+                    { "79598c8d-2c28-4bfe-ac8f-ac3c2f09ea9d", "42f7098a-f6de-47bc-93c4-ff116102108b", "Usuário comum do sistema", "User", "USER" },
+                    { "b6cd8db5-f129-4b8c-a6d9-82f125db48c5", "e80d16e1-3d9c-4b97-98b2-fd198d230812", "Administrador do sistema", "Administrator", "ADMINISTRATOR" }
+                });
 
             migrationBuilder.InsertData(
-                table: "ApplicationRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
-                values: new object[] { "ae0f52b9-298b-4bc2-9795-9989fbe971b5", "0a064d21-448e-471c-ae62-760633b6c6f3", "Administrador do sistema", "Administrator", "ADMINISTRATOR" });
+                table: "TaskCategories",
+                columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5485), "Civil", null },
+                    { 2, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5489), "Eletromecânico", null },
+                    { 3, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5491), "Aterramento", null },
+                    { 4, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5492), "Projeto", null },
+                    { 5, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5494), "Painéis", null },
+                    { 6, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5495), "Equipamentos", null },
+                    { 7, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5496), "Interligações", null },
+                    { 8, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5497), "SPCS", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TaskSteps",
+                columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7600), "Planejamento", null },
+                    { 2, new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7611), "TAC Equip. Interlig.", null },
+                    { 3, new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7612), "TAF SPCS", null },
+                    { 4, new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7614), "TAC SPCS", null },
+                    { 5, new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7615), "Energização", null },
+                    { 6, new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7616), "SAP", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TaskTypes",
+                columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
+                values: new object[,]
+                {
+                    { 1m, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4756), "Informativo", null },
+                    { 2m, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4761), "Acompanhamento", null },
+                    { 3m, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4763), "Pendência não impeditiva", null },
+                    { 4m, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4764), "Pendência impeditiva", null },
+                    { 5m, new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4765), "Não conformidade", null }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -634,8 +697,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "TasksId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssetType_Name",
-                table: "AssetType",
+                name: "IX_AssetTypes_Name",
+                table: "AssetTypes",
                 column: "Name",
                 unique: true);
 
@@ -675,6 +738,17 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "SubjectTaskId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TaskCategories_Name",
+                table: "TaskCategories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskItems_CategoryId",
+                table: "TaskItems",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TaskItems_ParentTaskId",
                 table: "TaskItems",
                 column: "ParentTaskId");
@@ -712,6 +786,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TaskSteps_Name",
                 table: "TaskSteps",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskTypes_Name",
+                table: "TaskTypes",
                 column: "Name",
                 unique: true);
         }
@@ -773,7 +853,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "TaskItems");
 
             migrationBuilder.DropTable(
-                name: "AssetType");
+                name: "AssetTypes");
 
             migrationBuilder.DropTable(
                 name: "ApplicationUsers");
@@ -782,10 +862,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "Projects");
 
             migrationBuilder.DropTable(
+                name: "TaskCategories");
+
+            migrationBuilder.DropTable(
                 name: "TaskSteps");
 
             migrationBuilder.DropTable(
-                name: "TaskType");
+                name: "TaskTypes");
         }
     }
 }

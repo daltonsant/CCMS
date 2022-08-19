@@ -24,6 +24,8 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
     public DbSet<Project> Projects { get; set; }
     public DbSet<TaskLog> TaskLogs { get; set; }
     public DbSet<TaskStep> TaskSteps { get; set; }
+    public DbSet<TaskType> TaskTypes { get; set; }
+    public DbSet<TaskCategory> TaskCategories { get; set; }
 
     public ApplicationContext (DbContextOptions<ApplicationContext> options) : base(options)
     {
@@ -48,6 +50,7 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
         builder.ApplyConfiguration(new TaskItemMap());
         builder.ApplyConfiguration(new LinkedTasksMap());
         builder.ApplyConfiguration(new CheckListItemMap());
-
+        builder.ApplyConfiguration(new TaskTypeMap());
+        builder.ApplyConfiguration(new TaskCategoryMap());
     }
 }

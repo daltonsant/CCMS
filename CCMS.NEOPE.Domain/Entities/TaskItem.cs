@@ -10,6 +10,11 @@ public class TaskItem : Entity<ulong>
 {
     public Project? Project { get; set; } = null;
     public string? Title { get; set; } = null;
+
+    public string? SapNoteNumber { get; set; } = null;
+    
+    public TaskCategory Category { get; set; }
+    
     public TaskPriority? Priority { get; set; }
     public string? Description { get; set; } = string.Empty;
     public TaskType Type { get; set; }

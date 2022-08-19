@@ -10,4 +10,5 @@ public class ViewTaskModel
     public string StartDate { get; set; }
     public string DueDate { get; set; }
     public string TaskType { get; set; }
+    public string Category { get; set; }
 }

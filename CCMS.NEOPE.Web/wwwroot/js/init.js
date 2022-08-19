@@ -7,6 +7,7 @@
         $('.collapsible').collapsible({accordion: true});
         $('.carousel.carousel-slider').carousel({fullWidth: true});
         $('.carousel').carousel();
+        $('.tooltipped').tooltip();
         $('.dropdown-trigger').dropdown({
             alignment: 'right',
             constrainWidth: false,

@@ -4,14 +4,16 @@ namespace CCMS.NEOPE.Domain.Enums;
 
 public enum TaskPriority
 {
-    [Display(Name="Crítico")]
+    [Display(Name="Emergencial")]
     Critical,
     [Display(Name="Urgente")]
     Urgent,
-    [Display(Name="Normal")]
+    [Display(Name="Importante")]
+    Important,
+    [Display(Name="Necessário")]
     Normal,
-    [Display(Name="Baixo")]
+    [Display(Name="Esperado")]
     Low,
-    [Display(Name="Baixíssimo")]
+    [Display(Name="Desejável")]
     Lowest
 }

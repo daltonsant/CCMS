@@ -21,6 +21,7 @@ public class TaskService : ITaskService
     private readonly IUserService _userService;
     private readonly ITaskRepository _taskRepository;
     private readonly ITaskTypeRepository _taskTypeRepository;
+    private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -29,6 +30,7 @@ public class TaskService : ITaskService
         ITaskTypeRepository taskTypeRepository,
         IProjectRepository projectRepository,
         ITaskStepRepository taskStepRepository,
+        ICategoryRepository categoryRepository,
         IUserService userService,
         IUnitOfWork unitOfWork, 
         IMapper mapper)
@@ -36,6 +38,7 @@ public class TaskService : ITaskService
         _taskTypeRepository = taskTypeRepository;
         _projectRepository = projectRepository;
         _taskStepRepository = taskStepRepository;
+        _categoryRepository = categoryRepository;
         _userService = userService;
         _taskRepository = taskRepository;
         _unitOfWork = unitOfWork;
@@ -232,6 +235,7 @@ public class TaskService : ITaskService
         model.Status = GetStatusSelectList(model.SelectedStatus);
         model.Projects = GetProjectSelectList(model.ProjectId);
         model.Types = GetTypesSelectList(model.TypeId);
+        model.Categories = GetCategoriesSelectList(model.SelectedCategory);
         
         return model;
     }
@@ -248,6 +252,7 @@ public class TaskService : ITaskService
         model.Status = GetStatusSelectList(model.SelectedStatus);
         model.Projects = GetProjectSelectList(model.ProjectId);
         model.Types = GetTypesSelectList(model.TypeId);
+        model.Categories = GetCategoriesSelectList(model.SelectedCategory);
         
         return model;
     }
@@ -297,6 +302,14 @@ public class TaskService : ITaskService
         types.AddRange(_taskStepRepository.Entities.ToList()
             .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
         return new SelectList(types, "Value","Text", stepId);
+    }
+    private SelectList GetCategoriesSelectList(int? categoryId)
+    {
+        var types = new List<SelectListItem>()
+            { new SelectListItem() { Text = "" } };
+        types.AddRange(_categoryRepository.Entities.ToList()
+            .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+        return new SelectList(types, "Value","Text", categoryId);
     }
     private SelectList GetPrioritySelectList(TaskPriority? priority)
     {
