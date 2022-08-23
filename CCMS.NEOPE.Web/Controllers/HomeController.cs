@@ -29,17 +29,23 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult GetProgress()
+    public IActionResult GetProgress(ulong? projectId=null)
     {
         return Json(
             new { 
                 totalProgress = _boardService.GetProgress(), 
                 totalConformity = _boardService.GetConformity(), 
-                totalAdherence = _boardService.GetAdherence() 
+                totalAdherence = _boardService.GetAdherence(),
+                charts = new object[]
+                {
+                    _boardService.GetPendenciesPerStepsChart(),
+                    _boardService.GetPendenciesPerCategoryChart(),
+                    _boardService.GetProgressChart(),
+                    _boardService.GetProgressPerProjectChart()
+                }
             });
     }
-
-
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

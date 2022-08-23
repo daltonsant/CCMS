@@ -34,6 +34,8 @@
                     { data: "priority", name: "Priority"},
                     { data: "status", name: "Status" },
                     { data: "taskType", name: "TaskType" },
+                    { data: "category", name: "Category" },
+                    { data: "sapNoteNumber", name: "SapNoteNumber" }
                 ],
                 'language': {
                     'searchPlaceholder': 'Pesquise aqui',

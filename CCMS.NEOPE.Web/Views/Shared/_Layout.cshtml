@@ -112,20 +112,12 @@
                             <li><a asp-action="Add" asp-controller="Projects" class="waves-effect">Criar novo<i class="material-icons">show_chart</i></a></li>
                         </ul>
                         <ul>
-                            <li><a asp-action="Add" asp-controller="Tasks" class="waves-effect">Criar atividade<i class="material-icons">show_chart</i></a></li>
+                            <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Listar atividades<i class="material-icons">list</i></a></li>
                         </ul>
                         <ul>
-                            <li><a asp-action="Index" asp-controller="TaskTypes" class="waves-effect">Tipos de atividade<i class="material-icons">show_chart</i></a></li>
+                            <li><a asp-action="Add" asp-controller="Tasks" class="waves-effect">Criar atividade<i class="material-icons">list</i></a></li>
                         </ul>
-                        <ul>
-                            <li><a asp-action="Add" asp-controller="TaskTypes" class="waves-effect">Criar tipo de atividade<i class="material-icons">show_chart</i></a></li>
-                        </ul>
-                        <ul>
-                            <li><a asp-action="Index" asp-controller="TaskSteps" class="waves-effect">Listar etapas<i class="material-icons">show_chart</i></a></li>
-                        </ul>
-                        <ul>
-                            <li><a asp-action="Add" asp-controller="TaskSteps" class="waves-effect">Criar etapa<i class="material-icons">show_chart</i></a></li>
-                        </ul>
+                        
                         <ul>
                             <li><a asp-action="Add" asp-controller="Tasks" class="waves-effect">Criar roteiro<i class="material-icons">show_chart</i></a></li>
                         </ul>
@@ -149,7 +141,6 @@
                     </div>
                 </li>
         
-                <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Backlog<i class="material-icons">list</i></a></li>
                 <li id="painel"><a asp-action="Index" asp-controller="Board" class="waves-effect">Kanban<i class="material-icons">dashboard</i></a></li>
                 <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Calendário<i class="material-icons">cloud</i></a></li>
                 <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Gantt chart<i class="material-icons">cloud</i></a></li>
@@ -157,7 +148,7 @@
                 <li class="bold waves-effect"><a class="collapsible-header" tabindex="0">Dashboards<i class="material-icons chevron">chevron_left</i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a asp-action="Index" asp-controller="Dashboards" class="waves-effect">Fullscreen with Chart<i class="material-icons">show_chart</i></a></li>
+                            <li><a asp-action="Index" asp-controller="Dashboards" class="waves-effect">Dashboard por projeto<i class="material-icons">show_chart</i></a></li>
                         </ul>
                     </div>
                 </li>

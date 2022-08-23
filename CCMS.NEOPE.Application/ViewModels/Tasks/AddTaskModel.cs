@@ -16,6 +16,10 @@ public class AddTaskModel
     [Display(Name = "Descrição")]
     public string? Description { get; set; } = string.Empty;
     
+    [StringLength(64, ErrorMessage = "Use menos caracteres")]
+    [Display(Name = "Numero da nota no SAP")]
+    public string? SapNoteNumber { get; set; } = string.Empty;
+    
     [Display(Name = "Tipo")]
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public ulong? TypeId { get; set; }

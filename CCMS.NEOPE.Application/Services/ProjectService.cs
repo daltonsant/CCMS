@@ -5,6 +5,7 @@ using CCMS.NEOPE.Domain.Core.Interfaces;
 using CCMS.NEOPE.Domain.Entities;
 using CCMS.NEOPE.Domain.Interfaces;
 using CCMS.NEOPE.Infra.Customs;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CCMS.NEOPE.Application.Services;
 
@@ -83,5 +84,16 @@ public class ProjectService : IProjectService
         }
 
         return null;
+    }
+
+    public SelectList GetProjectSelect()
+    {
+        var projects = new List<SelectListItem>()
+            { new SelectListItem() { Text = "Selecione..." } };
+        
+        projects.AddRange(_projectRepository.Entities.ToList()
+            .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+        
+        return new SelectList(projects.ToList(),"Value","Text");
     }
 }

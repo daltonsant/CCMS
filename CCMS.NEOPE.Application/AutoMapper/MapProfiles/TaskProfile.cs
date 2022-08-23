@@ -41,7 +41,12 @@ public class TaskProfile : Profile
             .ForMember(dest => dest.TaskType,
                 opt => 
                     opt.MapFrom(src => src.Type.Name))
-            .ForMember(dest => dest.Category, opt => opt.Ignore())
+            .ForMember(dest => dest.Category, 
+                opt => 
+                    opt.MapFrom( src => src.Category.Name ?? string.Empty))
+            .ForMember(dest => dest.SapNoteNumber, 
+                opt => 
+                    opt.MapFrom(src => src.SapNoteNumber ?? string.Empty))
             ;
 
         CreateMap<TaskItem, AddTaskModel>()

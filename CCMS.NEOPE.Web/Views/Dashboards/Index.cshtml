@@ -1,18 +1,138 @@
-
-
+@model SelectList
 @{
-    Layout = null;
+    ViewData["Title"] = "Início";
+    Layout = "_Layout";
+}
+@section Styles
+{
+    <link rel="stylesheet" href="/css/DashboardPerProject/style.css"/>
 }
 
-<!DOCTYPE html>
+    
+<div class="section container" style="padding-top: 20px">
+    <div class="row center"><h2 style="margin-top: 0px">Dashboard por projeto</h2></div>
+    
+    <div class="row">
+        <div class="col s4"></div>
+        <div class="col s8"></div>
+    </div>
+    <div id="kpis" class="row">
+        <div class="col s2">
+             <div class="kpi">
+                <div class="kpi-header tooltipped" data-position="top" data-tooltip="Selecione o projeto" style="background: #0d6efd">
+                    <div class="kpi-title" name="projeto" aria-label="projeto">Projeto</div>
+                </div>
+                <div class="kpi-value card center project-selector">
+                    <select id="projectSelector" asp-items="Model" class="project-selector" >Selecione...</select>
+                </div>
+             </div>
+        </div>
+        <div class="col s2">
+            <!--kpi start bellow-->
+            <div class="kpi">
+                <div class="kpi-header tooltipped" data-position="top" data-tooltip="Progresso Geral">
+                    <div class="kpi-title" name="ProgressoGeral" aria-label="Progresso Geral">PG</div>
+                </div>
+                <div class="kpi-value card center">
+                    <div id="progressCard">Loading...</div>
+                </div>
+            </div>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+        </div>
+        <div class="col s2">
+            <!--kpi start bellow-->
+            <div class="kpi">
+                <div class="kpi-header tooltipped" data-position="top" data-tooltip="Conformidade Geral">
+                    <div class="kpi-title " name="ConformidadeGeral" aria-label="Conformidade Geral">CG</div>
+                </div>
+                <div class="kpi-value card center">
+                    <div id="conformityCard">Loading...</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col s2">
+            <!--kpi start bellow-->
+            <div class="kpi">
+                <div class="kpi-header tooltipped" data-position="top" data-tooltip="Aderência Geral">
+                    <div class="kpi-title" name="AderenciaGeral" aria-label="Aderência Geral">AG</div>
+                </div>
+                <div class="kpi-value card center">
+                    <div id="adherenceCard">Loading...</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col s2">
+            <!--kpi start bellow-->
+            <div class="kpi">
+                <div class="kpi-header tooltipped" data-position="top" data-tooltip="Qualidade de Obra (pós energização)" style="background: #ff5a00">
+                    <div class="kpi-title" name="QualidadeObra" aria-label="Qualidade de Obra">QO</div>
+                </div>
+                <div class="kpi-value card center">
+                    <div id="qo">Loading...</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col s2">
+            <!--kpi start bellow-->
+            <div class="kpi">
+                <div class="kpi-header tooltipped" data-position="top" data-tooltip="Acompanhamento de pendências no SAP (pós energização)" style="background: #ff5a00">
+                    <div class="kpi-title" name="APOS" aria-label="APOS">APOS</div>
+                </div>
+                <div class="kpi-value card center">
+                    <div id="apos">Loading...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="progresses" class="row">
+            <div class="col s8">
+                 <div class="kpi-header"  >
+                    <div class="kpi-title" name="progressPerStep" >Progresso por Atividade</div>
+                </div>
+                <div class="card">
+                    <div id="progressPerEtapas" style="min-height: 200px;min-width: 300px"></div>
+                </div>
+            </div>
+            <div class="col s4">
+                 <div class="kpi-header"  >
+                    <div class="kpi-title" name="progressPerProjects" >Progresso por Status</div>
+                </div>
+                <div class="card">
+                    <div id="progressPerProjects" style="min-height: 200px;min-width: 300px"></div>
+                </div>
+            </div>
+    </div>
+    <div id="pendencies" class="row">
+        <div class="col s6">
+             <div class="kpi-header"  >
+                <div class="kpi-title" name="pendenciaPerStep"  >Pendências por Etapa</div>
+            </div>
+            <div class="card">
+                <div id="pendeciasPerEtapas" style="min-height: 250px;min-width: 300px"></div>
+            </div>
+        </div>
+        <div class="col s6">
+             <div class="kpi-header"  >
+                <div class="kpi-title" name="pendenciaPerCategory"  >Pendências por Categoria</div>
+            </div>
+            <div class="card">
+                <div id="pendeciasPerCategorias" style="min-height: 250px;min-width: 300px"></div>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
+
+
+
+@section Scripts
+{
+    <script src="/lib/echarts/js/echarts.min.js"></script>
+    <script src="/js/DashboardPerProject/dashboardperproject.js"></script>
+}

@@ -71,6 +71,13 @@ public class TaskService : ITaskService
             taskStep = _taskStepRepository.Get(model.StepId.Value);
         }
         task.Step = taskStep;
+        
+        TaskCategory? category = null;
+        if (model.SelectedCategory.HasValue)
+        {
+            category = _categoryRepository.Get(model.SelectedCategory.Value);
+        }
+        task.Category = category;
 
         IUser? user = null;
         if (model.ReporterId != null)
@@ -110,6 +117,7 @@ public class TaskService : ITaskService
             .Include(x => x.Step)
             .Include(x => x.Reporter)
             .Include(x => x.Assignees)
+            .Include(x => x.Category)
             .AsQueryable();
         
         var totalRecord = data.Count();
@@ -122,10 +130,11 @@ public class TaskService : ITaskService
                 (x.Step != null && x.Step.Name.ToLower().Contains(searchString.ToLower())) ||
                 (x.Project != null && x.Project.Name.ToLower().Contains(searchString.ToLower())) ||
                 (x.Reporter != null && x.Reporter.FirstName.Contains(searchString.ToLower())) ||
-                (x.Reporter != null && x.Reporter.LastName.Contains(searchString.ToLower()) || 
+                (x.Reporter != null && x.Reporter.LastName.Contains(searchString.ToLower())) ||
+                (x.Category != null && x.Category.Name.Contains(searchString.ToLower())) ||  
                 (x.Assignees.Any(a =>
                      a.FirstName.ToLower().Contains(searchString.ToLower()) ||
-                     a.LastName.ToLower().Contains(searchString.ToLower())))));
+                     a.LastName.ToLower().Contains(searchString.ToLower()))));
         }
         var filterRecord = data.Count();
         
@@ -146,6 +155,7 @@ public class TaskService : ITaskService
             .Include(x => x.Step)
             .Include(x => x.Reporter)
             .Include(x => x.Assignees)
+            .Include(x => x.Category)
             .FirstOrDefault(x => x.Id == model.Id);
 
         if (task != null)
@@ -166,6 +176,13 @@ public class TaskService : ITaskService
                 taskType = _taskTypeRepository.Get(model.TypeId.Value);
             }
             task.Type = taskType;
+            
+            TaskCategory? category = null;
+            if (model.SelectedCategory.HasValue)
+            {
+                category = _categoryRepository.Get(model.SelectedCategory.Value);
+            }
+            task.Category = category;
 
             TaskStep? taskStep = null;
             if (model.StepId.HasValue)
@@ -199,7 +216,6 @@ public class TaskService : ITaskService
                     }
                 }
             }
-            
             _taskRepository.Update(task);
         }
         
@@ -223,6 +239,7 @@ public class TaskService : ITaskService
             .Include(x => x.Reporter)
             .Include(x => x.Assignees)
             .Include(x => x.CheckListItems)
+            .Include(x => x.Category)
             .FirstOrDefault(x => x.Id == id);
         
         if (task == null) return null;

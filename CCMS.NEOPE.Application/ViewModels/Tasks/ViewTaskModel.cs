@@ -11,4 +11,5 @@ public class ViewTaskModel
     public string DueDate { get; set; }
     public string TaskType { get; set; }
     public string Category { get; set; }
+    public string SapNoteNumber { get; set; } = string.Empty;
 }

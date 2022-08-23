@@ -312,6 +312,19 @@
         return configuredChart;
     }
     
+    function fnUpdate(charts){
+        let selectedValue = $('#projectSelector').val();
+        $.ajax({
+            url: "/Dashboards/GetProgress/",
+            method: "POST",
+            data: {projectId: selectedValue},
+            async : true,
+            success: function (data) {
+                fnUpdateCards(data, charts);
+            }
+        });
+    }
+    
     $(document).ready(function () {
         const charts = [];
         
@@ -321,7 +334,11 @@
             fnGetProgressChart(),
             fnGetProgressPerProject());
         
-        fnInitTracker("/Home/GetProgress/", "POST", charts);
+        fnUpdate(charts);
+        
+        $('#projectSelector').change(function(event){
+            fnUpdate(charts);
+        });
         
         $(window).resize(function() {
             for(let index = 0; index < charts.length;index++){

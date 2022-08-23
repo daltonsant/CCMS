@@ -1,5 +1,35 @@
 
-
 @{
     Layout = "_Layout";
+}
+@section Styles
+{
+    <link rel="stylesheet" href="css/Kanban/main.css">
+}
+
+<div class="section container">
+    <div class="no-padding white">
+        <div class="section-header">
+            <h5 class="section-title">Quadro Kanban</h5>    
+        </div>
+        <div class="row">
+            <div class="col s12">
+                 <div class="kanban">
+                        <!-- <div class="kanban__column">
+                            <div class="kanban__column-title">Not Started</div>
+                            <div class="kanban__items">
+                                <div contenteditable class="kanban__item-input">Wash the dishes</div>
+                                <div class="kanban__dropzone"></div>
+                            </div>
+                            <button class="kanban__add-item" type="button">+ Add</button>
+                        </div> -->
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="js/Kanban/main.js" type="module"></script>
 }
