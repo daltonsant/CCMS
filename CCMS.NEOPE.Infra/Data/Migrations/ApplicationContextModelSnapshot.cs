@@ -3,7 +3,6 @@ using System;
 using CCMS.NEOPE.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -18,17 +17,15 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("ApplicationUserTaskItem", b =>
                 {
-                    b.Property<decimal>("AssignedTasksId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("AssignedTasksId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<string>("AssigneesId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("AssignedTasksId", "AssigneesId");
 
@@ -39,11 +36,11 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("AssetProject", b =>
                 {
-                    b.Property<decimal>("AssetsId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("AssetsId")
+                        .HasColumnType("bigint unsigned");
 
-                    b.Property<decimal>("ProjectsId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("ProjectsId")
+                        .HasColumnType("bigint unsigned");
 
                     b.HasKey("AssetsId", "ProjectsId");
 
@@ -54,11 +51,11 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("AssetTaskItem", b =>
                 {
-                    b.Property<decimal>("AssetsId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("AssetsId")
+                        .HasColumnType("bigint unsigned");
 
-                    b.Property<decimal>("TasksId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("TasksId")
+                        .HasColumnType("bigint unsigned");
 
                     b.HasKey("AssetsId", "TasksId");
 
@@ -69,36 +66,33 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Asset", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("varchar(64)");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
-                    b.Property<decimal>("TypeId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("TypeId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -112,32 +106,29 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.AssetType", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -149,37 +140,34 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Attachment", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Path")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<int>("Size")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("TaskId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong?>("TaskId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -190,34 +178,31 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.CheckListItem", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
-                    b.Property<decimal>("TaskId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("TaskId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("Value")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -228,34 +213,31 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Comment", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
-                    b.Property<decimal?>("TaskId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong?>("TaskId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -272,28 +254,25 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Color")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("varchar(16)");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -302,32 +281,29 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.LinkedTasks", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<decimal>("ObjectTaskId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("ObjectTaskId")
+                        .HasColumnType("bigint unsigned");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
-                    b.Property<decimal>("SubjectTaskId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("SubjectTaskId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -340,32 +316,29 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Project", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -378,23 +351,20 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -407,104 +377,101 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5485),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7361),
                             Name = "Civil"
                         },
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5489),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7364),
                             Name = "Eletromecânico"
                         },
                         new
                         {
                             Id = 3,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5491),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7365),
                             Name = "Aterramento"
                         },
                         new
                         {
                             Id = 4,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5492),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7366),
                             Name = "Projeto"
                         },
                         new
                         {
                             Id = 5,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5494),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7367),
                             Name = "Painéis"
                         },
                         new
                         {
                             Id = 6,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5495),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7368),
                             Name = "Equipamentos"
                         },
                         new
                         {
                             Id = 7,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5496),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7369),
                             Name = "Interligações"
                         },
                         new
                         {
                             Id = 8,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(5497),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7370),
                             Name = "SPCS"
                         });
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskItem", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CompletedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasColumnType("varchar(512)");
 
                     b.Property<DateTime?>("DueDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<decimal?>("ParentTaskId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong?>("ParentTaskId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("PlannedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("Priority")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ProjectId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("ProjectId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<string>("ReporterId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<string>("SapNoteNumber")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -515,13 +482,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
-                    b.Property<decimal>("TypeId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("TypeId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -542,34 +509,31 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskLog", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Log")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
-                    b.Property<decimal?>("TaskId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong?>("TaskId")
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -586,23 +550,20 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -615,64 +576,61 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7600),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7272),
                             Name = "Planejamento"
                         },
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7611),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7283),
                             Name = "TAC Equip. Interlig."
                         },
                         new
                         {
                             Id = 3,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7612),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7284),
                             Name = "TAF SPCS"
                         },
                         new
                         {
                             Id = 4,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7614),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7285),
                             Name = "TAC SPCS"
                         },
                         new
                         {
                             Id = 5,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7615),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7286),
                             Name = "Energização"
                         },
                         new
                         {
                             Id = 6,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 379, DateTimeKind.Local).AddTicks(7616),
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7287),
                             Name = "SAP"
                         });
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskType", b =>
                 {
-                    b.Property<decimal>("Id")
+                    b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(20,0)");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<decimal>("Id"), 1L, 1);
+                        .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<DateTime>("RowVersion")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -684,32 +642,32 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1m,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4756),
+                            Id = 1ul,
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6858),
                             Name = "Informativo"
                         },
                         new
                         {
-                            Id = 2m,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4761),
+                            Id = 2ul,
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6866),
                             Name = "Acompanhamento"
                         },
                         new
                         {
-                            Id = 3m,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4763),
+                            Id = 3ul,
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6867),
                             Name = "Pendência não impeditiva"
                         },
                         new
                         {
-                            Id = 4m,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4764),
+                            Id = 4ul,
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6868),
                             Name = "Pendência impeditiva"
                         },
                         new
                         {
-                            Id = 5m,
-                            CreateDate = new DateTime(2022, 8, 19, 9, 23, 42, 383, DateTimeKind.Local).AddTicks(4765),
+                            Id = 5ul,
+                            CreateDate = new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6869),
                             Name = "Não conformidade"
                         });
                 });
@@ -718,47 +676,46 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("varchar(64)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("ApplicationRoles", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "b6cd8db5-f129-4b8c-a6d9-82f125db48c5",
-                            ConcurrencyStamp = "e80d16e1-3d9c-4b97-98b2-fd198d230812",
+                            Id = "9641e920-d9fb-46ca-8a80-609c95e93fae",
+                            ConcurrencyStamp = "23e614ba-cb92-4c24-a2d8-6ea572fd6ba9",
                             Description = "Administrador do sistema",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "79598c8d-2c28-4bfe-ac8f-ac3c2f09ea9d",
-                            ConcurrencyStamp = "42f7098a-f6de-47bc-93c4-ff116102108b",
+                            Id = "a23a5bc0-27e4-40a3-8bb3-01ee83fee45b",
+                            ConcurrencyStamp = "f334fbc6-2efb-4caf-8138-251740eb9cef",
                             Description = "Usuário comum do sistema",
                             Name = "User",
                             NormalizedName = "USER"
@@ -769,7 +726,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -777,70 +734,70 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
+                        .HasColumnType("varchar(12)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                        .HasColumnType("varchar(32)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsFirstAccess")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("varchar(64)");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Photo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
@@ -852,8 +809,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("ApplicationUsers", (string)null);
                 });
@@ -863,8 +819,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<int>("LabelsId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("TasksId")
-                        .HasColumnType("decimal(20,0)");
+                    b.Property<ulong>("TasksId")
+                        .HasColumnType("bigint unsigned");
 
                     b.HasKey("LabelsId", "TasksId");
 
@@ -879,17 +835,15 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -904,17 +858,15 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -927,18 +879,18 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ProviderKey")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -950,10 +902,10 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -965,18 +917,18 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
