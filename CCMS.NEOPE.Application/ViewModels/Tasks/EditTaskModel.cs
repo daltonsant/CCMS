@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CCMS.NEOPE.Application.ViewModels.LinkedTasks;
 using CCMS.NEOPE.Domain.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
@@ -74,6 +75,8 @@ public class EditTaskModel
     
     [Display(Name = "É uma sub-atividade?")]
     public bool? IsSubTask { get; set; }
+    
+    public List<ViewLinkedTaskModel> LinkedTasks { get; set; }
 
     public EditTaskModel()
     {
@@ -86,5 +89,6 @@ public class EditTaskModel
         Projects = new SelectList(new List<SelectListItem>(),"Value","Text",ProjectId);
         Types = new SelectList(new List<SelectListItem>(), "Value", "Text", TypeId);
         Categories = new SelectList(new List<SelectListItem>(), "Value", "Text", SelectedCategory);
+        LinkedTasks = new List<ViewLinkedTaskModel>();
     }
 }

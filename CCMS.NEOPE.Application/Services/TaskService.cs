@@ -1,5 +1,6 @@
 using AutoMapper;
 using CCMS.NEOPE.Application.Interfaces;
+using CCMS.NEOPE.Application.ViewModels.LinkedTasks;
 using CCMS.NEOPE.Application.ViewModels.Tasks;
 using CCMS.NEOPE.Domain.Core.Interfaces;
 using CCMS.NEOPE.Domain.Entities;
@@ -22,6 +23,7 @@ public class TaskService : ITaskService
     private readonly ITaskRepository _taskRepository;
     private readonly ITaskTypeRepository _taskTypeRepository;
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ILinkedTasksRepository _linkedTasksRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -31,6 +33,7 @@ public class TaskService : ITaskService
         IProjectRepository projectRepository,
         ITaskStepRepository taskStepRepository,
         ICategoryRepository categoryRepository,
+        ILinkedTasksRepository linkedTasksRepository,
         IUserService userService,
         IUnitOfWork unitOfWork, 
         IMapper mapper)
@@ -39,6 +42,7 @@ public class TaskService : ITaskService
         _projectRepository = projectRepository;
         _taskStepRepository = taskStepRepository;
         _categoryRepository = categoryRepository;
+        _linkedTasksRepository = linkedTasksRepository;
         _userService = userService;
         _taskRepository = taskRepository;
         _unitOfWork = unitOfWork;
@@ -92,7 +96,7 @@ public class TaskService : ITaskService
             parent = _taskRepository.Get(model.ParentTaskId.Value);
         }
         task.ParentTask = parent;
-
+        
         if (model.AssigneeIds.Any())
         {
             foreach (var id in model.AssigneeIds)
@@ -105,6 +109,47 @@ public class TaskService : ITaskService
             }
         }
         _taskRepository.Save(task);
+        
+        //Add activities that relates to the added task
+        var linkedTasks = new List<LinkedTasks>();
+        foreach (var linkedTaskModel in model.LinkedTasks)
+        {
+            TaskItem otherTask;
+            LinkedTasks linked = null;
+            if (linkedTaskModel.SubjectTaskId.HasValue)
+            {
+                otherTask = _taskRepository.Entities.FirstOrDefault(e => e.Id == linkedTaskModel.SubjectTaskId);
+                
+                if (otherTask != null)
+                {
+                    linked = new LinkedTasks()
+                    {
+                        SubjectTask = otherTask,
+                        ObjectTask = task,
+                        Type = linkedTaskModel.Type,
+                        CreateDate = DateTime.Now
+                    };
+                }
+            }
+            else
+            {
+                otherTask = _taskRepository.Entities.FirstOrDefault(e => e.Id == linkedTaskModel.ObjectTaskId);
+                
+                if (otherTask != null)
+                {
+                    linked = new LinkedTasks()
+                    {
+                        SubjectTask = task,
+                        ObjectTask = otherTask,
+                        Type = linkedTaskModel.Type,
+                        CreateDate = DateTime.Now
+                    };
+                }
+            }
+            if(linked!=null)
+                linkedTasks.Add(linked);
+        }
+        foreach(var linked in linkedTasks) _linkedTasksRepository.Save(linked);
         
         transaction.Commit();
     }
@@ -156,6 +201,8 @@ public class TaskService : ITaskService
             .Include(x => x.Reporter)
             .Include(x => x.Assignees)
             .Include(x => x.Category)
+            .Include(x => x.LinkedObjectTasks)
+            .Include(x => x.LinkedSubjectTasks)
             .FirstOrDefault(x => x.Id == model.Id);
 
         if (task != null)
@@ -216,6 +263,67 @@ public class TaskService : ITaskService
                     }
                 }
             }
+            
+            //here we update the linkedtasks
+            //get all existing links
+            var modelLinkIds = model.LinkedTasks.Where(x => x.Id != null).Select(x => x.Id);
+            var linkedTasks = task.LinkedObjectTasks.Where(x => modelLinkIds.Contains(x.Id)).ToList();
+            linkedTasks.AddRange(task.LinkedSubjectTasks.Where(x => modelLinkIds.Contains(x.Id)));
+            task.LinkedObjectTasks.Clear();
+            task.LinkedSubjectTasks.Clear();
+
+            foreach (var link in model.LinkedTasks)
+            {
+                if (link.Id.HasValue)
+                {
+                    var oldLink = linkedTasks.FirstOrDefault(x => x.Id == link.Id.Value);
+                    if (oldLink != null && link.ObjectTaskId.HasValue && link.SubjectTaskId.HasValue)
+                    {
+                        oldLink.Type = link.Type;
+                        oldLink.ObjectTaskId = link.ObjectTaskId.Value;
+                        oldLink.SubjectTaskId = link.SubjectTaskId.Value;
+                        oldLink.ObjectTask = null;
+                        oldLink.SubjectTask = null;
+                        oldLink.UpdateDate = DateTime.Now;
+                    }
+                    
+                    if (link.SubjectTaskId == task.Id)
+                    {
+                        task.LinkedSubjectTasks.Add(oldLink);
+                        oldLink.SubjectTask = task;
+                    }
+                    else if (link.ObjectTaskId == task.Id)
+                    {
+                        task.LinkedObjectTasks.Add(oldLink);
+                        oldLink.ObjectTask = task;
+                    }
+                    
+                    _linkedTasksRepository.Update(oldLink);
+                    
+                }
+                else if(link.ObjectTaskId.HasValue && link.SubjectTaskId.HasValue) // vai ser adicao com certeza
+                {
+                    var linkToAdd = new LinkedTasks()
+                    {
+                        CreateDate = DateTime.Now,
+                        Type = link.Type,
+                        ObjectTaskId = link.ObjectTaskId.Value,
+                        SubjectTaskId = link.SubjectTaskId.Value,
+                    };
+                    
+                    if (link.SubjectTaskId == task.Id)
+                    {
+                        task.LinkedSubjectTasks.Add(linkToAdd);
+                        linkToAdd.SubjectTask = task;
+                    }
+                    else if (link.ObjectTaskId == task.Id)
+                    {
+                        task.LinkedObjectTasks.Add(linkToAdd);
+                        linkToAdd.ObjectTask = task;
+                    }
+                }
+            }
+            
             _taskRepository.Update(task);
         }
         
@@ -240,6 +348,8 @@ public class TaskService : ITaskService
             .Include(x => x.Assignees)
             .Include(x => x.CheckListItems)
             .Include(x => x.Category)
+            .Include(x => x.LinkedObjectTasks).ThenInclude(x => x.SubjectTask).ThenInclude(x => x.Project)
+            .Include(x => x.LinkedSubjectTasks).ThenInclude(x => x.ObjectTask).ThenInclude(x => x.Project)
             .FirstOrDefault(x => x.Id == id);
         
         if (task == null) return null;
@@ -253,10 +363,62 @@ public class TaskService : ITaskService
         model.Projects = GetProjectSelectList(model.ProjectId);
         model.Types = GetTypesSelectList(model.TypeId);
         model.Categories = GetCategoriesSelectList(model.SelectedCategory);
+
+        foreach (var obj in task.LinkedObjectTasks)
+        {
+            model.LinkedTasks.Add(new ViewLinkedTaskModel()
+            {
+                Id = obj.Id,
+                Type = obj.Type,
+                ObjectTaskId = obj.ObjectTaskId,
+                SubjectTaskId = obj.SubjectTaskId,
+                TaskText = obj.SubjectTask.Project.Name + " - " + obj.SubjectTask.Title,
+                TypeText = TypeText(obj.Type, false)
+            });
+        }
+        foreach (var sub in task.LinkedSubjectTasks)
+        {
+            model.LinkedTasks.Add(new ViewLinkedTaskModel()
+            {
+                Id = sub.Id,
+                Type = sub.Type,
+                ObjectTaskId = sub.ObjectTaskId,
+                SubjectTaskId = sub.SubjectTaskId,
+                TaskText = sub.ObjectTask.Project.Name + " - " + sub.ObjectTask.Title,
+                TypeText = TypeText(sub.Type, true)
+            });
+        }
         
         return model;
     }
 
+    private string TypeText(LinkType type, bool isSubject)
+    {
+        string typeText = string.Empty;
+
+        switch (type)
+        {
+           case LinkType.Blocks:
+               typeText = "Bloqueia";
+               if (!isSubject)
+                   typeText = "Bloqueada por";
+               break;
+           case LinkType.Causes:
+               typeText = "Causa";
+               if (!isSubject)
+                   typeText = "Causada por";
+               break;
+           case LinkType.Duplicates:
+               typeText = "Duplica";
+               break;
+           case LinkType.RelatesTo:
+               typeText = "Relacionada a";
+               break;
+        }
+
+        return typeText;
+    }
+    
     public AddTaskModel Get()
     {
         var model = new AddTaskModel();
@@ -272,6 +434,28 @@ public class TaskService : ITaskService
         model.Categories = GetCategoriesSelectList(model.SelectedCategory);
         
         return model;
+    }
+
+    public object GetTasks(string search, int page, ulong? exceptId)
+    {
+        var entities = _taskRepository.Entities.Include(x => x.Project)
+            .Where(x => (exceptId == null || exceptId.Value != x.Id) &&(x.Title.ToLower().Contains(search.ToLower()) ||
+                        x.Project.Name.ToLower().Contains(search.ToLower())))
+            .OrderBy(x => x.Id);
+        
+        var skip = (page-1) > 0 ? (page-1)*10 : 0;
+        
+        var tasks = entities.Skip(skip).Take(10).ToList();
+
+        return new
+        {
+            total_count = tasks.Count,
+            items = tasks.Select(x => new
+            {
+                id = x.Id,
+                text = x.Project.Name + " - " + x.Title
+            }).ToArray()
+        };
     }
     
     private SelectList GetProjectSelectList(ulong? id)

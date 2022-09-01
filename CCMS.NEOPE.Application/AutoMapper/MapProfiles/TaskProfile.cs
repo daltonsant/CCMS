@@ -1,5 +1,6 @@
 using AutoMapper;
 using CCMS.NEOPE.Application.ViewModels.Calendar;
+using CCMS.NEOPE.Application.ViewModels.LinkedTasks;
 using CCMS.NEOPE.Application.ViewModels.Tasks;
 using CCMS.NEOPE.Domain.Entities;
 using CCMS.NEOPE.Domain.Enums;
@@ -149,5 +150,6 @@ public class TaskProfile : Profile
             .ForMember(ev => ev.id, opt => opt.MapFrom(src => src.Id.ToString()))
             .ForMember(ev => ev.title, opt => opt.MapFrom(src => src.Title))
             ;
+        CreateMap<AddTaskModel, AddTaskModel>();
     }
 }

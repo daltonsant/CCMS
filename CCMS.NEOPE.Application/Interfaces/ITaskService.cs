@@ -11,4 +11,5 @@ public interface ITaskService
     void Delete(ulong Id);
     EditTaskModel? Get(ulong id);
     AddTaskModel Get();
+    object GetTasks(string search, int page, ulong? exceptId);
 }

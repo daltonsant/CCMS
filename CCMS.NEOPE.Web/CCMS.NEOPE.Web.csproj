@@ -22,6 +22,7 @@
     <ItemGroup>
       <Folder Include="wwwroot\attachments" />
       <Folder Include="wwwroot\Images" />
+      <Folder Include="wwwroot\lib\select2" />
     </ItemGroup>
 
     <ItemGroup>

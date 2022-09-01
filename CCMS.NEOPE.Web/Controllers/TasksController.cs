@@ -101,4 +101,9 @@ public class TasksController : Controller
         _taskService.Delete(id);
         return Ok();
     }
+
+    public IActionResult SearchTasks(string search, int page, ulong? taskId)
+    {
+        return Json(_taskService.GetTasks(search, page, taskId));
+    }
 }

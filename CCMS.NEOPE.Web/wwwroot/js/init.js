@@ -35,7 +35,7 @@
         $('.sidenav').sidenav({'edge': 'left'});
         $('#sidenav-right').sidenav({'edge': 'right'});
         $('.datepicker').datepicker({selectYears: 20});
-        $('select').not('.disabled').formSelect();
+        $('select').not('.disabled').not('.js-is-select2').formSelect();
         $('input.autocomplete').autocomplete({
             data: {"Apple": null, "Microsoft": null, "Google": 'http://placehold.it/250x250'},
         });

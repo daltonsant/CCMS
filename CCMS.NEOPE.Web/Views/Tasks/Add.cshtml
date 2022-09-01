@@ -3,6 +3,11 @@
     Layout = "_Layout";
 }
 
+@section Styles
+{
+    <link href="/lib/materialize-select2/select2-materialize.css" rel="stylesheet">
+}
+
 <div class="section container">
     <div class="no-padding white">
         <div class="section-header">
@@ -60,10 +65,86 @@
                                             Atividades associadas
                                             <div class="divider"></div>
                                         </h6>
-                                        <div id="lista_atv_associadas">
-                                            
+                                        <div id="lista_atv_associadas" style="height: 200px; ">
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div style="overflow-y: scroll;padding-left: 10px; max-height: 164px;">
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Relação</th>
+                                                                <th>Atividade</th>
+                                                                <th>Ações</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="related_tasks_table_content">
+                                                            @for(var index = 0; index < @Model.LinkedTasks.Count; index++)
+                                                            {
+                                                                <tr class="hoverable linkedtask">
+                                                                    <input type="hidden" name="LinkedTasks[@index].Id" value="@Model.LinkedTasks[index].Id"/>
+                                                                    <input type="hidden" name="LinkedTasks[@index].Type" value="@Model.LinkedTasks[index].Type"/>
+                                                                    <input type="hidden" name="LinkedTasks[@index].ObjectTaskId" value="@Model.LinkedTasks[index].ObjectTaskId"/>
+                                                                    <input type="hidden" name="LinkedTasks[@index].SubjectTaskId" value="@Model.LinkedTasks[index].SubjectTaskId"/>
+                                                                    <td>@Model.LinkedTasks[index].TypeText</td>
+                                                                    <td>@Model.LinkedTasks[index].TaskText</td>
+                                                                    <td>
+                                                                        <a class="delete-link waves-effect waves-light material-icons" style="color: red;">delete</a>
+                                                                        <a class="edit-link waves-effect waves-light material-icons" style="color: black;">edit</a>
+                                                                    </td>
+                                                                    <input type="hidden" name="LinkedTasks[@index].TypeText" value="@Model.LinkedTasks[index].TypeText"/>
+                                                                    <input type="hidden" name="LinkedTasks[@index].TaskText" value="@Model.LinkedTasks[index].TaskText"/>
+                                                                </tr>
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s8"></div>
+                                                <div class="col s4">
+                                                    <div class="right" style="padding-right: 10px;">
+                                                        <button type="button" id="add_new_link" class="waves-effect waves-light btn cian darken-1">+ Adicionar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                    
+                                        <div id="add_or_edit_atv_associada" style="height: 104px; display: none;">
+                                            <div class="row" style="padding-left: 10px; height: 104px;">
+                                                <div class="input-field col s4">
+                                                    <select id="rel_type">
+                                                        <option value=""></option>
+                                                        <option value="Blocks">Bloqueia</option>
+                                                        <option value="Blocks">Bloqueada por</option>
+                                                        <option value="Causes">Causa</option>
+                                                        <option value="Causes">Causada por</option>
+                                                        <option value="Duplicates">Duplica</option>
+                                                        <option value="RelatesTo">Relacionada a</option>
+                                                    </select>
+                                                    <label for="rel_type">Tipo de relacionamento</label>
+                                                    <span id="val_rel_type" class="red-text text-darken-4 field-validation-error" data-valmsg-for="rel_type" data-valmsg-replace="true"></span>
+                                                </div>
+                                                <div id="related_tasks_select" class="input-field col s8">
+
+                                                    <select id="related_atvs" class="js-is-select2">
+                                                        <option value="" selected></option>
+                                                    </select>
+                                                    
+                                                    <label for="related_atvs" style="position: absolute; top: -26px; font-size: 0.8rem">Atividade relacionada</label>
+                                                    <span id="val_tasks_rel" class="red-text text-darken-4 field-validation-error" data-valmsg-for="related_atvs" data-valmsg-replace="true"></span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col s8"></div>
+                                                <div class="col s4">
+                                                    <div class="right" style="padding-right:10px;">
+                                                        <button id="cancel_add_or_edit_linked_task" type="button" class="waves-effect waves-light btn grey">Cancelar</button>
+                                                        <button id="concluir_add_or_edit_linked_task" type="button" class="waves-effect waves-light btn cian darken-1 modal-trigger">Concluir</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                    
                                     </div>
                                     <div class="row">
                                         <h6 class="col s12">
@@ -161,3 +242,11 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/lib/select2/js/select2.full.js"></script>
+    <script src="~/lib/materialize-select2/select2-materialize.js"></script>
+    <script src="~/lib/select2/js/i18n/pt-BR.js"></script>
+    <script src="~/js/Tasks/linkedtasks.common.js"></script>
+}
