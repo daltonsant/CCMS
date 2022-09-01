@@ -27,7 +27,11 @@ public static class OrmConfigurationExtension
                     var version = configuration.GetSection("MysqlVersion")?.Value ?? "8.0.30";
                     var serverVersion = new MySqlServerVersion(new Version(version));
                     options.UseMySql(configuration.GetConnectionString("MysqlConnection"), serverVersion,
-                        b => b.MigrationsAssembly(Assembly.GetAssembly(typeof(ApplicationConfiguration))?.ToString()));
+                        b =>
+                        {
+                            b.MigrationsAssembly(Assembly.GetAssembly(typeof(ApplicationConfiguration))?.ToString());
+                            b.EnableRetryOnFailure(5);
+                        });
                 }
             }
         );
