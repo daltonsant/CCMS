@@ -1,6 +1,5 @@
 using AutoMapper;
 using CCMS.NEOPE.Application.Interfaces;
-using CCMS.NEOPE.Application.ViewModels.Assets;
 using CCMS.NEOPE.Application.ViewModels.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +62,13 @@ public class TasksController : Controller
         if (ModelState.IsValid)
         {
             _taskService.Edit(model);
-            return RedirectToAction("Index", "Tasks");
+            if(!model.Errors.Any())
+                return RedirectToAction("Index", "Tasks");
+            
+            foreach (var error in model.Errors)
+            {
+                ModelState.AddModelError(error.Key, error.Value);
+            }
         }
         
         var dbmodel = _taskService.Get(model.Id);
@@ -71,6 +76,7 @@ public class TasksController : Controller
         if (dbmodel == null) NotFound();
         
         _mapper.Map<EditTaskModel, EditTaskModel>(model, dbmodel);
+        dbmodel.LinkedTasks = model.LinkedTasks;
         
         return View(dbmodel);
     }
@@ -86,11 +92,18 @@ public class TasksController : Controller
         if(ModelState.IsValid)
         {
             _taskService.Add(model);
-            return RedirectToAction("Index", "Tasks");
+            if(!model.Errors.Any())
+                return RedirectToAction("Index", "Tasks");
+            
+            foreach (var error in model.Errors)
+            {
+                ModelState.AddModelError(error.Key, error.Value);
+            }
         }
         
         var dbmodel = _taskService.Get();
         _mapper.Map<AddTaskModel, AddTaskModel>(model, dbmodel);
+        dbmodel.LinkedTasks = model.LinkedTasks;
         
         return View(dbmodel);
     }

@@ -1,0 +1,34 @@
+
+@{
+    Layout = "_Layout";
+}
+
+@section Styles
+{
+    <link href="~/lib/frappe/css/frappe-gantt.min.css" rel="stylesheet" />
+}
+
+<div class="section container">
+    <div class="no-padding white">
+        <div class="section-header">
+            <h5 class="section-title">Gráfico de Gantt</h5>    
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div>
+                    <svg id="gantt" ></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+     <script src="~/lib/materialize/js/materialize.min.js"></script>
+    <script src="~/js/moment.js"></script>
+    <script src="~/lib/frappe/js/snap.svg-min.js" ></script>
+    <script src="~/lib/frappe/js/frappe-gantt.min.js" ></script>
+    <script src="~/js/Gantt/gantt.common.js" ></script>
+}

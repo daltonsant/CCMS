@@ -75,6 +75,8 @@ public class AddTaskModel
     
     public List<ViewLinkedTaskModel> LinkedTasks { get; set; }
 
+    public Dictionary<string, string> Errors = new Dictionary<string, string>();
+
     public AddTaskModel()
     {
         Tasks = new SelectList(new List<SelectListItem>(),"Value","Text",ParentTaskId);

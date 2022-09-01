@@ -78,6 +78,8 @@ public class EditTaskModel
     
     public List<ViewLinkedTaskModel> LinkedTasks { get; set; }
 
+    public Dictionary<string, string> Errors = new Dictionary<string, string>();
+
     public EditTaskModel()
     {
         Tasks = new SelectList(new List<SelectListItem>(),"Value","Text",ParentTaskId);

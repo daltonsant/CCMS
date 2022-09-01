@@ -150,6 +150,6 @@ public class TaskProfile : Profile
             .ForMember(ev => ev.id, opt => opt.MapFrom(src => src.Id.ToString()))
             .ForMember(ev => ev.title, opt => opt.MapFrom(src => src.Title))
             ;
-        CreateMap<AddTaskModel, AddTaskModel>();
+        
     }
 }

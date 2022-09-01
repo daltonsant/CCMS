@@ -52,106 +52,113 @@ public class TaskService : ITaskService
 
     public void Add(AddTaskModel model)
     {
-        using var transaction = _unitOfWork.BeginTransaction();
         var task = _mapper.Map<TaskItem>(model);
 
-        Project? project = null;
-        if(model.ProjectId.HasValue)
-        {
-            project = _projectRepository.Get(model.ProjectId.Value);
-        }
-        task.Project = project;
-
-        TaskType? taskType = null;
-        if (model.TypeId.HasValue)
-        {
-            taskType = _taskTypeRepository.Get(model.TypeId.Value);
-        }
-        task.Type = taskType;
-
-        TaskStep? taskStep = null;
-        if (model.StepId.HasValue)
-        {
-            taskStep = _taskStepRepository.Get(model.StepId.Value);
-        }
-        task.Step = taskStep;
+        var hasErrors = model.SelectedStatus == TaskStatus.Done && IsToBlockDoneStatus(model.LinkedTasks);
         
-        TaskCategory? category = null;
-        if (model.SelectedCategory.HasValue)
-        {
-            category = _categoryRepository.Get(model.SelectedCategory.Value);
-        }
-        task.Category = category;
+        if(hasErrors) model.Errors.Add("SelectedStatus", "Esta atividade pussui dependência em atividade não concluida.");
 
-        IUser? user = null;
-        if (model.ReporterId != null)
+        if (!hasErrors)
         {
-            user = _userService.Users.FirstOrDefault(x => x.Id == model.ReporterId);
-        }
-        task.Reporter = user;
-
-        TaskItem? parent = null;
-        if (model.ParentTaskId.HasValue)
-        {
-            parent = _taskRepository.Get(model.ParentTaskId.Value);
-        }
-        task.ParentTask = parent;
-        
-        if (model.AssigneeIds.Any())
-        {
-            foreach (var id in model.AssigneeIds)
+            using var transaction = _unitOfWork.BeginTransaction();
+            Project? project = null;
+            if(model.ProjectId.HasValue)
             {
-                var assignee = _userService.Users.FirstOrDefault(x => x.Id == id);
-                if (assignee != null)
-                {
-                    task.Assignees.Add(assignee);
-                }
+                project = _projectRepository.Get(model.ProjectId.Value);
             }
-        }
-        _taskRepository.Save(task);
-        
-        //Add activities that relates to the added task
-        var linkedTasks = new List<LinkedTasks>();
-        foreach (var linkedTaskModel in model.LinkedTasks)
-        {
-            TaskItem otherTask;
-            LinkedTasks linked = null;
-            if (linkedTaskModel.SubjectTaskId.HasValue)
+            task.Project = project;
+
+            TaskType? taskType = null;
+            if (model.TypeId.HasValue)
             {
-                otherTask = _taskRepository.Entities.FirstOrDefault(e => e.Id == linkedTaskModel.SubjectTaskId);
-                
-                if (otherTask != null)
+                taskType = _taskTypeRepository.Get(model.TypeId.Value);
+            }
+            task.Type = taskType;
+
+            TaskStep? taskStep = null;
+            if (model.StepId.HasValue)
+            {
+                taskStep = _taskStepRepository.Get(model.StepId.Value);
+            }
+            task.Step = taskStep;
+            
+            TaskCategory? category = null;
+            if (model.SelectedCategory.HasValue)
+            {
+                category = _categoryRepository.Get(model.SelectedCategory.Value);
+            }
+            task.Category = category;
+
+            IUser? user = null;
+            if (model.ReporterId != null)
+            {
+                user = _userService.Users.FirstOrDefault(x => x.Id == model.ReporterId);
+            }
+            task.Reporter = user;
+
+            TaskItem? parent = null;
+            if (model.ParentTaskId.HasValue)
+            {
+                parent = _taskRepository.Get(model.ParentTaskId.Value);
+            }
+            task.ParentTask = parent;
+            
+            if (model.AssigneeIds.Any())
+            {
+                foreach (var id in model.AssigneeIds)
                 {
-                    linked = new LinkedTasks()
+                    var assignee = _userService.Users.FirstOrDefault(x => x.Id == id);
+                    if (assignee != null)
                     {
-                        SubjectTask = otherTask,
-                        ObjectTask = task,
-                        Type = linkedTaskModel.Type,
-                        CreateDate = DateTime.Now
-                    };
+                        task.Assignees.Add(assignee);
+                    }
                 }
             }
-            else
+            _taskRepository.Save(task);
+            
+            //Add activities that relates to the added task
+            var linkedTasks = new List<LinkedTasks>();
+            foreach (var linkedTaskModel in model.LinkedTasks)
             {
-                otherTask = _taskRepository.Entities.FirstOrDefault(e => e.Id == linkedTaskModel.ObjectTaskId);
-                
-                if (otherTask != null)
+                TaskItem otherTask;
+                LinkedTasks linked = null;
+                if (linkedTaskModel.SubjectTaskId.HasValue)
                 {
-                    linked = new LinkedTasks()
+                    otherTask = _taskRepository.Entities.FirstOrDefault(e => e.Id == linkedTaskModel.SubjectTaskId);
+                    
+                    if (otherTask != null)
                     {
-                        SubjectTask = task,
-                        ObjectTask = otherTask,
-                        Type = linkedTaskModel.Type,
-                        CreateDate = DateTime.Now
-                    };
+                        linked = new LinkedTasks()
+                        {
+                            SubjectTask = otherTask,
+                            ObjectTask = task,
+                            Type = linkedTaskModel.Type,
+                            CreateDate = DateTime.Now
+                        };
+                    }
                 }
+                else
+                {
+                    otherTask = _taskRepository.Entities.FirstOrDefault(e => e.Id == linkedTaskModel.ObjectTaskId);
+                    
+                    if (otherTask != null)
+                    {
+                        linked = new LinkedTasks()
+                        {
+                            SubjectTask = task,
+                            ObjectTask = otherTask,
+                            Type = linkedTaskModel.Type,
+                            CreateDate = DateTime.Now
+                        };
+                    }
+                }
+                if(linked!=null)
+                    linkedTasks.Add(linked);
             }
-            if(linked!=null)
-                linkedTasks.Add(linked);
+            foreach(var linked in linkedTasks) _linkedTasksRepository.Save(linked);
+            
+            transaction.Commit();
         }
-        foreach(var linked in linkedTasks) _linkedTasksRepository.Save(linked);
-        
-        transaction.Commit();
     }
 
     public IPagedList<ViewTaskModel> List(string? searchString, int skip, int pageSize)
@@ -207,129 +214,176 @@ public class TaskService : ITaskService
 
         if (task != null)
         {
-            task.Assignees.Clear();
-            _mapper.Map(model, task);
+            bool hasValidationErros = model.SelectedStatus == TaskStatus.Done &&
+                                      HasBlockingLink(task, model.LinkedTasks);
             
-            Project? project = null;
-            if(model.ProjectId.HasValue)
-            {
-                project = _projectRepository.Get(model.ProjectId.Value);
-            }
-            task.Project = project;
+            if(hasValidationErros) model.Errors.Add("SelectedStatus", "Esta atividade pussui dependência em atividade não concluida.");
 
-            TaskType? taskType = null;
-            if (model.TypeId.HasValue)
+            if (!hasValidationErros)
             {
-                taskType = _taskTypeRepository.Get(model.TypeId.Value);
-            }
-            task.Type = taskType;
-            
-            TaskCategory? category = null;
-            if (model.SelectedCategory.HasValue)
-            {
-                category = _categoryRepository.Get(model.SelectedCategory.Value);
-            }
-            task.Category = category;
-
-            TaskStep? taskStep = null;
-            if (model.StepId.HasValue)
-            {
-                taskStep = _taskStepRepository.Get(model.StepId.Value);
-            }
-            task.Step = taskStep;
-
-            IUser? user = null;
-            if (model.ReporterId != null)
-            {
-                user = _userService.Users.FirstOrDefault(x => x.Id == model.ReporterId);
-            }
-            task.Reporter = user;
-
-            TaskItem? parent = null;
-            if (model.ParentTaskId.HasValue)
-            {
-                parent = _taskRepository.Get(model.ParentTaskId.Value);
-            }
-            task.ParentTask = parent;
-            
-            if (model.AssigneeIds.Any())
-            {
-                foreach (var id in model.AssigneeIds)
+                task.Assignees.Clear();
+                _mapper.Map(model, task);
+                
+                Project? project = null;
+                if(model.ProjectId.HasValue)
                 {
-                    var assignee = _userService.Users.FirstOrDefault(x => x.Id == id);
-                    if (assignee != null)
+                    project = _projectRepository.Get(model.ProjectId.Value);
+                }
+                task.Project = project;
+
+                TaskType? taskType = null;
+                if (model.TypeId.HasValue)
+                {
+                    taskType = _taskTypeRepository.Get(model.TypeId.Value);
+                }
+                task.Type = taskType;
+                
+                TaskCategory? category = null;
+                if (model.SelectedCategory.HasValue)
+                {
+                    category = _categoryRepository.Get(model.SelectedCategory.Value);
+                }
+                task.Category = category;
+
+                TaskStep? taskStep = null;
+                if (model.StepId.HasValue)
+                {
+                    taskStep = _taskStepRepository.Get(model.StepId.Value);
+                }
+                task.Step = taskStep;
+
+                IUser? user = null;
+                if (model.ReporterId != null)
+                {
+                    user = _userService.Users.FirstOrDefault(x => x.Id == model.ReporterId);
+                }
+                task.Reporter = user;
+
+                TaskItem? parent = null;
+                if (model.ParentTaskId.HasValue)
+                {
+                    parent = _taskRepository.Get(model.ParentTaskId.Value);
+                }
+                task.ParentTask = parent;
+                
+                if (model.AssigneeIds.Any())
+                {
+                    foreach (var id in model.AssigneeIds)
                     {
-                        task.Assignees.Add(assignee);
+                        var assignee = _userService.Users.FirstOrDefault(x => x.Id == id);
+                        if (assignee != null)
+                        {
+                            task.Assignees.Add(assignee);
+                        }
                     }
                 }
-            }
-            
-            //here we update the linkedtasks
-            //get all existing links
-            var modelLinkIds = model.LinkedTasks.Where(x => x.Id != null).Select(x => x.Id);
-            var linkedTasks = task.LinkedObjectTasks.Where(x => modelLinkIds.Contains(x.Id)).ToList();
-            linkedTasks.AddRange(task.LinkedSubjectTasks.Where(x => modelLinkIds.Contains(x.Id)));
-            task.LinkedObjectTasks.Clear();
-            task.LinkedSubjectTasks.Clear();
+                
+                //here we update the linkedtasks
+                //get all existing links
+                var modelLinkIds = model.LinkedTasks.Where(x => x.Id != null).Select(x => x.Id);
+                var linkedTasks = task.LinkedObjectTasks.Where(x => modelLinkIds.Contains(x.Id)).ToList();
+                linkedTasks.AddRange(task.LinkedSubjectTasks.Where(x => modelLinkIds.Contains(x.Id)));
+                task.LinkedObjectTasks.Clear();
+                task.LinkedSubjectTasks.Clear();
 
-            foreach (var link in model.LinkedTasks)
-            {
-                if (link.Id.HasValue)
+                foreach (var link in model.LinkedTasks)
                 {
-                    var oldLink = linkedTasks.FirstOrDefault(x => x.Id == link.Id.Value);
-                    if (oldLink != null && link.ObjectTaskId.HasValue && link.SubjectTaskId.HasValue)
+                    if (link.Id.HasValue)
                     {
-                        oldLink.Type = link.Type;
-                        oldLink.ObjectTaskId = link.ObjectTaskId.Value;
-                        oldLink.SubjectTaskId = link.SubjectTaskId.Value;
-                        oldLink.ObjectTask = null;
-                        oldLink.SubjectTask = null;
-                        oldLink.UpdateDate = DateTime.Now;
+                        var oldLink = linkedTasks.FirstOrDefault(x => x.Id == link.Id.Value);
+                        if (oldLink != null && link.ObjectTaskId.HasValue && link.SubjectTaskId.HasValue)
+                        {
+                            oldLink.Type = link.Type;
+                            oldLink.ObjectTaskId = link.ObjectTaskId.Value;
+                            oldLink.SubjectTaskId = link.SubjectTaskId.Value;
+                            oldLink.ObjectTask = null;
+                            oldLink.SubjectTask = null;
+                            oldLink.UpdateDate = DateTime.Now;
+                        }
+                        
+                        if (link.SubjectTaskId == task.Id)
+                        {
+                            task.LinkedSubjectTasks.Add(oldLink);
+                            oldLink.SubjectTask = task;
+                        }
+                        else if (link.ObjectTaskId == task.Id)
+                        {
+                            task.LinkedObjectTasks.Add(oldLink);
+                            oldLink.ObjectTask = task;
+                        }
+                        
+                        _linkedTasksRepository.Update(oldLink);
+                        
                     }
-                    
-                    if (link.SubjectTaskId == task.Id)
+                    else if(link.ObjectTaskId.HasValue && link.SubjectTaskId.HasValue) // vai ser adicao com certeza
                     {
-                        task.LinkedSubjectTasks.Add(oldLink);
-                        oldLink.SubjectTask = task;
+                        var linkToAdd = new LinkedTasks()
+                        {
+                            CreateDate = DateTime.Now,
+                            Type = link.Type,
+                            ObjectTaskId = link.ObjectTaskId.Value,
+                            SubjectTaskId = link.SubjectTaskId.Value,
+                        };
+                        
+                        if (link.SubjectTaskId == task.Id)
+                        {
+                            task.LinkedSubjectTasks.Add(linkToAdd);
+                            linkToAdd.SubjectTask = task;
+                        }
+                        else if (link.ObjectTaskId == task.Id)
+                        {
+                            task.LinkedObjectTasks.Add(linkToAdd);
+                            linkToAdd.ObjectTask = task;
+                        }
                     }
-                    else if (link.ObjectTaskId == task.Id)
-                    {
-                        task.LinkedObjectTasks.Add(oldLink);
-                        oldLink.ObjectTask = task;
-                    }
-                    
-                    _linkedTasksRepository.Update(oldLink);
-                    
                 }
-                else if(link.ObjectTaskId.HasValue && link.SubjectTaskId.HasValue) // vai ser adicao com certeza
-                {
-                    var linkToAdd = new LinkedTasks()
-                    {
-                        CreateDate = DateTime.Now,
-                        Type = link.Type,
-                        ObjectTaskId = link.ObjectTaskId.Value,
-                        SubjectTaskId = link.SubjectTaskId.Value,
-                    };
-                    
-                    if (link.SubjectTaskId == task.Id)
-                    {
-                        task.LinkedSubjectTasks.Add(linkToAdd);
-                        linkToAdd.SubjectTask = task;
-                    }
-                    else if (link.ObjectTaskId == task.Id)
-                    {
-                        task.LinkedObjectTasks.Add(linkToAdd);
-                        linkToAdd.ObjectTask = task;
-                    }
-                }
+                
+                _taskRepository.Update(task);
             }
-            
-            _taskRepository.Update(task);
         }
         
         transaction.Commit();
     }
 
+    private bool HasBlockingLink(TaskItem task, List<ViewLinkedTaskModel> links)
+    {
+        var hasError = false;
+
+        foreach (var link in links.Where(x => x.Type == LinkType.Blocks))
+        {
+            var subjectTask =  _taskRepository.Entities
+                .FirstOrDefault(x => x.Id == link.SubjectTaskId);
+            var objectTask = _taskRepository.Entities
+                .FirstOrDefault(x => x.Id == link.ObjectTaskId);
+
+            if (subjectTask != null && objectTask != null &&
+                objectTask.Id == task.Id && subjectTask.Status != TaskStatus.Done)
+            {
+                hasError = true;
+                break;
+            }
+        }
+        
+        return hasError;
+    }
+
+    private bool IsToBlockDoneStatus(List<ViewLinkedTaskModel> links)
+    {
+        var hasError = false;
+        foreach (var link in links.Where(x => x.Type == LinkType.Blocks))
+        {
+            var subjectTask =  _taskRepository.Entities
+                .FirstOrDefault(x => x.Id == link.SubjectTaskId);
+            if (subjectTask != null && subjectTask.Status != TaskStatus.Done)
+            {
+                hasError = true;
+                break;
+            }
+        }
+
+        return hasError;
+    }
+    
     public void Delete(ulong id)
     {
         using var transaction = _unitOfWork.BeginTransaction();

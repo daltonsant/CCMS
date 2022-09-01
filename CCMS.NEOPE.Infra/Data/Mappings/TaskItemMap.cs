@@ -23,6 +23,7 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.Property(e => e.DueDate);
         builder.Property(e => e.PlannedDate);
         builder.Property(e => e.CompletedDate);
+        builder.Property(e => e.Order);
 
         builder.HasOne(e => e.ParentTask).WithMany(e => e.ChildTasks);
         builder.HasOne(e => e.Step).WithMany().IsRequired();
