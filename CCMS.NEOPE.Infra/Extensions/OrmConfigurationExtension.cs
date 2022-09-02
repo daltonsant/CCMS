@@ -30,7 +30,6 @@ public static class OrmConfigurationExtension
                         b =>
                         {
                             b.MigrationsAssembly(Assembly.GetAssembly(typeof(ApplicationConfiguration))?.ToString());
-                            b.EnableRetryOnFailure(5);
                         });
                 }
             }
