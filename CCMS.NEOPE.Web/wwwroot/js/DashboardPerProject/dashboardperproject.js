@@ -23,10 +23,14 @@
         let progress = document.getElementById("progressCard");
         let adherence = document.getElementById("adherenceCard");
         let conformity = document.getElementById("conformityCard");
+        let qo = document.getElementById("qo");
+        let apos = document.getElementById("apos");
         
         progress.innerHTML = (data["totalProgress"] * 100.0).toFixed(1) + "%";
         adherence.innerHTML = (data["totalAdherence"] * 100.0).toFixed(1) + "%";
         conformity.innerHTML = (data["totalConformity"] * 100.0).toFixed(1) + "%";
+        qo.innerHTML = (data["qo"] * 100.0).toFixed(1) + "%";
+        apos.innerHTML = (data["apos"] * 100.0).toFixed(1) + "%";
         
         for(let index = 0; index < charts.length; index++) {
             let dataset = data.charts[index];

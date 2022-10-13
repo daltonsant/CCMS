@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CCMS.NEOPE.Domain.Enums;
 
-public enum TaskPriority
+public enum Priority
 {
     [Display(Name="Emergencial")]
     Critical,

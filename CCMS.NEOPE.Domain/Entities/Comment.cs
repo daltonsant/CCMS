@@ -8,4 +8,5 @@ public class Comment : Entity<ulong>
     public string Content { get; set; } = string.Empty;
     public IUser? User { get; set; } = null;
     public TaskItem? Task { get; set; } = null;
+    public virtual Pendency? Pendency { get; set; } = null;
 }

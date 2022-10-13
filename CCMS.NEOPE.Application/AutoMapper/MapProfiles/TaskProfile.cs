@@ -27,7 +27,7 @@ public class TaskProfile : Profile
                     opt.MapFrom(src => src.Title ?? string.Empty))
             .ForMember(dest => dest.Priority,
                 opt => 
-                    opt.MapFrom(src => src.Priority.HasValue ? EnumHelper<TaskPriority>.GetDisplayValue(src.Priority.Value) : string.Empty))
+                    opt.MapFrom(src => src.Priority.HasValue ? EnumHelper<Priority>.GetDisplayValue(src.Priority.Value) : string.Empty))
             .ForMember(dest => dest.Status,
                 opt => 
                     opt.MapFrom(src => EnumHelper<TaskStatus>.GetDisplayValue(src.Status)))

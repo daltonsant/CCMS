@@ -4,7 +4,7 @@ using CCMS.NEOPE.Infra.Data.Context;
 
 namespace CCMS.NEOPE.Infra.Data.Repositories;
 
-public class CategoryRepository : Repository<TaskCategory, int>, ICategoryRepository
+public class CategoryRepository : Repository<Category, int>, ICategoryRepository
 {
     public CategoryRepository(ApplicationContext context) : base(context)
     {

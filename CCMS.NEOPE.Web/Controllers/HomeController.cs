@@ -36,6 +36,8 @@ public class HomeController : Controller
                 totalProgress = _boardService.GetProgress(), 
                 totalConformity = _boardService.GetConformity(), 
                 totalAdherence = _boardService.GetAdherence(),
+                qo = _boardService.GetQo(),
+                apos = _boardService.GetApos(),
                 charts = new object[]
                 {
                     _boardService.GetPendenciesPerStepsChart(),

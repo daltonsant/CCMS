@@ -8,9 +8,9 @@ public class TaskTypeProfile : Profile
 {
     public TaskTypeProfile()
     {
-        CreateMap<TaskType, AddTaskTypeModel>().ReverseMap();
-        CreateMap<TaskType, EditTaskTypeModel>().ReverseMap();
-        CreateMap<TaskType, ViewTaskTypeModel>().ReverseMap();
+        CreateMap<Domain.Entities.PendencyType, AddTaskTypeModel>().ReverseMap();
+        CreateMap<Domain.Entities.PendencyType, EditTaskTypeModel>().ReverseMap();
+        CreateMap<Domain.Entities.PendencyType, ViewTaskTypeModel>().ReverseMap();
         
     }
 }

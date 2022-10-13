@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CCMS.NEOPE.Domain.Enums;
 using CCMS.NEOPE.Infra.Helpers;
 using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
 
@@ -63,6 +64,73 @@ public class BoardService : IBoardService
             entities = entities.Where(x => x.Project.Id == projectId.Value);
 
         return GetConformity(entities);
+    }
+
+    public decimal GetQo(ulong? projectId = null)
+    {
+        var entities = _taskRepository.Entities
+            .Include(x => x.Project)
+            .Include(x => x.Type)
+            .Include(x => x.Category)
+            .AsQueryable();
+
+        if (projectId.HasValue)
+            entities = entities.Where(x => x.Project.Id == projectId.Value);
+
+        var notesPerCategory = new Dictionary<string, decimal>();
+        var weightPerCategory = new Dictionary<string, decimal>();
+        weightPerCategory.Add("Civil",10.0M);
+        weightPerCategory.Add("Eletromecânico",10.0M);
+        weightPerCategory.Add("Aterramento",10.0M);
+        weightPerCategory.Add("Projeto",10.0M);
+        weightPerCategory.Add("Painéis",10.0M);
+        weightPerCategory.Add("Equipamentos",10.0M);
+        weightPerCategory.Add("Interligações",10.0M);
+        weightPerCategory.Add("SPCS",10.0M);
+        
+        
+
+
+
+        
+        var totalClosedNotes =
+            entities.Where(x => x.Status == TaskStatus.Done &&
+                                !string.IsNullOrEmpty(x.SapNoteNumber))
+                .Count();
+        
+        
+        
+        
+        
+        
+        
+        
+        var totalR1AndR2Notes =  entities.Where(x => x.Status != TaskStatus.Done && !string.IsNullOrEmpty(x.SapNoteNumber) && 
+                                                     (x.Priority == Priority.Critical || x.Priority == Priority.Urgent)).Count();
+        
+        var denom = totalClosedNotes + totalR1AndR2Notes;
+        
+        return denom != decimal.Zero ? (decimal) totalClosedNotes / denom : decimal.Zero;
+    }
+
+    public decimal GetApos(ulong? projectId = null)
+    {
+        var entities = _taskRepository.Entities
+            .Include(x => x.Project)
+            .Include(x => x.Type)
+            .AsQueryable();
+
+        if (projectId.HasValue)
+            entities = entities.Where(x => x.Project.Id == projectId.Value);
+        
+        var totalClosedNotes =
+            entities.Where(x => x.Status == TaskStatus.Done && !string.IsNullOrEmpty(x.SapNoteNumber)).Count();
+        var totalR1AndR2Notes =  entities.Where(x => x.Status != TaskStatus.Done && !string.IsNullOrEmpty(x.SapNoteNumber) && 
+                                                     (x.Priority == Priority.Critical || x.Priority == Priority.Urgent)).Count();
+        
+        var denom = totalClosedNotes + totalR1AndR2Notes;
+
+        return denom != decimal.Zero ? (decimal) totalClosedNotes / denom : decimal.Zero;
     }
     
     private decimal GetConformity(IQueryable<TaskItem> entities)

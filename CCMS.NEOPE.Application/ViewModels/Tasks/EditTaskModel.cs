@@ -50,7 +50,7 @@ public class EditTaskModel
     public SelectList? Status { get; set; }
 
     [Display(Name = "Prioridade")]
-    public TaskPriority? SelectedPriority { get; set; }
+    public Priority? SelectedPriority { get; set; }
     public SelectList? Priorities { get; set; }
 
     [Display(Name = "Data Início")]

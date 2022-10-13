@@ -3,7 +3,7 @@ using CCMS.NEOPE.Domain.Entities;
 
 namespace CCMS.NEOPE.Domain.Interfaces;
 
-public interface ITaskStepRepository : IGenericRepository<TaskStep, int>
+public interface ITaskStepRepository : IGenericRepository<Step, int>
 {
     
 }

@@ -4,7 +4,7 @@ using CCMS.NEOPE.Infra.Data.Context;
 
 namespace CCMS.NEOPE.Infra.Data.Repositories;
 
-public class TaskStepRepository : Repository<TaskStep, int>, ITaskStepRepository
+public class TaskStepRepository : Repository<Step, int>, ITaskStepRepository
 {
     public TaskStepRepository(ApplicationContext context) : base(context)
     {

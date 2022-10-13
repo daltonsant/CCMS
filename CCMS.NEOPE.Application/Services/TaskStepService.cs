@@ -27,7 +27,7 @@ public class TaskStepService : ITaskStepService
     public void Add(AddTaskStepModel model)
     {
         using var transaction = _unitOfWork.BeginTransaction();
-        var step = _mapper.Map<TaskStep>(model);
+        var step = _mapper.Map<Step>(model);
         _taskStepRepository.Save(step);
         transaction.Commit();
     }
@@ -48,7 +48,7 @@ public class TaskStepService : ITaskStepService
         var list = data.Skip(skip).Take(pageSize).ToList();
         
         var records = 
-            _mapper.Map<ICollection<TaskStep>, ICollection<ViewTaskStepModel>>(list.ToList());
+            _mapper.Map<ICollection<Step>, ICollection<ViewTaskStepModel>>(list.ToList());
 
         return new PagedList<ViewTaskStepModel>(totalRecord, filterRecord, records);
     }

@@ -13,6 +13,9 @@ public interface IBoardService
     decimal GetConformity(ulong? projectid = null);
     decimal GetAdherence(ulong? projectid = null);
 
+    decimal GetQo(ulong? projectId = null);
+    decimal GetApos(ulong? projectId = null);
+
     object[] GetProgressPerProjectChart(ulong? projectId = null);
 
     object[] GetPendenciesPerStepsChart(ulong? projectId=null);

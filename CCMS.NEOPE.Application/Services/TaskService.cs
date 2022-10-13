@@ -68,21 +68,21 @@ public class TaskService : ITaskService
             }
             task.Project = project;
 
-            TaskType? taskType = null;
+            Domain.Entities.PendencyType? taskType = null;
             if (model.TypeId.HasValue)
             {
                 taskType = _taskTypeRepository.Get(model.TypeId.Value);
             }
             task.Type = taskType;
 
-            TaskStep? taskStep = null;
+            Step? taskStep = null;
             if (model.StepId.HasValue)
             {
                 taskStep = _taskStepRepository.Get(model.StepId.Value);
             }
             task.Step = taskStep;
             
-            TaskCategory? category = null;
+            Category? category = null;
             if (model.SelectedCategory.HasValue)
             {
                 category = _categoryRepository.Get(model.SelectedCategory.Value);
@@ -231,21 +231,21 @@ public class TaskService : ITaskService
                 }
                 task.Project = project;
 
-                TaskType? taskType = null;
+                Domain.Entities.PendencyType? taskType = null;
                 if (model.TypeId.HasValue)
                 {
                     taskType = _taskTypeRepository.Get(model.TypeId.Value);
                 }
                 task.Type = taskType;
                 
-                TaskCategory? category = null;
+                Category? category = null;
                 if (model.SelectedCategory.HasValue)
                 {
                     category = _categoryRepository.Get(model.SelectedCategory.Value);
                 }
                 task.Category = category;
 
-                TaskStep? taskStep = null;
+                Step? taskStep = null;
                 if (model.StepId.HasValue)
                 {
                     taskStep = _taskStepRepository.Get(model.StepId.Value);
@@ -566,12 +566,12 @@ public class TaskService : ITaskService
             .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
         return new SelectList(types, "Value","Text", categoryId);
     }
-    private SelectList GetPrioritySelectList(TaskPriority? priority)
+    private SelectList GetPrioritySelectList(Priority? priority)
     {
         var types = new List<SelectListItem>()
             { new SelectListItem() { Text = "" } };
-        types.AddRange(Enum.GetValues<TaskPriority>()
-            .Select(x => new SelectListItem() { Text = EnumHelper<TaskPriority>.GetDisplayValue(x), Value = x.ToString() }));
+        types.AddRange(Enum.GetValues<Priority>()
+            .Select(x => new SelectListItem() { Text = EnumHelper<Priority>.GetDisplayValue(x), Value = x.ToString() }));
         return new SelectList(types, "Value","Text", priority);
     }
     private SelectList GetStatusSelectList(TaskStatus? status)
