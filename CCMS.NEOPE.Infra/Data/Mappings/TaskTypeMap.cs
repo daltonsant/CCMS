@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CCMS.NEOPE.Infra.Data.Mappings;
 
-public class TaskTypeMap : IEntityTypeConfiguration<Domain.Entities.PendencyType>
+public class TaskTypeMap : IEntityTypeConfiguration<TaskType>
 {
-    public void Configure(EntityTypeBuilder<Domain.Entities.PendencyType> builder)
+    public void Configure(EntityTypeBuilder<TaskType> builder)
     {
         builder.Property(e => e.Id).ValueGeneratedOnAdd();
         builder.Property(e => e.CreateDate).IsRequired();
@@ -17,31 +17,31 @@ public class TaskTypeMap : IEntityTypeConfiguration<Domain.Entities.PendencyType
         builder.ToTable("TaskTypes");
         
         builder.HasData(
-            new Type()
+            new TaskType()
             {
                 Id = 1,
                 CreateDate = DateTime.Now,
                 Name = "Informativo"
             },
-            new Type()
+            new TaskType()
             {
                 Id = 2,
                 CreateDate = DateTime.Now,
                 Name = "Acompanhamento"
             },
-            new Type()
+            new TaskType()
             {
                 Id = 3,
                 CreateDate = DateTime.Now,
                 Name = "Pendência não impeditiva"
             },
-            new Type()
+            new TaskType()
             {
                 Id = 4,
                 CreateDate = DateTime.Now,
                 Name = "Pendência impeditiva"
             },
-            new Type()
+            new TaskType()
             {
                 Id = 5,
                 CreateDate = DateTime.Now,

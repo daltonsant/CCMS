@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CCMS.NEOPE.Infra.Data.Mappings;
 
-public class TaskStepMap : IEntityTypeConfiguration<Step>
+public class TaskStepMap : IEntityTypeConfiguration<TaskStep>
 {
-    public void Configure(EntityTypeBuilder<Step> builder)
+    public void Configure(EntityTypeBuilder<TaskStep> builder)
     {
         builder.Property(e => e.Id).ValueGeneratedOnAdd();
         builder.Property(e => e.CreateDate).IsRequired();
@@ -18,37 +18,37 @@ public class TaskStepMap : IEntityTypeConfiguration<Step>
         builder.ToTable("TaskSteps");
 
         builder.HasData(
-            new Step()
+            new TaskStep()
             {
                 Id = 1,
                 CreateDate = DateTime.Now,
                 Name = "Planejamento"
             },
-            new Step()
+            new TaskStep()
             {
                 Id = 2,
                 CreateDate = DateTime.Now,
                 Name = "TAC Equip. Interlig."
             },
-            new Step()
+            new TaskStep()
             {
                 Id = 3,
                 CreateDate = DateTime.Now,
                 Name = "TAF SPCS"
             },
-            new Step()
+            new TaskStep()
             {
                 Id = 4,
                 CreateDate = DateTime.Now,
                 Name = "TAC SPCS"
             },
-            new Step()
+            new TaskStep()
             {
                 Id = 5,
                 CreateDate = DateTime.Now,
                 Name = "Energização"
             },
-            new Step()
+            new TaskStep()
             {
                 Id = 6,
                 CreateDate = DateTime.Now,

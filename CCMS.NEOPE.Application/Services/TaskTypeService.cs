@@ -29,7 +29,7 @@ public class TaskTypeService : ITaskTypeService
     public void Add(AddTaskTypeModel model)
     {
         using var transaction = _unitOfWork.BeginTransaction();
-        var project = _mapper.Map<Domain.Entities.PendencyType>(model);
+        var project = _mapper.Map<TaskType>(model);
         _taskTypeRepository.Save(project);
         transaction.Commit();
     }
@@ -49,8 +49,8 @@ public class TaskTypeService : ITaskTypeService
         
         var list = data.Skip(skip).Take(pageSize).ToList();
         
-        var records =
-            _mapper.Map<ICollection<Domain.Entities.PendencyType>, ICollection<ViewTaskTypeModel>>(list.ToList());
+        var records = 
+            _mapper.Map<ICollection<TaskType>, ICollection<ViewTaskTypeModel>>(list.ToList());
 
         return new PagedList<ViewTaskTypeModel>(totalRecord, filterRecord, records);
     }

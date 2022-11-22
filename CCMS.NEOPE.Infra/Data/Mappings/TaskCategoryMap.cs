@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CCMS.NEOPE.Infra.Data.Mappings;
 
-public class TaskCategoryMap : IEntityTypeConfiguration<Category>
+public class TaskCategoryMap : IEntityTypeConfiguration<TaskCategory>
 {
-    public void Configure(EntityTypeBuilder<Category> builder)
+    public void Configure(EntityTypeBuilder<TaskCategory> builder)
     {
         builder.Property(e => e.Id).ValueGeneratedOnAdd();
         builder.Property(e => e.CreateDate).IsRequired();
@@ -17,49 +17,49 @@ public class TaskCategoryMap : IEntityTypeConfiguration<Category>
         builder.ToTable("TaskCategories");
         
         builder.HasData(
-            new Category()
+            new TaskCategory()
             {
                 Id = 1,
                 CreateDate = DateTime.Now,
                 Name = "Civil"
             },
-            new Category()
+            new TaskCategory()
             {
                 Id = 2,
                 CreateDate = DateTime.Now,
                 Name = "Eletromecânico"
             },
-            new Category()
+            new TaskCategory()
             {
                 Id = 3,
                 CreateDate = DateTime.Now,
                 Name = "Aterramento"
             },
-            new Category()
+            new TaskCategory()
             {
                 Id = 4,
                 CreateDate = DateTime.Now,
                 Name = "Projeto"
             },
-            new Category()
+            new TaskCategory()
             {
                 Id = 5,
                 CreateDate = DateTime.Now,
                 Name = "Painéis"
             } ,
-            new Category()
+            new TaskCategory()
             {
                 Id = 6,
                 CreateDate = DateTime.Now,
                 Name = "Equipamentos"
             } ,
-            new Category()
+            new TaskCategory()
             {
                 Id = 7,
                 CreateDate = DateTime.Now,
                 Name = "Interligações"
             } ,
-            new Category()
+            new TaskCategory()
             {
                 Id = 8,
                 CreateDate = DateTime.Now,

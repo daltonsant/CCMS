@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CCMS.NEOPE.Domain.Enums;
 
-public enum Status
+public enum TaskStatus
 {
     [Display(Name="Não iniciada")]
     NotStarted,

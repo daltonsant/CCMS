@@ -8,8 +8,8 @@ public class TaskStepProfile : Profile
 {
     public TaskStepProfile()
     {
-        CreateMap<Step, ViewTaskStepModel>().ReverseMap();
-        CreateMap<Step, EditTaskStepModel>().ReverseMap();
-        CreateMap<Step, AddTaskStepModel>().ReverseMap();
+        CreateMap<TaskStep, ViewTaskStepModel>().ReverseMap();
+        CreateMap<TaskStep, EditTaskStepModel>().ReverseMap();
+        CreateMap<TaskStep, AddTaskStepModel>().ReverseMap();
     }
 }

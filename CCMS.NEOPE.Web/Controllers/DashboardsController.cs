@@ -30,8 +30,6 @@ public class DashboardsController : Controller
                 totalProgress = _boardService.GetProgress(projectId), 
                 totalConformity = _boardService.GetConformity(projectId), 
                 totalAdherence = _boardService.GetAdherence(projectId),
-                qo = _boardService.GetQo(projectId),
-                apos = _boardService.GetApos(projectId),
                 charts = new object[]
                 {
                     _boardService.GetPendenciesPerStepsChart(projectId),

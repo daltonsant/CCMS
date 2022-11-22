@@ -4,7 +4,7 @@ using CCMS.NEOPE.Infra.Data.Context;
 
 namespace CCMS.NEOPE.Infra.Data.Repositories;
 
-public class TaskTypeRepository : Repository<Domain.Entities.PendencyType,ulong>, ITaskTypeRepository
+public class TaskTypeRepository : Repository<TaskType,ulong>, ITaskTypeRepository
 {
     public TaskTypeRepository(ApplicationContext context) : base(context)
     {

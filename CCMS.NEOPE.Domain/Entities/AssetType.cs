@@ -6,6 +6,6 @@ public class AssetType: Entity<ulong>
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public string Code { get; set; }
+    
     public ICollection<Asset> AssetsByType { get; set; }
 }
