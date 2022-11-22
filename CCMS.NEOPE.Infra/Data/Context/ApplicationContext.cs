@@ -23,9 +23,9 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
 
     public DbSet<Project> Projects { get; set; }
     public DbSet<TaskLog> TaskLogs { get; set; }
-    public DbSet<TaskStep> TaskSteps { get; set; }
-    public DbSet<TaskType> TaskTypes { get; set; }
-    public DbSet<TaskCategory> TaskCategories { get; set; }
+    public DbSet<Step> TaskSteps { get; set; }
+    public DbSet<Domain.Entities.Type> TaskTypes { get; set; }
+    public DbSet<Category> TaskCategories { get; set; }
 
     public DbSet<Accountable> Accountables { get; set; }
 
@@ -48,12 +48,12 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
         builder.ApplyConfiguration(new ApplicationUserMap());
         builder.ApplyConfiguration(new AttachmentMap());
         builder.ApplyConfiguration(new ProjectMap());
-        builder.ApplyConfiguration(new TaskStepMap());
+        builder.ApplyConfiguration(new StepMap());
         builder.ApplyConfiguration(new TaskItemMap());
         builder.ApplyConfiguration(new LinkedTasksMap());
         builder.ApplyConfiguration(new CheckListItemMap());
-        builder.ApplyConfiguration(new TaskTypeMap());
-        builder.ApplyConfiguration(new TaskCategoryMap());
+        builder.ApplyConfiguration(new TypeMap());
+        builder.ApplyConfiguration(new CategoryMap());
         builder.ApplyConfiguration(new AccountableMap());
     }
 }

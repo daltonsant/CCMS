@@ -26,7 +26,6 @@ public class ProjectsController : Controller
         return View();
     }
     
-    
     [HttpPost]
     public IActionResult Add(AddProjectModel model)
     {

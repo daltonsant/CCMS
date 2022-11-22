@@ -71,21 +71,21 @@ public class TaskService : ITaskService
             }
             task.Project = project;
 
-            TaskType? taskType = null;
+            Domain.Entities.Type? taskType = null;
             if (model.TypeId.HasValue)
             {
                 taskType = _taskTypeRepository.Get(model.TypeId.Value);
             }
             task.Type = taskType;
 
-            TaskStep? taskStep = null;
+            Step? taskStep = null;
             if (model.StepId.HasValue)
             {
                 taskStep = _taskStepRepository.Get(model.StepId.Value);
             }
             task.Step = taskStep;
             
-            TaskCategory? category = null;
+            Category? category = null;
             if (model.SelectedCategory.HasValue)
             {
                 category = _categoryRepository.Get(model.SelectedCategory.Value);
@@ -242,21 +242,21 @@ public class TaskService : ITaskService
                 }
                 task.Project = project;
 
-                TaskType? taskType = null;
+                Domain.Entities.Type? taskType = null;
                 if (model.TypeId.HasValue)
                 {
                     taskType = _taskTypeRepository.Get(model.TypeId.Value);
                 }
                 task.Type = taskType;
                 
-                TaskCategory? category = null;
+                Category? category = null;
                 if (model.SelectedCategory.HasValue)
                 {
                     category = _categoryRepository.Get(model.SelectedCategory.Value);
                 }
                 task.Category = category;
 
-                TaskStep? taskStep = null;
+                Step? taskStep = null;
                 if (model.StepId.HasValue)
                 {
                     taskStep = _taskStepRepository.Get(model.StepId.Value);

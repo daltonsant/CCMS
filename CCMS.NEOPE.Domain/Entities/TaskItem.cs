@@ -13,13 +13,13 @@ public class TaskItem : Entity<ulong>
 
     public string? SapNoteNumber { get; set; } = null;
     
-    public TaskCategory Category { get; set; }
+    public Category Category { get; set; }
     
     public TaskPriority? Priority { get; set; }
     public string? Description { get; set; } = string.Empty;
-    public TaskType Type { get; set; }
+    public Type Type { get; set; }
     public TaskStatus Status { get; set; }
-    public TaskStep Step { get; set; } = null;
+    public Step Step { get; set; } = null;
     public TaskItem? ParentTask { get; set; } = null;
     public virtual ICollection<TaskItem> ChildTasks { get; set; } = new List<TaskItem>();
     public virtual ICollection<LinkedTasks> LinkedObjectTasks { get; set; } = new List<LinkedTasks>();
