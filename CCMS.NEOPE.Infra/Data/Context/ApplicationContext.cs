@@ -27,6 +27,8 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
     public DbSet<TaskType> TaskTypes { get; set; }
     public DbSet<TaskCategory> TaskCategories { get; set; }
 
+    public DbSet<Accountable> Accountables { get; set; }
+
     public ApplicationContext (DbContextOptions<ApplicationContext> options) : base(options)
     {
         
@@ -52,5 +54,6 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
         builder.ApplyConfiguration(new CheckListItemMap());
         builder.ApplyConfiguration(new TaskTypeMap());
         builder.ApplyConfiguration(new TaskCategoryMap());
+        builder.ApplyConfiguration(new AccountableMap());
     }
 }

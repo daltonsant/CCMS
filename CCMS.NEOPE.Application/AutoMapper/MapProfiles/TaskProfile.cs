@@ -72,11 +72,12 @@ public class TaskProfile : Profile
                 opt => opt.Ignore())
             .ForMember(model => model.ReporterId, 
                 opt => 
-                    opt.MapFrom(source => (source.Reporter as ApplicationUser)!.Id))
+                    opt.MapFrom(source => source.Reporter != null ? source.Reporter.Id.ToString() : null))
             .ForMember(model => model.AssigneeIds, 
                 opt => 
                     opt.MapFrom(source => 
-                        source.Assignees.Select(x => (x as ApplicationUser)!.Id).ToList()))
+                        source.Assignees.Select(x => x.Id.ToString()).ToList()))
+
             .ForMember(model => model.Assignees, 
                 opt => opt.Ignore())
             .ForMember(model => model.ParentTaskId, 
@@ -120,11 +121,11 @@ public class TaskProfile : Profile
                 opt => opt.Ignore())
             .ForMember(model => model.ReporterId, 
                 opt => 
-                    opt.MapFrom(source => (source.Reporter as ApplicationUser)!.Id))
+                    opt.MapFrom(source => source.Reporter!= null ? source.Reporter.Id.ToString() : null))
             .ForMember(model => model.AssigneeIds, 
                 opt => 
                     opt.MapFrom(source => 
-                        source.Assignees.Select(x => (x as ApplicationUser)!.Id)))
+                        source.Assignees.Select(x => x.Id.ToString())))
             .ForMember(model => model.Assignees, 
                 opt => opt.Ignore())
             .ForMember(model => model.ParentTaskId, 

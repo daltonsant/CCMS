@@ -32,8 +32,8 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.HasOne(e => e.Project).WithMany(e => e.Tasks);
 
         builder.HasMany(e => e.Labels).WithMany(e => e.Tasks);
-        builder.HasMany(e => e.Assignees as ICollection<ApplicationUser>).WithMany(e => e.AssignedTasks);
-        builder.HasOne(e => e.Reporter as ApplicationUser).WithMany(e => e.ReportedTasks);
+        builder.HasMany(e => e.Assignees).WithMany(e => e.AssignedTasks);
+        builder.HasOne(e => e.Reporter).WithMany(e => e.ReportedTasks);
         builder.HasMany(e => e.Comments).WithOne(e => e.Task);
         builder.HasMany(e => e.Attachments).WithOne(e => e.Task);
         

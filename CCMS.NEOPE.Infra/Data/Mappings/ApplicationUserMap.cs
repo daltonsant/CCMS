@@ -19,9 +19,9 @@ public class ApplicationUserMap : IEntityTypeConfiguration<ApplicationUser>
 
         builder.HasMany(e => e.Comments).WithOne(c => c.User as ApplicationUser);
         builder.HasMany(e => e.Logs).WithOne(l => l.User as ApplicationUser);
-        builder.HasMany(e => e.ReportedTasks).WithOne(t => t.Reporter as ApplicationUser);
-        builder.HasMany(e => e.AssignedTasks).WithMany(t => t.Assignees as ICollection<ApplicationUser>);
-       
+
+        builder.HasOne(e => e.Accountable);
+        
         builder.ToTable("ApplicationUsers");
     }
 }

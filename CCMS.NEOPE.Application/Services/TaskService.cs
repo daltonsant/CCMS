@@ -24,6 +24,7 @@ public class TaskService : ITaskService
     private readonly ITaskTypeRepository _taskTypeRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ILinkedTasksRepository _linkedTasksRepository;
+    private readonly IAccountableRepository _accountableRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -35,7 +36,8 @@ public class TaskService : ITaskService
         ICategoryRepository categoryRepository,
         ILinkedTasksRepository linkedTasksRepository,
         IUserService userService,
-        IUnitOfWork unitOfWork, 
+        IUnitOfWork unitOfWork,
+        IAccountableRepository accountableRepository, 
         IMapper mapper)
     {
         _taskTypeRepository = taskTypeRepository;
@@ -45,6 +47,7 @@ public class TaskService : ITaskService
         _linkedTasksRepository = linkedTasksRepository;
         _userService = userService;
         _taskRepository = taskRepository;
+        _accountableRepository = accountableRepository;
         _unitOfWork = unitOfWork;
         
         _mapper = mapper;
@@ -89,10 +92,15 @@ public class TaskService : ITaskService
             }
             task.Category = category;
 
-            IUser? user = null;
+            Accountable? user = null;
             if (model.ReporterId != null)
             {
-                user = _userService.Users.FirstOrDefault(x => x.Id == model.ReporterId);
+                ulong reporterId = 0;
+                ulong.TryParse(model.ReporterId, out reporterId);
+                if(reporterId != 0)
+                {
+                    user = _accountableRepository.Entities.FirstOrDefault(x => x.Id == reporterId);
+                }
             }
             task.Reporter = user;
 
@@ -107,10 +115,15 @@ public class TaskService : ITaskService
             {
                 foreach (var id in model.AssigneeIds)
                 {
-                    var assignee = _userService.Users.FirstOrDefault(x => x.Id == id);
-                    if (assignee != null)
+                    ulong assigneeId = 0;
+                    ulong.TryParse(id, out assigneeId);
+                    if(assigneeId != 0)
                     {
-                        task.Assignees.Add(assignee);
+                        var assignee = _accountableRepository.Entities.FirstOrDefault(x => x.Id == assigneeId);
+                        if (assignee != null)
+                        {
+                            task.Assignees.Add(assignee);
+                        }
                     }
                 }
             }
@@ -181,12 +194,10 @@ public class TaskService : ITaskService
                 (x.Type != null && x.Type.Name.ToLower().Contains(searchString.ToLower())) ||
                 (x.Step != null && x.Step.Name.ToLower().Contains(searchString.ToLower())) ||
                 (x.Project != null && x.Project.Name.ToLower().Contains(searchString.ToLower())) ||
-                (x.Reporter != null && x.Reporter.FirstName.Contains(searchString.ToLower())) ||
-                (x.Reporter != null && x.Reporter.LastName.Contains(searchString.ToLower())) ||
+                (x.Reporter != null && x.Reporter.DisplayName.Contains(searchString.ToLower())) ||
                 (x.Category != null && x.Category.Name.Contains(searchString.ToLower())) ||  
                 (x.Assignees.Any(a =>
-                     a.FirstName.ToLower().Contains(searchString.ToLower()) ||
-                     a.LastName.ToLower().Contains(searchString.ToLower()))));
+                     a.DisplayName.ToLower().Contains(searchString.ToLower()))));
         }
         var filterRecord = data.Count();
         
@@ -252,10 +263,15 @@ public class TaskService : ITaskService
                 }
                 task.Step = taskStep;
 
-                IUser? user = null;
+                 Accountable? user = null;
                 if (model.ReporterId != null)
                 {
-                    user = _userService.Users.FirstOrDefault(x => x.Id == model.ReporterId);
+                    ulong reporterId = 0;
+                    ulong.TryParse(model.ReporterId, out reporterId);
+                    if(reporterId != 0)
+                    {
+                        user = _accountableRepository.Entities.FirstOrDefault(x => x.Id == reporterId);
+                    }
                 }
                 task.Reporter = user;
 
@@ -265,15 +281,20 @@ public class TaskService : ITaskService
                     parent = _taskRepository.Get(model.ParentTaskId.Value);
                 }
                 task.ParentTask = parent;
-                
+
                 if (model.AssigneeIds.Any())
                 {
                     foreach (var id in model.AssigneeIds)
                     {
-                        var assignee = _userService.Users.FirstOrDefault(x => x.Id == id);
-                        if (assignee != null)
+                        ulong assigneeId = 0;
+                        ulong.TryParse(id, out assigneeId);
+                        if(assigneeId != 0)
                         {
-                            task.Assignees.Add(assignee);
+                            var assignee = _accountableRepository.Entities.FirstOrDefault(x => x.Id == assigneeId);
+                            if (assignee != null)
+                            {
+                                task.Assignees.Add(assignee);
+                            }
                         }
                     }
                 }

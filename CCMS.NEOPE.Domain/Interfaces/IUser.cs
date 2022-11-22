@@ -11,10 +11,8 @@ public interface IUser
     
     bool IsActive { get; set; }
     
-    ICollection<TaskItem> ReportedTasks { get; set; }
-    ICollection<TaskItem> AssignedTasks { get; set; }
-    
     ICollection<Comment> Comments { get; set; }
     
     ICollection<TaskLog> Logs { get; set; }
+
 }

@@ -1,4 +1,5 @@
 using CCMS.NEOPE.Application.ViewModels;
+using CCMS.NEOPE.Domain.Entities;
 using CCMS.NEOPE.Infra.Identity;
 using CCMS.NEOPE.Infra.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -54,6 +55,14 @@ public class UsersController : Controller
         user.Code = viewModel.UserName;
         user.Photo = viewModel.Photo;
         user.IsActive = true;
+
+        Accountable accountable = new Accountable()
+        {
+            DisplayName = user.FirstName + " " + user.LastName,
+            Code = user.Code,
+            User = user
+        };
+        user.Accountable = accountable;
             
         if(!_userService.VerifyIfHasRegisteredUsers())
         {
@@ -161,6 +170,10 @@ public class UsersController : Controller
                 }
                 return View(viewModel);
             }
+        }
+
+        if(currentUser.Accountable != null){
+            currentUser.Accountable.DisplayName = currentUser.FirstName + " " + currentUser.LastName;
         }
 
         if (photo == null) return RedirectToAction("Index", "Home");

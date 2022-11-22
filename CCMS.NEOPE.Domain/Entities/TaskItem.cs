@@ -30,8 +30,8 @@ public class TaskItem : Entity<ulong>
     public virtual DateTime? CompletedDate { get; set; } = null;
     public virtual ICollection<Asset> Assets { get; set; } = new List<Asset>();
     public virtual ICollection<Label> Labels { get; set; } = new List<Label>();
-    public virtual ICollection<IUser> Assignees { get; set; } = new List<IUser>();
-    public virtual IUser? Reporter { get; set; } = null;
+    public virtual ICollection<Accountable> Assignees { get; set; } = new List<Accountable>();
+    public virtual Accountable? Reporter { get; set; } = null;
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
     public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
     public virtual ICollection<TaskLog> Logs { get; set; } = new List<TaskLog>();
