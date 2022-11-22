@@ -15,4 +15,7 @@ public interface IUser
     
     ICollection<TaskLog> Logs { get; set; }
 
+    ulong AccountableId { get; set; }
+    Accountable Accountable { get; set; }
+
 }

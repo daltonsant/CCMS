@@ -17,6 +17,9 @@ public class AccountableMap : IEntityTypeConfiguration<Accountable>
         builder.HasMany(e => e.ReportedTasks).WithOne(t => t.Reporter);
         builder.HasMany(e => e.AssignedTasks).WithMany(t => t.Assignees);
 
+        builder.HasOne(e => e.User as ApplicationUser)
+            .WithOne(e => e.Accountable);
+
         builder.ToTable("Accountables");
     }
 }

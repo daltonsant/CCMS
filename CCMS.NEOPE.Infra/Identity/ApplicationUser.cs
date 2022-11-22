@@ -14,6 +14,7 @@ public class ApplicationUser : IdentityUser<string>,  IUser
     public bool IsActive { get; set; }
     public bool IsFirstAccess { get; set; }
     
+    public virtual ulong AccountableId { get; set; }
     public virtual Accountable Accountable { get; set; }
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
