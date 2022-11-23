@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CCMS.NEOPE.Infra.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20221122143712_AccountableChange2")]
-    partial class AccountableChange2
+    [Migration("20221123170055_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -142,6 +142,48 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.ToTable("Assets", (string)null);
                 });
 
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.AssetProjectStatus", b =>
+                {
+                    b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<ulong>("AssetId")
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StepId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetId")
+                        .IsUnique();
+
+                    b.HasIndex("StepId");
+
+                    b.ToTable("AssetProjectStatus");
+                });
+
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.AssetType", b =>
                 {
                     b.Property<ulong>("Id")
@@ -182,6 +224,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint unsigned");
 
+                    b.Property<ulong?>("AssetStatusId")
+                        .HasColumnType("bigint unsigned");
+
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime(6)");
 
@@ -201,17 +246,93 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Property<int>("Size")
                         .HasColumnType("int");
 
-                    b.Property<ulong?>("TaskId")
-                        .HasColumnType("bigint unsigned");
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetStatusId");
+
+                    b.ToTable("Attachments", (string)null);
+                });
+
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TaskId");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
-                    b.ToTable("Attachments", (string)null);
+                    b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(485),
+                            Name = "Civil"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(532),
+                            Name = "Eletromecânico"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(534),
+                            Name = "Aterramento"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(535),
+                            Name = "Projeto"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(536),
+                            Name = "Painéis"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(537),
+                            Name = "Equipamentos"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(539),
+                            Name = "Interligações"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(540),
+                            Name = "SPCS"
+                        });
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.CheckListItem", b =>
@@ -255,6 +376,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint unsigned");
 
+                    b.Property<ulong?>("AssetStatusId")
+                        .HasColumnType("bigint unsigned");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -268,9 +392,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp(6)");
 
-                    b.Property<ulong?>("TaskId")
-                        .HasColumnType("bigint unsigned");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime(6)");
 
@@ -279,7 +400,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TaskId");
+                    b.HasIndex("AssetStatusId");
 
                     b.HasIndex("UserId");
 
@@ -352,6 +473,38 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.ToTable("LinkedTasks", (string)null);
                 });
 
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Log", b =>
+                {
+                    b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<ulong?>("AssetStatusId")
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp(6)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetStatusId");
+
+                    b.ToTable("Logs", (string)null);
+                });
+
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Project", b =>
                 {
                     b.Property<ulong>("Id")
@@ -383,7 +536,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.ToTable("Projects", (string)null);
                 });
 
-            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskCategory", b =>
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Step", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -409,56 +562,44 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("TaskCategories", (string)null);
+                    b.ToTable("Steps", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8943),
-                            Name = "Civil"
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9863),
+                            Name = "Planejamento"
                         },
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8948),
-                            Name = "Eletromecânico"
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9875),
+                            Name = "TAC Equip. Interlig."
                         },
                         new
                         {
                             Id = 3,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8949),
-                            Name = "Aterramento"
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9876),
+                            Name = "TAF SPCS"
                         },
                         new
                         {
                             Id = 4,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8950),
-                            Name = "Projeto"
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9877),
+                            Name = "TAC SPCS"
                         },
                         new
                         {
                             Id = 5,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8952),
-                            Name = "Painéis"
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9878),
+                            Name = "Energização"
                         },
                         new
                         {
                             Id = 6,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8953),
-                            Name = "Equipamentos"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8954),
-                            Name = "Interligações"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8955),
-                            Name = "SPCS"
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9879),
+                            Name = "SAP"
                         });
                 });
 
@@ -548,111 +689,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.ToTable("TaskItems", (string)null);
                 });
 
-            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskLog", b =>
-                {
-                    b.Property<ulong>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint unsigned");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Log")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
-
-                    b.Property<DateTime>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<ulong?>("TaskId")
-                        .HasColumnType("bigint unsigned");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TaskLogs", (string)null);
-                });
-
-            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskStep", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("TaskSteps", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 29, DateTimeKind.Local).AddTicks(1632),
-                            Name = "Planejamento"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 29, DateTimeKind.Local).AddTicks(1644),
-                            Name = "TAC Equip. Interlig."
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 29, DateTimeKind.Local).AddTicks(1645),
-                            Name = "TAF SPCS"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 29, DateTimeKind.Local).AddTicks(1646),
-                            Name = "TAC SPCS"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 29, DateTimeKind.Local).AddTicks(1647),
-                            Name = "Energização"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 29, DateTimeKind.Local).AddTicks(1648),
-                            Name = "SAP"
-                        });
-                });
-
-            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskType", b =>
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Type", b =>
                 {
                     b.Property<ulong>("Id")
                         .ValueGeneratedOnAdd()
@@ -678,37 +715,37 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("TaskTypes", (string)null);
+                    b.ToTable("Types", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1ul,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8227),
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9716),
                             Name = "Informativo"
                         },
                         new
                         {
                             Id = 2ul,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8238),
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9728),
                             Name = "Acompanhamento"
                         },
                         new
                         {
                             Id = 3ul,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8240),
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9730),
                             Name = "Pendência não impeditiva"
                         },
                         new
                         {
                             Id = 4ul,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8242),
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9731),
                             Name = "Pendência impeditiva"
                         },
                         new
                         {
                             Id = 5ul,
-                            CreateDate = new DateTime(2022, 11, 22, 11, 37, 12, 46, DateTimeKind.Local).AddTicks(8243),
+                            CreateDate = new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9732),
                             Name = "Não conformidade"
                         });
                 });
@@ -747,16 +784,16 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cc4ab119-be38-4eab-94eb-5fbbcab6bbb5",
-                            ConcurrencyStamp = "94ce2696-e958-455b-9e06-b0a5285e715d",
+                            Id = "b97c49d6-8186-4129-a7cd-92d88df5eea0",
+                            ConcurrencyStamp = "c48c74fd-c2ab-4811-a888-6ad40195c229",
                             Description = "Administrador do sistema",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "e52bcf97-e128-4209-b662-d5675b214836",
-                            ConcurrencyStamp = "ee30eee7-6f72-47ea-b952-642e3150fd24",
+                            Id = "d9beec0c-0596-4ce1-8157-93934530e91c",
+                            ConcurrencyStamp = "02c65148-083a-4fc7-8c7f-2967f11bd77f",
                             Description = "Usuário comum do sistema",
                             Name = "User",
                             NormalizedName = "USER"
@@ -1038,13 +1075,32 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.AssetProjectStatus", b =>
+                {
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.Asset", "Asset")
+                        .WithOne("Status")
+                        .HasForeignKey("CCMS.NEOPE.Domain.Entities.AssetProjectStatus", "AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.Step", "Step")
+                        .WithMany()
+                        .HasForeignKey("StepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Asset");
+
+                    b.Navigation("Step");
+                });
+
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Attachment", b =>
                 {
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskItem", "Task")
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.AssetProjectStatus", "AssetStatus")
                         .WithMany("Attachments")
-                        .HasForeignKey("TaskId");
+                        .HasForeignKey("AssetStatusId");
 
-                    b.Navigation("Task");
+                    b.Navigation("AssetStatus");
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.CheckListItem", b =>
@@ -1060,15 +1116,15 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Comment", b =>
                 {
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskItem", "Task")
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.AssetProjectStatus", "AssetStatus")
                         .WithMany("Comments")
-                        .HasForeignKey("TaskId");
+                        .HasForeignKey("AssetStatusId");
 
                     b.HasOne("CCMS.NEOPE.Infra.Identity.ApplicationUser", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Task");
+                    b.Navigation("AssetStatus");
 
                     b.Navigation("User");
                 });
@@ -1092,9 +1148,18 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Navigation("SubjectTask");
                 });
 
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Log", b =>
+                {
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.AssetProjectStatus", "AssetStatus")
+                        .WithMany("Logs")
+                        .HasForeignKey("AssetStatusId");
+
+                    b.Navigation("AssetStatus");
+                });
+
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskItem", b =>
                 {
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskCategory", "Category")
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.Category", "Category")
                         .WithMany("TaskItemsByCategory")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1114,13 +1179,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .WithMany("ReportedTasks")
                         .HasForeignKey("ReporterId");
 
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskStep", "Step")
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.Step", "Step")
                         .WithMany()
                         .HasForeignKey("StepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskType", "Type")
+                    b.HasOne("CCMS.NEOPE.Domain.Entities.Type", "Type")
                         .WithMany("TaskItemsByType")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1137,21 +1202,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Navigation("Step");
 
                     b.Navigation("Type");
-                });
-
-            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskLog", b =>
-                {
-                    b.HasOne("CCMS.NEOPE.Domain.Entities.TaskItem", "Task")
-                        .WithMany("Logs")
-                        .HasForeignKey("TaskId");
-
-                    b.HasOne("CCMS.NEOPE.Infra.Identity.ApplicationUser", "User")
-                        .WithMany("Logs")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Task");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Infra.Identity.ApplicationUser", b =>
@@ -1238,9 +1288,29 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Asset", b =>
+                {
+                    b.Navigation("Status")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.AssetProjectStatus", b =>
+                {
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("Logs");
+                });
+
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.AssetType", b =>
                 {
                     b.Navigation("AssetsByType");
+                });
+
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("TaskItemsByCategory");
                 });
 
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Project", b =>
@@ -1248,29 +1318,18 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskCategory", b =>
-                {
-                    b.Navigation("TaskItemsByCategory");
-                });
-
             modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskItem", b =>
                 {
-                    b.Navigation("Attachments");
-
                     b.Navigation("CheckListItems");
 
                     b.Navigation("ChildTasks");
 
-                    b.Navigation("Comments");
-
                     b.Navigation("LinkedObjectTasks");
 
                     b.Navigation("LinkedSubjectTasks");
-
-                    b.Navigation("Logs");
                 });
 
-            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.TaskType", b =>
+            modelBuilder.Entity("CCMS.NEOPE.Domain.Entities.Type", b =>
                 {
                     b.Navigation("TaskItemsByType");
                 });
@@ -1278,8 +1337,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
             modelBuilder.Entity("CCMS.NEOPE.Infra.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Logs");
                 });
 #pragma warning restore 612, 618
         }

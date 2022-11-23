@@ -22,7 +22,7 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser,ApplicationR
     public DbSet<Label> Labels { get; set; }
 
     public DbSet<Project> Projects { get; set; }
-    public DbSet<TaskLog> TaskLogs { get; set; }
+    public DbSet<Log> TaskLogs { get; set; }
     public DbSet<Step> TaskSteps { get; set; }
     public DbSet<Domain.Entities.Type> TaskTypes { get; set; }
     public DbSet<Category> TaskCategories { get; set; }

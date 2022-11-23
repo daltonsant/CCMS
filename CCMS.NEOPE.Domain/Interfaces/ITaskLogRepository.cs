@@ -3,7 +3,7 @@ using CCMS.NEOPE.Domain.Entities;
 
 namespace CCMS.NEOPE.Domain.Interfaces;
 
-public interface ITaskLogRepository : IGenericRepository<TaskLog, ulong>
+public interface ITaskLogRepository : IGenericRepository<Log, ulong>
 {
     
 }

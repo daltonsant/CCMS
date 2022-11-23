@@ -3,10 +3,8 @@ using CCMS.NEOPE.Domain.Interfaces;
 
 namespace CCMS.NEOPE.Domain.Entities;
 
-public class TaskLog : Entity<ulong>
+public class Log : Entity<ulong>
 {
-    public string Log { get; set; } = string.Empty;
-    public virtual IUser? User { get; set; } = null;
-
-    public virtual TaskItem? Task { get; set; } = null;
+    public string Text { get; set; } = string.Empty;
+    public virtual AssetProjectStatus? AssetStatus { get; set; }
 }

@@ -12,8 +12,6 @@ public interface IUser
     bool IsActive { get; set; }
     
     ICollection<Comment> Comments { get; set; }
-    
-    ICollection<TaskLog> Logs { get; set; }
 
     ulong AccountableId { get; set; }
     Accountable Accountable { get; set; }

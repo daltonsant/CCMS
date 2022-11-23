@@ -18,7 +18,6 @@ public class ApplicationUserMap : IEntityTypeConfiguration<ApplicationUser>
         builder.Property(e => e.LastName).IsRequired().HasMaxLength(64);
 
         builder.HasMany(e => e.Comments).WithOne(c => c.User as ApplicationUser);
-        builder.HasMany(e => e.Logs).WithOne(l => l.User as ApplicationUser);
         
         builder.HasOne(e => e.Accountable)
             .WithOne(e => e.User as ApplicationUser)

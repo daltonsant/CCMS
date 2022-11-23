@@ -14,7 +14,7 @@ public class AttachmentMap : IEntityTypeConfiguration<Attachment>
         builder.Property(e => e.Size).IsRequired();
         builder.Property(e => e.Path).IsRequired();
         builder.Property(e => e.Name).IsRequired();
-        builder.HasOne(e => e.Task).WithMany(a => a.Attachments);
+        builder.HasOne(e => e.AssetStatus).WithMany(a => a.Attachments);
 
         builder.ToTable("Attachments");
     }

@@ -32,9 +32,7 @@ public class TaskItem : Entity<ulong>
     public virtual ICollection<Label> Labels { get; set; } = new List<Label>();
     public virtual ICollection<Accountable> Assignees { get; set; } = new List<Accountable>();
     public virtual Accountable? Reporter { get; set; } = null;
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-    public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
-    public virtual ICollection<TaskLog> Logs { get; set; } = new List<TaskLog>();
+    
     public virtual ICollection<CheckListItem> CheckListItems { get; set; } = new List<CheckListItem>();
     public virtual int Order { get; set; }
 }

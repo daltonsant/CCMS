@@ -6,11 +6,34 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CCMS.NEOPE.Infra.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Accountables",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DisplayName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Sector = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accountables", x => x.Id);
+                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -35,51 +58,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ApplicationUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Code = table.Column<string>(type: "varchar(12)", maxLength: 12, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FirstName = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    LastName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Photo = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    IsFirstAccess = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicationUsers", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AssetTypes",
                 columns: table => new
                 {
@@ -97,6 +75,25 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AssetTypes", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -143,7 +140,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "TaskCategories",
+                name: "Steps",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -157,31 +154,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskCategories", x => x.Id);
+                    table.PrimaryKey("PK_Steps", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "TaskSteps",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TaskSteps", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "TaskTypes",
+                name: "Types",
                 columns: table => new
                 {
                     Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
@@ -195,7 +173,59 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskTypes", x => x.Id);
+                    table.PrimaryKey("PK_Types", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Code = table.Column<string>(type: "varchar(12)", maxLength: 12, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FirstName = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LastName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Photo = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsFirstAccess = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AccountableId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUsers_Accountables_AccountableId",
+                        column: x => x.AccountableId,
+                        principalTable: "Accountables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -219,6 +249,104 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         name: "FK_AspNetRoleClaims_ApplicationRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "ApplicationRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Assets",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TypeId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Assets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Assets_AssetTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "AssetTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "TaskItems",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ProjectId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    Title = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SapNoteNumber = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TypeId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    StepId = table.Column<int>(type: "int", nullable: false),
+                    ParentTaskId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    PlannedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CompletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    ReporterId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskItems_Accountables_ReporterId",
+                        column: x => x.ReporterId,
+                        principalTable: "Accountables",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TaskItems_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TaskItems_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TaskItems_Steps_StepId",
+                        column: x => x.StepId,
+                        principalTable: "Steps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TaskItems_TaskItems_ParentTaskId",
+                        column: x => x.ParentTaskId,
+                        principalTable: "TaskItems",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TaskItems_Types_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "Types",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -327,104 +455,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Assets",
-                columns: table => new
-                {
-                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TypeId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Assets", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Assets_AssetTypes_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "AssetTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "TaskItems",
-                columns: table => new
-                {
-                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ProjectId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    Title = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SapNoteNumber = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    Priority = table.Column<int>(type: "int", nullable: true),
-                    Description = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TypeId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    StepId = table.Column<int>(type: "int", nullable: false),
-                    ParentTaskId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    PlannedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    CompletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ReporterId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TaskItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TaskItems_ApplicationUsers_ReporterId",
-                        column: x => x.ReporterId,
-                        principalTable: "ApplicationUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TaskItems_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TaskItems_TaskCategories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "TaskCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TaskItems_TaskItems_ParentTaskId",
-                        column: x => x.ParentTaskId,
-                        principalTable: "TaskItems",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_TaskItems_TaskSteps_StepId",
-                        column: x => x.StepId,
-                        principalTable: "TaskSteps",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TaskItems_TaskTypes_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "TaskTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AssetProject",
                 columns: table => new
                 {
@@ -450,24 +480,57 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ApplicationUserTaskItem",
+                name: "AssetProjectStatus",
                 columns: table => new
                 {
-                    AssignedTasksId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    AssigneesId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    StepId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    AssetId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApplicationUserTaskItem", x => new { x.AssignedTasksId, x.AssigneesId });
+                    table.PrimaryKey("PK_AssetProjectStatus", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ApplicationUserTaskItem_ApplicationUsers_AssigneesId",
-                        column: x => x.AssigneesId,
-                        principalTable: "ApplicationUsers",
+                        name: "FK_AssetProjectStatus_Assets_AssetId",
+                        column: x => x.AssetId,
+                        principalTable: "Assets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ApplicationUserTaskItem_TaskItems_AssignedTasksId",
+                        name: "FK_AssetProjectStatus_Steps_StepId",
+                        column: x => x.StepId,
+                        principalTable: "Steps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AccountableTaskItem",
+                columns: table => new
+                {
+                    AssignedTasksId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    AssigneesId = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountableTaskItem", x => new { x.AssignedTasksId, x.AssigneesId });
+                    table.ForeignKey(
+                        name: "FK_AccountableTaskItem_Accountables_AssigneesId",
+                        column: x => x.AssigneesId,
+                        principalTable: "Accountables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccountableTaskItem_TaskItems_AssignedTasksId",
                         column: x => x.AssignedTasksId,
                         principalTable: "TaskItems",
                         principalColumn: "Id",
@@ -501,34 +564,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Attachments",
-                columns: table => new
-                {
-                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Size = table.Column<int>(type: "int", nullable: false),
-                    Path = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TaskId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
-                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attachments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Attachments_TaskItems_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "TaskItems",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "CheckListItems",
                 columns: table => new
                 {
@@ -552,38 +587,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         principalTable: "TaskItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Content = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TaskId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
-                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comments_ApplicationUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "ApplicationUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Comments_TaskItems_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "TaskItems",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -643,16 +646,17 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "TaskLogs",
+                name: "Attachments",
                 columns: table => new
                 {
                     Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Log = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
+                    Size = table.Column<int>(type: "int", nullable: false),
+                    Path = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                    Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TaskId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    AssetStatusId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
@@ -660,16 +664,68 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskLogs", x => x.Id);
+                    table.PrimaryKey("PK_Attachments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TaskLogs_ApplicationUsers_UserId",
+                        name: "FK_Attachments_AssetProjectStatus_AssetStatusId",
+                        column: x => x.AssetStatusId,
+                        principalTable: "AssetProjectStatus",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Content = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AssetStatusId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_ApplicationUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "ApplicationUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_TaskLogs_TaskItems_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "TaskItems",
+                        name: "FK_Comments_AssetProjectStatus_AssetStatusId",
+                        column: x => x.AssetStatusId,
+                        principalTable: "AssetProjectStatus",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Logs",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Text = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AssetStatusId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Logs_AssetProjectStatus_AssetStatusId",
+                        column: x => x.AssetStatusId,
+                        principalTable: "AssetProjectStatus",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -679,49 +735,54 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "9641e920-d9fb-46ca-8a80-609c95e93fae", "23e614ba-cb92-4c24-a2d8-6ea572fd6ba9", "Administrador do sistema", "Administrator", "ADMINISTRATOR" },
-                    { "a23a5bc0-27e4-40a3-8bb3-01ee83fee45b", "f334fbc6-2efb-4caf-8138-251740eb9cef", "Usuário comum do sistema", "User", "USER" }
+                    { "b97c49d6-8186-4129-a7cd-92d88df5eea0", "c48c74fd-c2ab-4811-a888-6ad40195c229", "Administrador do sistema", "Administrator", "ADMINISTRATOR" },
+                    { "d9beec0c-0596-4ce1-8157-93934530e91c", "02c65148-083a-4fc7-8c7f-2967f11bd77f", "Usuário comum do sistema", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
-                table: "TaskCategories",
+                table: "Categories",
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7361), "Civil", null },
-                    { 2, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7364), "Eletromecânico", null },
-                    { 3, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7365), "Aterramento", null },
-                    { 4, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7366), "Projeto", null },
-                    { 5, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7367), "Painéis", null },
-                    { 6, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7368), "Equipamentos", null },
-                    { 7, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7369), "Interligações", null },
-                    { 8, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(7370), "SPCS", null }
+                    { 1, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(485), "Civil", null },
+                    { 2, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(532), "Eletromecânico", null },
+                    { 3, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(534), "Aterramento", null },
+                    { 4, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(535), "Projeto", null },
+                    { 5, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(536), "Painéis", null },
+                    { 6, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(537), "Equipamentos", null },
+                    { 7, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(539), "Interligações", null },
+                    { 8, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(540), "SPCS", null }
                 });
 
             migrationBuilder.InsertData(
-                table: "TaskSteps",
+                table: "Steps",
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7272), "Planejamento", null },
-                    { 2, new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7283), "TAC Equip. Interlig.", null },
-                    { 3, new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7284), "TAF SPCS", null },
-                    { 4, new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7285), "TAC SPCS", null },
-                    { 5, new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7286), "Energização", null },
-                    { 6, new DateTime(2022, 8, 26, 16, 28, 20, 212, DateTimeKind.Local).AddTicks(7287), "SAP", null }
+                    { 1, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9863), "Planejamento", null },
+                    { 2, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9875), "TAC Equip. Interlig.", null },
+                    { 3, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9876), "TAF SPCS", null },
+                    { 4, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9877), "TAC SPCS", null },
+                    { 5, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9878), "Energização", null },
+                    { 6, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9879), "SAP", null }
                 });
 
             migrationBuilder.InsertData(
-                table: "TaskTypes",
+                table: "Types",
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1ul, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6858), "Informativo", null },
-                    { 2ul, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6866), "Acompanhamento", null },
-                    { 3ul, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6867), "Pendência não impeditiva", null },
-                    { 4ul, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6868), "Pendência impeditiva", null },
-                    { 5ul, new DateTime(2022, 8, 26, 16, 28, 20, 215, DateTimeKind.Local).AddTicks(6869), "Não conformidade", null }
+                    { 1ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9716), "Informativo", null },
+                    { 2ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9728), "Acompanhamento", null },
+                    { 3ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9730), "Pendência não impeditiva", null },
+                    { 4ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9731), "Pendência impeditiva", null },
+                    { 5ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9732), "Não conformidade", null }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountableTaskItem_AssigneesId",
+                table: "AccountableTaskItem",
+                column: "AssigneesId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -735,6 +796,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUsers_AccountableId",
+                table: "ApplicationUsers",
+                column: "AccountableId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ApplicationUsers_Code",
                 table: "ApplicationUsers",
                 column: "Code",
@@ -745,11 +812,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 table: "ApplicationUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApplicationUserTaskItem_AssigneesId",
-                table: "ApplicationUserTaskItem",
-                column: "AssigneesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -777,6 +839,17 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "ProjectsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AssetProjectStatus_AssetId",
+                table: "AssetProjectStatus",
+                column: "AssetId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssetProjectStatus_StepId",
+                table: "AssetProjectStatus",
+                column: "StepId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Assets_Code",
                 table: "Assets",
                 column: "Code",
@@ -799,9 +872,15 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_TaskId",
+                name: "IX_Attachments_AssetStatusId",
                 table: "Attachments",
-                column: "TaskId");
+                column: "AssetStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CheckListItems_TaskId",
@@ -809,9 +888,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_TaskId",
+                name: "IX_Comments_AssetStatusId",
                 table: "Comments",
-                column: "TaskId");
+                column: "AssetStatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserId",
@@ -834,8 +913,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "SubjectTaskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskCategories_Name",
-                table: "TaskCategories",
+                name: "IX_Logs_AssetStatusId",
+                table: "Logs",
+                column: "AssetStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Steps_Name",
+                table: "Steps",
                 column: "Name",
                 unique: true);
 
@@ -870,24 +954,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskLogs_TaskId",
-                table: "TaskLogs",
-                column: "TaskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskLogs_UserId",
-                table: "TaskLogs",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskSteps_Name",
-                table: "TaskSteps",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskTypes_Name",
-                table: "TaskTypes",
+                name: "IX_Types_Name",
+                table: "Types",
                 column: "Name",
                 unique: true);
         }
@@ -895,7 +963,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApplicationUserTaskItem");
+                name: "AccountableTaskItem");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -934,13 +1002,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "LinkedTasks");
 
             migrationBuilder.DropTable(
-                name: "TaskLogs");
+                name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "ApplicationRoles");
 
             migrationBuilder.DropTable(
-                name: "Assets");
+                name: "ApplicationUsers");
 
             migrationBuilder.DropTable(
                 name: "Labels");
@@ -949,22 +1017,28 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "TaskItems");
 
             migrationBuilder.DropTable(
-                name: "AssetTypes");
+                name: "AssetProjectStatus");
 
             migrationBuilder.DropTable(
-                name: "ApplicationUsers");
+                name: "Accountables");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "TaskCategories");
+                name: "Types");
 
             migrationBuilder.DropTable(
-                name: "TaskSteps");
+                name: "Assets");
 
             migrationBuilder.DropTable(
-                name: "TaskTypes");
+                name: "Steps");
+
+            migrationBuilder.DropTable(
+                name: "AssetTypes");
         }
     }
 }

@@ -19,6 +19,9 @@ public class AssetMap : IEntityTypeConfiguration<Asset>
         builder.HasOne(e => e.Type)
             .WithMany(e => e.AssetsByType);
 
+        builder.HasOne(e => e.Status).WithOne(e => e.Asset)
+            .HasForeignKey<AssetProjectStatus>("AssetId").OnDelete(DeleteBehavior.Cascade);
+
         builder.ToTable("Assets");
     }
 }
