@@ -9,7 +9,11 @@ public class AssetTypeProfile : Profile
     public AssetTypeProfile()
     {
         CreateMap<AssetType, ViewAssetTypeModel>().ReverseMap();
-        CreateMap<AssetType, EditAssetTypeModel>().ReverseMap();
-        CreateMap<AssetType, AddAssetTypeModel>().ReverseMap();
+        CreateMap<AssetType, EditAssetTypeModel>()
+            .ForMember(x => x.SelectedSteps, opt => opt.MapFrom(x => x.AllowedSteps.Select(x => x.Id)))
+            .ReverseMap();
+        CreateMap<AssetType, AddAssetTypeModel>()
+            .ForMember(x => x.SelectedSteps, opt => opt.MapFrom(x => x.AllowedSteps.Select(x => x.Id)))
+            .ReverseMap();
     }
 }

@@ -22,7 +22,8 @@ public class AssetTypesController : Controller
 
     public IActionResult Add()
     {
-        return View();
+        var model = _assetTypeService.Get();
+        return View(model);
     }
     
     

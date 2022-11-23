@@ -11,4 +11,5 @@ public interface IAssetTypeService
     void Edit(EditAssetTypeModel model);
     void Delete(ulong Id);
     EditAssetTypeModel? Get(ulong id);
+    AddAssetTypeModel Get();
 }

@@ -426,3 +426,130 @@ VALUES ('20221123170055_InitialMigration', '6.0.7');
 
 COMMIT;
 
+START TRANSACTION;
+
+DELETE FROM `ApplicationRoles`
+WHERE `Id` = 'b97c49d6-8186-4129-a7cd-92d88df5eea0';
+SELECT ROW_COUNT();
+
+
+DELETE FROM `ApplicationRoles`
+WHERE `Id` = 'd9beec0c-0596-4ce1-8157-93934530e91c';
+SELECT ROW_COUNT();
+
+
+CREATE TABLE `AssetTypeStep` (
+    `AllowedStepsId` int NOT NULL,
+    `AssetTypesId` bigint unsigned NOT NULL,
+    CONSTRAINT `PK_AssetTypeStep` PRIMARY KEY (`AllowedStepsId`, `AssetTypesId`),
+    CONSTRAINT `FK_AssetTypeStep_AssetTypes_AssetTypesId` FOREIGN KEY (`AssetTypesId`) REFERENCES `AssetTypes` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_AssetTypeStep_Steps_AllowedStepsId` FOREIGN KEY (`AllowedStepsId`) REFERENCES `Steps` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+
+INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
+VALUES ('159f96e4-1ecb-4bf5-8172-f2686c658bb8', 'de391e89-54b4-4514-a6ab-04273f91ad57', 'Administrador do sistema', 'Administrator', 'ADMINISTRATOR');
+INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
+VALUES ('77902611-8080-4f8b-b103-3e39814d4e7c', '24586352-88a1-471f-ae22-3e8c1a173c3e', 'Usuário comum do sistema', 'User', 'USER');
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 1;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 2;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 3;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 4;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 5;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 6;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 7;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 8;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 1;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 2;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 3;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 4;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 5;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 6;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 1;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 2;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 3;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 4;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
+WHERE `Id` = 5;
+SELECT ROW_COUNT();
+
+
+CREATE INDEX `IX_AssetTypeStep_AssetTypesId` ON `AssetTypeStep` (`AssetTypesId`);
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20221123183345_AddAllowedSteps', '6.0.7');
+
+COMMIT;
+

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CCMS.NEOPE.Application.ViewModels.AssetTypes;
 
@@ -16,4 +17,8 @@ public class EditAssetTypeModel
     [StringLength(256, ErrorMessage = "Use menos caracteres")]
     [Display(Name = "Description")]
     public string Description { get; set; } = string.Empty;
+
+    public ICollection<int> SelectedSteps { get; set; }
+
+    public MultiSelectList AvailableSteps { get; set; }
 }

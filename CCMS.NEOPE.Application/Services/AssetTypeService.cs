@@ -5,6 +5,8 @@ using CCMS.NEOPE.Domain.Core.Interfaces;
 using CCMS.NEOPE.Domain.Entities;
 using CCMS.NEOPE.Domain.Interfaces;
 using CCMS.NEOPE.Infra.Customs;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace CCMS.NEOPE.Application.Services;
 
@@ -12,14 +14,17 @@ public class AssetTypeService : IAssetTypeService
 {
     private readonly IAssetTypeRepository _assetTypeRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ITaskStepRepository _stepRepository;
     private readonly IMapper _mapper;
 
     public AssetTypeService(
         IAssetTypeRepository assetTypeRepository, 
         IUnitOfWork unitOfWork,
+        ITaskStepRepository stepRepository,
         IMapper mapper)
     {
         _assetTypeRepository = assetTypeRepository;
+        _stepRepository = stepRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -27,8 +32,15 @@ public class AssetTypeService : IAssetTypeService
     public void Add(AddAssetTypeModel model)
     {
         using var transaction = _unitOfWork.BeginTransaction();
-        var project = _mapper.Map<AssetType>(model);
-        _assetTypeRepository.Save(project);
+        var assetType = _mapper.Map<AssetType>(model);
+        if(model.SelectedSteps != null && model.SelectedSteps.Any())
+        {
+            var ids = model.SelectedSteps.ToList();
+            var steps = _stepRepository.Entities.Where(x => ids.Contains(x.Id)).OrderBy(x => x.Id).ToList();
+            assetType.AllowedSteps = new List<Step>(steps);
+        }
+
+        _assetTypeRepository.Save(assetType);
         transaction.Commit();
     }
 
@@ -57,11 +69,18 @@ public class AssetTypeService : IAssetTypeService
     public void Edit(EditAssetTypeModel model)
     {
         using var transaction = _unitOfWork.BeginTransaction();
-        var projectToUpdate = _assetTypeRepository.Get(model.Id);
+        var assetTypeToUpdate = _assetTypeRepository.Get(model.Id);
 
-        _mapper.Map(model, projectToUpdate);
+        _mapper.Map(model, assetTypeToUpdate);
+
+        if(model.SelectedSteps != null && model.SelectedSteps.Any())
+        {
+            var ids = model.SelectedSteps.ToList();
+            var steps = _stepRepository.Entities.Where(x => ids.Contains(x.Id)).OrderBy(x => x.Id).ToList();
+            assetTypeToUpdate.AllowedSteps = new List<Step>(steps);
+        }
         
-        _assetTypeRepository.Update(projectToUpdate);
+        _assetTypeRepository.Update(assetTypeToUpdate);
         transaction.Commit();
     }
 
@@ -75,10 +94,32 @@ public class AssetTypeService : IAssetTypeService
 
     public EditAssetTypeModel? Get(ulong id)
     {
-        var project = _assetTypeRepository.Get(id);
-        if (project == null) return null;
-        var model = _mapper.Map<EditAssetTypeModel>(project);
-        return model;
+        var assetType = _assetTypeRepository.Entities
+            .Include(x => x.AllowedSteps)
+            .FirstOrDefault(x => x.Id ==id);
 
+        if (assetType == null) return null;
+
+        var model = _mapper.Map<EditAssetTypeModel>(assetType);
+        
+        var steps = new List<SelectListItem>();
+        steps.AddRange(_assetTypeRepository.Entities.ToList()
+            .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+
+         model.AvailableSteps =  new MultiSelectList(steps, "Value","Text", model.SelectedSteps.Select(x => x.ToString()));
+
+        return model;
+    }
+    public AddAssetTypeModel Get()
+    {
+        var model = new AddAssetTypeModel();
+
+        var steps = new List<SelectListItem>();
+        steps.AddRange(_assetTypeRepository.Entities.ToList()
+            .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+
+        model.AvailableSteps = new MultiSelectList(steps, "Value","Text", model.SelectedSteps.Select(x => x.ToString()));
+
+        return model;
     }
 }

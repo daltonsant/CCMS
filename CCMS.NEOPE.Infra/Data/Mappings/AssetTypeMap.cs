@@ -15,6 +15,9 @@ public class AssetTypeMap : IEntityTypeConfiguration<AssetType>
         builder.HasIndex(e => e.Name).IsUnique();
         builder.Property(e => e.Description).HasMaxLength(256);
 
+        builder.HasMany(x => x.AllowedSteps)
+            .WithMany(x => x.AssetTypes);
+
         builder.HasMany<Asset>(e => e.AssetsByType)
             .WithOne(e => e.Type);
         

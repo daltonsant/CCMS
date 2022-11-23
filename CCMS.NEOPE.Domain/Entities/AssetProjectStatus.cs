@@ -12,5 +12,4 @@ public class AssetProjectStatus : Entity<ulong>
     public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
     public virtual ICollection<Log> Logs { get; set; } = new List<Log>();
     public virtual Asset Asset { get; set; }
-    
 }
