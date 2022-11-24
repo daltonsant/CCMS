@@ -10,15 +10,9 @@ public class AssetProfile : Profile
     {
         
         CreateMap<Asset, AddAssetModel>()
-            .ForMember(model => model.Projects,
-                opt => opt.Ignore())
-            .ForMember(model => model.Tasks,
-                opt => opt.Ignore())
+            .ForMember(model => model.SelectedProject,
+                opt => opt.MapFrom(src => src.Project.Id))
             .ReverseMap()
-            .ForMember(asset => asset.Projects,
-                opt => opt.Ignore())
-            .ForMember(asset => asset.Tasks,
-                opt => opt.Ignore())
             ;
         
         CreateMap<Asset,ViewAssetModel>()
@@ -31,22 +25,13 @@ public class AssetProfile : Profile
         CreateMap<Asset, EditAssetModel>()
             .ForMember(model => model.Projects,
                 opt => opt.Ignore())
-            .ForMember(model => model.Tasks,
-                opt => opt.Ignore())
-            .ForMember(model => model.ProjectIds,
+            .ForMember(model => model.SelectedProject,
                 opt => opt.MapFrom(source =>
-                    source.Projects.Select(p => p.Id)))
-            .ForMember(model => model.TaskIds, 
-                opt => opt.MapFrom(source =>
-                    source.Tasks.Select(t => t.Id)))
+                    source.Project.Id))
             .ForMember(model => model.TypeId,
                 source => source.MapFrom(source =>
                     source.Type.Id))
             .ReverseMap()
-            .ForMember(asset => asset.Projects,
-                opt => opt.Ignore())
-            .ForMember(asset => asset.Tasks,
-                opt => opt.Ignore())
             .ForMember(asset => asset.Type,
                 opt => opt.Ignore())
             ;

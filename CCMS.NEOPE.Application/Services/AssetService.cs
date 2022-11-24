@@ -42,33 +42,21 @@ public class AssetService : IAssetService
         var asset = _mapper.Map<Asset>(model);
         Project?  project = null;
         
-        if(model.ProjectIds != null)
+        if(model.SelectedProject.HasValue)
         {
-            foreach (var id in model.ProjectIds)
-            {
-                project = _projectRepository.Get(id);
-                if(project != null)
-                    asset.Projects.Add(project);
-            }
-        }
-           
-        TaskItem? task = null;
-        if (model.TaskIds!=null)
-        {
-            foreach (var id in model.TaskIds)
-            {
-                task = _taskRepository.Get(id);
-                if(task != null)
-                    asset.Tasks.Add(task);
-            }
+            project = _projectRepository.Get(model.SelectedProject.Value);
+            asset.Project = project;
         }
 
         AssetType?  assetType = null;
         if(model.TypeId.HasValue)
-             assetType = _assetTypeRepository.Get(model.TypeId.Value) ;
-        
+             assetType = _assetTypeRepository.Get(model.TypeId.Value);
         asset.Type = assetType;
 
+
+        //here insert the default status configuration for task mgnt
+
+        
         _assetRepository.Save(asset);
         
         transaction.Commit();
@@ -101,45 +89,33 @@ public class AssetService : IAssetService
     {
         using var transaction = _unitOfWork.BeginTransaction();
         var asset = _assetRepository.Entities
-            .Include(x => x.Tasks)
-            .Include(x => x.Projects)
+            .Include(x => x.Project)
             .Include(x => x.Type)
+            .ThenInclude(x => x.AllowedSteps)
+            .Include(x => x.Status)
             .FirstOrDefault(x => x.Id == model.Id);
 
         if (asset != null)
         {
-            asset.Tasks.Clear();
-            asset.Projects.Clear();
             _mapper.Map(model, asset);
             
             Project?  project = null;
         
-            if(model.ProjectIds != null)
+            if(model.SelectedProject.HasValue)
             {
-                foreach (var id in model.ProjectIds)
-                {
-                    project = _projectRepository.Get(id);
-                    if(project != null)
-                        asset.Projects.Add(project);
-                }
-            }
-           
-            TaskItem? task = null;
-            if (model.TaskIds!=null)
-            {
-                foreach (var id in model.TaskIds)
-                {
-                    task = _taskRepository.Get(id);
-                    if(task != null)
-                        asset.Tasks.Add(task);
-                }
+                project = _projectRepository.Get(model.SelectedProject.Value);
+                asset.Project = project;
             }
 
             AssetType?  assetType = null;
             if(model.TypeId.HasValue)
                 assetType = _assetTypeRepository.Get(model.TypeId.Value) ;
-        
             asset.Type = assetType;
+            
+            //here verify if there is change in the type to update the status allowed steps
+            
+        
+            
             _assetRepository.Update(asset);
         }
         
@@ -156,30 +132,24 @@ public class AssetService : IAssetService
     public EditAssetModel? Get(ulong id)
     {
         var project = _assetRepository.Entities
-            .Include(x => x.Projects)
-            .Include(x => x.Tasks)
+            .Include(x => x.Project)
+            .Include(x => x.Status)
             .Include(x => x.Type)
+            .ThenInclude(x => x.AllowedSteps)
             .FirstOrDefault(x => x.Id == id);
         if (project == null) return null;
         var model = _mapper.Map<EditAssetModel>(project);
-        model.Projects = GetProjectsSelectList(model.ProjectIds);
-        model.Tasks = GetTasksSelectList(model.TaskIds);
+        model.Projects = GetProjectsSelectList(model.SelectedProject);
         model.Types = GetTypesSelectList(model.TypeId);
 
         return model;
     }
 
-    private MultiSelectList GetProjectsSelectList(IEnumerable<ulong>? ids)
+    private SelectList GetProjectsSelectList(ulong? id)
     {
-        return new MultiSelectList(_projectRepository.Entities
+        return new SelectList(_projectRepository.Entities
             .ToList().Select(x =>
-                new SelectListItem() { Text = x.Code, Value = x.Id.ToString() }).ToList(),"Value","Text", ids);
-    }
-    private MultiSelectList GetTasksSelectList(IEnumerable<ulong>? ids)
-    {
-        return new MultiSelectList(_taskRepository.Entities
-            .ToList().Select(x =>
-                new SelectListItem() { Text = x.Title, Value = x.Id.ToString() }).ToList(),"Value","Text", ids);
+                new SelectListItem() { Text = x.Code, Value = x.Id.ToString() }).ToList(),"Value","Text", id);
     }
 
     private SelectList GetTypesSelectList(ulong? id)
@@ -194,8 +164,7 @@ public class AssetService : IAssetService
     public AddAssetModel GetAddAssetModel()
     {
         var model = new AddAssetModel();
-        model.Projects = GetProjectsSelectList(model.ProjectIds);
-        model.Tasks = GetTasksSelectList(model.TaskIds);
+        model.Projects = GetProjectsSelectList(model.SelectedProject);
         model.Types = GetTypesSelectList(model.TypeId);
         
         return model;

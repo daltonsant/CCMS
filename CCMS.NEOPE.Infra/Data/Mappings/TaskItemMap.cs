@@ -28,7 +28,6 @@ public class TaskItemMap : IEntityTypeConfiguration<TaskItem>
         builder.HasOne(e => e.ParentTask).WithMany(e => e.ChildTasks);
         builder.HasOne(e => e.Step).WithMany().IsRequired();
         builder.HasOne(e => e.Project).WithMany(e => e.Tasks).IsRequired();
-        builder.HasMany(e => e.Assets).WithMany(e => e.Tasks);
         builder.HasOne(e => e.Project).WithMany(e => e.Tasks);
 
         builder.HasMany(e => e.Labels).WithMany(e => e.Tasks);

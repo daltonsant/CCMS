@@ -22,22 +22,15 @@ public class EditAssetModel
     public ulong? TypeId { get; set; }
     public SelectList? Types { get; set; }
 
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Display(Name = "Comissionamento")]
+    public ulong? SelectedProject { get; set; }
 
-    [Display(Name = "Projetos")]
-    public IEnumerable<ulong>? ProjectIds { get; set; } = new List<ulong>();
-
-    public MultiSelectList? Projects { get; set; } 
-    
-   
-    [Display(Name = "Atividades")]
-    public IEnumerable<ulong> TaskIds { get; set; } = new List<ulong>();
-  
-    public MultiSelectList? Tasks { get; set; }
+    public SelectList? Projects { get; set; } 
 
     public EditAssetModel()
     {
-        Projects = new MultiSelectList(new List<SelectListItem>(), "Value", "Text", ProjectIds);
-        Tasks = new MultiSelectList(new List<SelectListItem>(), "Value", "Text", TaskIds);
+        Projects = new SelectList(new List<SelectListItem>(), "Value", "Text", SelectedProject);
         Types = new SelectList(new List<SelectListItem>(), "Value", "Text", TypeId);
 
     }

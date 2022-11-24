@@ -10,7 +10,5 @@ public class Asset : Entity<ulong>
     public AssetType Type { get; set; }
 
     public AssetProjectStatus Status { get; set; }
-
-    public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
-    public ICollection<Project> Projects { get; set; } = new List<Project>();
+    public virtual Project Project { get; set; }
 }

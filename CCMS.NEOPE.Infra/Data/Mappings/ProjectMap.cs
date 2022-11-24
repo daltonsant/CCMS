@@ -14,7 +14,7 @@ public class ProjectMap : IEntityTypeConfiguration<Project>
 
         builder.Property(e => e.Name).IsRequired().HasMaxLength(128);
 
-        builder.HasMany(e => e.Assets).WithMany(e => e.Projects);
+        builder.HasMany(e => e.Assets).WithOne(e => e.Project);
         builder.HasMany(e => e.Tasks).WithOne(e => e.Project);
 
         builder.ToTable("Projects");
