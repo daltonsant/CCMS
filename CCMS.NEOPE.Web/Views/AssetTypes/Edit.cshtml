@@ -20,10 +20,17 @@
                             </div>
                             @Html.HiddenFor(m => m.Id)
                             <div class="row">
-                                <div class="input-field col s6">
-                                    <input asp-for="Name" class="validate" id="Name"/>
-                                    <label asp-for="Name" id="Name"></label>
-                                    <span asp-validation-for="Name" class="red-text text-darken-4"></span>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <input asp-for="Name" class="validate" id="Name"/>
+                                        <label asp-for="Name" id="Name"></label>
+                                        <span asp-validation-for="Name" class="red-text text-darken-4"></span>
+                                    </div>
+                                    <div class="input-field">
+                                        <select asp-for="SelectedSteps" asp-items="@Model.AvailableSteps" class="validate" id="SelectedSteps">Selecione um status</select>
+                                        <label asp-for="SelectedSteps" id="AssigneeIdsLabel"></label>
+                                        <span asp-validation-for="SelectedSteps" class="red-text text-darken-4"></span>
+                                    </div>
                                 </div>
                                 <div class="input-field col s6">
                                     <textarea asp-for="Description" class="validate" id="Description" style="resize:none; height: 200px;" rows="6" ></textarea>

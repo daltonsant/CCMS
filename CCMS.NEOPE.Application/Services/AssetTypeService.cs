@@ -68,20 +68,27 @@ public class AssetTypeService : IAssetTypeService
 
     public void Edit(EditAssetTypeModel model)
     {
-        using var transaction = _unitOfWork.BeginTransaction();
-        var assetTypeToUpdate = _assetTypeRepository.Get(model.Id);
+       
+        var assetTypeToUpdate = _assetTypeRepository.Entities
+            .Include(x => x.AllowedSteps)
+            .FirstOrDefault(x => x.Id == model.Id);
 
-        _mapper.Map(model, assetTypeToUpdate);
-
-        if(model.SelectedSteps != null && model.SelectedSteps.Any())
+        if(assetTypeToUpdate != null)
         {
-            var ids = model.SelectedSteps.ToList();
-            var steps = _stepRepository.Entities.Where(x => ids.Contains(x.Id)).OrderBy(x => x.Id).ToList();
-            assetTypeToUpdate.AllowedSteps = new List<Step>(steps);
+             using var transaction = _unitOfWork.BeginTransaction();
+            _mapper.Map(model, assetTypeToUpdate);
+
+            if(model.SelectedSteps != null && model.SelectedSteps.Any())
+            {
+                var ids = model.SelectedSteps.ToList();
+                var steps = _stepRepository.Entities.Where(x => ids.Contains(x.Id)).OrderBy(x => x.Id).ToList();
+                assetTypeToUpdate.AllowedSteps.Clear();
+                assetTypeToUpdate.AllowedSteps = new List<Step>(steps);
+            }
+
+            _assetTypeRepository.Update(assetTypeToUpdate);
+            transaction.Commit();
         }
-        
-        _assetTypeRepository.Update(assetTypeToUpdate);
-        transaction.Commit();
     }
 
     public void Delete(ulong id)
@@ -103,7 +110,7 @@ public class AssetTypeService : IAssetTypeService
         var model = _mapper.Map<EditAssetTypeModel>(assetType);
         
         var steps = new List<SelectListItem>();
-        steps.AddRange(_assetTypeRepository.Entities.ToList()
+        steps.AddRange(_stepRepository.Entities.ToList()
             .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
 
          model.AvailableSteps =  new MultiSelectList(steps, "Value","Text", model.SelectedSteps.Select(x => x.ToString()));
@@ -115,10 +122,10 @@ public class AssetTypeService : IAssetTypeService
         var model = new AddAssetTypeModel();
 
         var steps = new List<SelectListItem>();
-        steps.AddRange(_assetTypeRepository.Entities.ToList()
+        steps.AddRange(_stepRepository.Entities.ToList()
             .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
 
-        model.AvailableSteps = new MultiSelectList(steps, "Value","Text", model.SelectedSteps.Select(x => x.ToString()));
+        model.AvailableSteps = new MultiSelectList(steps, "Value","Text");
 
         return model;
     }

@@ -30,7 +30,13 @@ public class AssetTypesController : Controller
     [HttpPost]
     public IActionResult Add(AddAssetTypeModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid) 
+        {
+            var dbmodel = _assetTypeService.Get();
+            model.AvailableSteps = dbmodel.AvailableSteps;
+
+            return View(model);
+        }
         _assetTypeService.Add(model);
         return RedirectToAction("Index", "AssetTypes");
     }
@@ -68,7 +74,13 @@ public class AssetTypesController : Controller
     [HttpPost]
     public IActionResult Edit(EditAssetTypeModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid) 
+        {
+            var dbmodel = _assetTypeService.Get();
+            model.AvailableSteps = dbmodel.AvailableSteps;
+            
+            return View(model);
+        }
         _assetTypeService.Edit(model);
         return RedirectToAction("Index", "AssetTypes");
     }
