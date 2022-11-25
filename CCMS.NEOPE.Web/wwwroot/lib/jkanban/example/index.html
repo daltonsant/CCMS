@@ -1,32 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-@{
-    Layout = "_Layout";
-}
-@section Styles
-{
-    <link rel="stylesheet" href="~/lib/jkanban/dist/jkanban.min.css">
-}
+    <title>Title</title>
+    <link rel="stylesheet" href="../dist/jkanban.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato"
+      rel="stylesheet"
+    />
 
-<div class="section container">
-    <div class="no-padding white">
-        <div class="section-header">
-            <h5 class="section-title">Quadro Kanban</h5>    
-        </div>
-        <div class="row">
-            <div class="col s12">
-                 <div class="kanban" id="myKanban">
-                       
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <style>
+      body {
+        font-family: "Lato";
+        margin: 0;
+        padding: 0;
+      }
 
-@section Scripts
-{
-    <script src="~/lib/jkanban/dist/jkanban.min.js"></script>
+      #myKanban {
+        overflow-x: auto;
+        padding: 20px 0;
+      }
+
+      .success {
+        background: #00b961;
+      }
+
+      .info {
+        background: #2a92bf;
+      }
+
+      .warning {
+        background: #f4ce46;
+      }
+
+      .error {
+        background: #fb7d44;
+      }
+
+      .custom-button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 7px 15px;
+        margin: 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+      }      
+    </style>
+  </head>
+  <body>
+    <div id="myKanban"></div>
+    <button id="addDefault">Add "Default" board</button>
+    <br />
+    <button id="addToDo">Add element in "To Do" Board</button>
+    <br />
+    <button id="removeBoard">Remove "Done" Board</button>
+    <br />
+    <button id="removeElement">Remove "My Task Test"</button>
+
+    <script src="../dist/jkanban.js"></script>
     <script>
-        var KanbanTest = new jKanban({
+      var KanbanTest = new jKanban({
         element: "#myKanban",
         gutter: "10px",
         widthBoard: "450px",
@@ -35,9 +73,6 @@
         },
         click: function(el) {
           console.log("Trigger on all items click!");
-        },
-        context: function(el, e) {
-          console.log("Trigger on all items right-click!");
         },
         dropEl: function(el, target, source, sibling){
           console.log(target.parentElement.getAttribute('data-id'));
@@ -96,9 +131,6 @@
                 click: function(el) {
                   alert("click");
                 },
-                context: function(el, e){
-                  alert("right-click at (" + `${e.pageX}` + "," + `${e.pageX}` + ")")
-                },
                 class: ["peppe", "bello"]
               }
             ]
@@ -140,13 +172,6 @@
         });
       });
 
-      var toDoButtonAtPosition = document.getElementById("addToDoAtPosition");
-      toDoButtonAtPosition.addEventListener("click", function() {
-        KanbanTest.addElement("_todo", {
-          title: "Test Add at Pos"
-        }, 1);
-      });
-
       var addBoardDefault = document.getElementById("addDefault");
       addBoardDefault.addEventListener("click", function() {
         KanbanTest.addBoards([
@@ -182,8 +207,6 @@
       allEle.forEach(function(item, index) {
         //console.log(item);
       });
-
-
-
     </script>
-}
+  </body>
+</html>

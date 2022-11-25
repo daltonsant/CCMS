@@ -253,19 +253,19 @@ CREATE TABLE `LinkedTasks` (
 
 CREATE TABLE `AssetProjectStatus` (
     `Id` bigint unsigned NOT NULL AUTO_INCREMENT,
-    `StepId` int NOT NULL,
+    `StepId` int NULL,
     `Status` int NOT NULL,
     `StartDate` datetime(6) NULL,
     `DueDate` datetime(6) NULL,
     `AssetId` bigint unsigned NOT NULL,
-    `CategoryId` int NOT NULL,
+    `CategoryId` int NULL,
     `CreateDate` datetime(6) NOT NULL,
     `UpdateDate` datetime(6) NULL,
     `RowVersion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     CONSTRAINT `PK_AssetProjectStatus` PRIMARY KEY (`Id`),
     CONSTRAINT `FK_AssetProjectStatus_Assets_AssetId` FOREIGN KEY (`AssetId`) REFERENCES `Assets` (`Id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_AssetProjectStatus_Categories_CategoryId` FOREIGN KEY (`CategoryId`) REFERENCES `Categories` (`Id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_AssetProjectStatus_Steps_StepId` FOREIGN KEY (`StepId`) REFERENCES `Steps` (`Id`) ON DELETE CASCADE
+    CONSTRAINT `FK_AssetProjectStatus_Categories_CategoryId` FOREIGN KEY (`CategoryId`) REFERENCES `Categories` (`Id`),
+    CONSTRAINT `FK_AssetProjectStatus_Steps_StepId` FOREIGN KEY (`StepId`) REFERENCES `Steps` (`Id`)
 ) CHARACTER SET=utf8mb4;
 
 CREATE TABLE `AccountableAssetProjectStatus` (
@@ -314,50 +314,50 @@ CREATE TABLE `Logs` (
 ) CHARACTER SET=utf8mb4;
 
 INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
-VALUES ('80f63171-af03-47bc-9431-7a00344bddfa', '154ba7a7-b4fc-43ff-ab8a-27aaceac780f', 'Administrador do sistema', 'Administrator', 'ADMINISTRATOR');
+VALUES ('51126545-470a-4697-a70c-f88508e2d910', 'd811b36d-1720-4025-a318-2f4803b4fc58', 'Administrador do sistema', 'Administrator', 'ADMINISTRATOR');
 INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
-VALUES ('bb915378-e77f-4de1-92b2-caaf59576d7f', '86c05f8d-a97c-4ae7-b0a1-3c13d0f4f1a9', 'Usuário comum do sistema', 'User', 'USER');
+VALUES ('73b0f8ea-feee-422c-b7b9-b95115f3115e', 'f3f0bbb3-dbf8-436e-a042-fd76fdf758be', 'Usuário comum do sistema', 'User', 'USER');
 
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (1, TIMESTAMP '2022-11-25 15:55:13', 'Civil', NULL);
+VALUES (1, TIMESTAMP '2022-11-25 16:19:07', 'Civil', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (2, TIMESTAMP '2022-11-25 15:55:13', 'Eletromecânico', NULL);
+VALUES (2, TIMESTAMP '2022-11-25 16:19:07', 'Eletromecânico', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (3, TIMESTAMP '2022-11-25 15:55:13', 'Aterramento', NULL);
+VALUES (3, TIMESTAMP '2022-11-25 16:19:07', 'Aterramento', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (4, TIMESTAMP '2022-11-25 15:55:13', 'Projeto', NULL);
+VALUES (4, TIMESTAMP '2022-11-25 16:19:07', 'Projeto', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (5, TIMESTAMP '2022-11-25 15:55:13', 'Painéis', NULL);
+VALUES (5, TIMESTAMP '2022-11-25 16:19:07', 'Painéis', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (6, TIMESTAMP '2022-11-25 15:55:13', 'Equipamentos', NULL);
+VALUES (6, TIMESTAMP '2022-11-25 16:19:07', 'Equipamentos', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (7, TIMESTAMP '2022-11-25 15:55:13', 'Interligações', NULL);
+VALUES (7, TIMESTAMP '2022-11-25 16:19:07', 'Interligações', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (8, TIMESTAMP '2022-11-25 15:55:13', 'SPCS', NULL);
+VALUES (8, TIMESTAMP '2022-11-25 16:19:07', 'SPCS', NULL);
 
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (1, TIMESTAMP '2022-11-25 15:55:13', 'Planejamento', NULL);
+VALUES (1, TIMESTAMP '2022-11-25 16:19:07', 'Planejamento', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (2, TIMESTAMP '2022-11-25 15:55:13', 'TAC Equip. Interlig.', NULL);
+VALUES (2, TIMESTAMP '2022-11-25 16:19:07', 'TAC Equip. Interlig.', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (3, TIMESTAMP '2022-11-25 15:55:13', 'TAF SPCS', NULL);
+VALUES (3, TIMESTAMP '2022-11-25 16:19:07', 'TAF SPCS', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (4, TIMESTAMP '2022-11-25 15:55:13', 'TAC SPCS', NULL);
+VALUES (4, TIMESTAMP '2022-11-25 16:19:07', 'TAC SPCS', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (5, TIMESTAMP '2022-11-25 15:55:13', 'Energização', NULL);
+VALUES (5, TIMESTAMP '2022-11-25 16:19:07', 'Energização', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (6, TIMESTAMP '2022-11-25 15:55:13', 'SAP', NULL);
+VALUES (6, TIMESTAMP '2022-11-25 16:19:07', 'SAP', NULL);
 
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (1, TIMESTAMP '2022-11-25 15:55:13', 'Informativo', NULL);
+VALUES (1, TIMESTAMP '2022-11-25 16:19:07', 'Informativo', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (2, TIMESTAMP '2022-11-25 15:55:13', 'Acompanhamento', NULL);
+VALUES (2, TIMESTAMP '2022-11-25 16:19:07', 'Acompanhamento', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (3, TIMESTAMP '2022-11-25 15:55:13', 'Pendência não impeditiva', NULL);
+VALUES (3, TIMESTAMP '2022-11-25 16:19:07', 'Pendência não impeditiva', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (4, TIMESTAMP '2022-11-25 15:55:13', 'Pendência impeditiva', NULL);
+VALUES (4, TIMESTAMP '2022-11-25 16:19:07', 'Pendência impeditiva', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (5, TIMESTAMP '2022-11-25 15:55:13', 'Não conformidade', NULL);
+VALUES (5, TIMESTAMP '2022-11-25 16:19:07', 'Não conformidade', NULL);
 
 CREATE INDEX `IX_AccountableAssetProjectStatus_AssigneesId` ON `AccountableAssetProjectStatus` (`AssigneesId`);
 
@@ -434,7 +434,7 @@ CREATE INDEX `IX_TaskItems_TypeId` ON `TaskItems` (`TypeId`);
 CREATE UNIQUE INDEX `IX_Types_Name` ON `Types` (`Name`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20221125185513_InitialMigration', '6.0.7');
+VALUES ('20221125191907_InitialMigration', '6.0.7');
 
 COMMIT;
 
