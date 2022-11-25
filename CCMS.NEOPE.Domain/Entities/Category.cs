@@ -7,4 +7,6 @@ public class Category : Entity<int>
     public virtual string Name { get; set; }
 
     public virtual ICollection<TaskItem> TaskItemsByCategory { get; set; } = new List<TaskItem>();
+
+    public virtual ICollection<AssetProjectStatus> StatusByCategory { get; set; }
 }

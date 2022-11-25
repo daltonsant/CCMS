@@ -11,6 +11,10 @@ public class Accountable : Entity<ulong>
 
     public virtual ICollection<TaskItem> ReportedTasks { get; set; } = new List<TaskItem>();
     public virtual ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>();
+
+    public virtual ICollection<Comment> CommentsPerAccountable { get; set; } = new List<Comment>();
+    public virtual ICollection<AssetProjectStatus> AssetStatusPerAccountable { get; set; } = new List<AssetProjectStatus>();
+
     public virtual IUser? User { get; set; } 
 }   
  

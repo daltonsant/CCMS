@@ -7,7 +7,7 @@ using CCMS.NEOPE.Domain.Enums;
 using CCMS.NEOPE.Infra.Helpers;
 using CCMS.NEOPE.Infra.Identity;
 using Microsoft.EntityFrameworkCore;
-using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
+using Status = CCMS.NEOPE.Domain.Enums.Status;
 
 namespace CCMS.NEOPE.Application.AutoMapper.MapProfiles;
 
@@ -30,7 +30,7 @@ public class TaskProfile : Profile
                     opt.MapFrom(src => src.Priority.HasValue ? EnumHelper<TaskPriority>.GetDisplayValue(src.Priority.Value) : string.Empty))
             .ForMember(dest => dest.Status,
                 opt => 
-                    opt.MapFrom(src => EnumHelper<TaskStatus>.GetDisplayValue(src.Status)))
+                    opt.MapFrom(src => EnumHelper<Status>.GetDisplayValue(src.Status)))
             .ForMember(dest => dest.StartDate,
                 opt => 
                     opt.MapFrom(src => src.StartDate.HasValue ? 

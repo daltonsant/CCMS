@@ -17,8 +17,6 @@ public class ApplicationUser : IdentityUser<string>,  IUser
     public virtual ulong AccountableId { get; set; }
     public virtual Accountable Accountable { get; set; }
 
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-
     public ApplicationUser()
     {
         

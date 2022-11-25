@@ -121,16 +121,12 @@ CREATE TABLE `AspNetRoleClaims` (
     CONSTRAINT `FK_AspNetRoleClaims_ApplicationRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `ApplicationRoles` (`Id`) ON DELETE CASCADE
 ) CHARACTER SET=utf8mb4;
 
-CREATE TABLE `Assets` (
-    `Id` bigint unsigned NOT NULL AUTO_INCREMENT,
-    `Description` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
-    `Code` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
-    `TypeId` bigint unsigned NOT NULL,
-    `CreateDate` datetime(6) NOT NULL,
-    `UpdateDate` datetime(6) NULL,
-    `RowVersion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    CONSTRAINT `PK_Assets` PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_Assets_AssetTypes_TypeId` FOREIGN KEY (`TypeId`) REFERENCES `AssetTypes` (`Id`) ON DELETE CASCADE
+CREATE TABLE `AssetTypeStep` (
+    `AllowedStepsId` int NOT NULL,
+    `AssetTypesId` bigint unsigned NOT NULL,
+    CONSTRAINT `PK_AssetTypeStep` PRIMARY KEY (`AllowedStepsId`, `AssetTypesId`),
+    CONSTRAINT `FK_AssetTypeStep_AssetTypes_AssetTypesId` FOREIGN KEY (`AssetTypesId`) REFERENCES `AssetTypes` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_AssetTypeStep_Steps_AllowedStepsId` FOREIGN KEY (`AllowedStepsId`) REFERENCES `Steps` (`Id`) ON DELETE CASCADE
 ) CHARACTER SET=utf8mb4;
 
 CREATE TABLE `TaskItems` (
@@ -198,29 +194,6 @@ CREATE TABLE `AspNetUserTokens` (
     CONSTRAINT `FK_AspNetUserTokens_ApplicationUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `ApplicationUsers` (`Id`) ON DELETE CASCADE
 ) CHARACTER SET=utf8mb4;
 
-CREATE TABLE `AssetProject` (
-    `AssetsId` bigint unsigned NOT NULL,
-    `ProjectsId` bigint unsigned NOT NULL,
-    CONSTRAINT `PK_AssetProject` PRIMARY KEY (`AssetsId`, `ProjectsId`),
-    CONSTRAINT `FK_AssetProject_Assets_AssetsId` FOREIGN KEY (`AssetsId`) REFERENCES `Assets` (`Id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_AssetProject_Projects_ProjectsId` FOREIGN KEY (`ProjectsId`) REFERENCES `Projects` (`Id`) ON DELETE CASCADE
-) CHARACTER SET=utf8mb4;
-
-CREATE TABLE `AssetProjectStatus` (
-    `Id` bigint unsigned NOT NULL AUTO_INCREMENT,
-    `StepId` int NOT NULL,
-    `Status` int NOT NULL,
-    `StartDate` datetime(6) NULL,
-    `DueDate` datetime(6) NULL,
-    `AssetId` bigint unsigned NOT NULL,
-    `CreateDate` datetime(6) NOT NULL,
-    `UpdateDate` datetime(6) NULL,
-    `RowVersion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    CONSTRAINT `PK_AssetProjectStatus` PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_AssetProjectStatus_Assets_AssetId` FOREIGN KEY (`AssetId`) REFERENCES `Assets` (`Id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_AssetProjectStatus_Steps_StepId` FOREIGN KEY (`StepId`) REFERENCES `Steps` (`Id`) ON DELETE CASCADE
-) CHARACTER SET=utf8mb4;
-
 CREATE TABLE `AccountableTaskItem` (
     `AssignedTasksId` bigint unsigned NOT NULL,
     `AssigneesId` bigint unsigned NOT NULL,
@@ -229,12 +202,20 @@ CREATE TABLE `AccountableTaskItem` (
     CONSTRAINT `FK_AccountableTaskItem_TaskItems_AssignedTasksId` FOREIGN KEY (`AssignedTasksId`) REFERENCES `TaskItems` (`Id`) ON DELETE CASCADE
 ) CHARACTER SET=utf8mb4;
 
-CREATE TABLE `AssetTaskItem` (
-    `AssetsId` bigint unsigned NOT NULL,
-    `TasksId` bigint unsigned NOT NULL,
-    CONSTRAINT `PK_AssetTaskItem` PRIMARY KEY (`AssetsId`, `TasksId`),
-    CONSTRAINT `FK_AssetTaskItem_Assets_AssetsId` FOREIGN KEY (`AssetsId`) REFERENCES `Assets` (`Id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_AssetTaskItem_TaskItems_TasksId` FOREIGN KEY (`TasksId`) REFERENCES `TaskItems` (`Id`) ON DELETE CASCADE
+CREATE TABLE `Assets` (
+    `Id` bigint unsigned NOT NULL AUTO_INCREMENT,
+    `Description` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
+    `Code` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
+    `TypeId` bigint unsigned NOT NULL,
+    `ProjectId` bigint unsigned NOT NULL,
+    `TaskItemId` bigint unsigned NULL,
+    `CreateDate` datetime(6) NOT NULL,
+    `UpdateDate` datetime(6) NULL,
+    `RowVersion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    CONSTRAINT `PK_Assets` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_Assets_AssetTypes_TypeId` FOREIGN KEY (`TypeId`) REFERENCES `AssetTypes` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_Assets_Projects_ProjectId` FOREIGN KEY (`ProjectId`) REFERENCES `Projects` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_Assets_TaskItems_TaskItemId` FOREIGN KEY (`TaskItemId`) REFERENCES `TaskItems` (`Id`)
 ) CHARACTER SET=utf8mb4;
 
 CREATE TABLE `CheckListItems` (
@@ -270,6 +251,31 @@ CREATE TABLE `LinkedTasks` (
     CONSTRAINT `FK_LinkedTasks_TaskItems_SubjectTaskId` FOREIGN KEY (`SubjectTaskId`) REFERENCES `TaskItems` (`Id`)
 ) CHARACTER SET=utf8mb4;
 
+CREATE TABLE `AssetProjectStatus` (
+    `Id` bigint unsigned NOT NULL AUTO_INCREMENT,
+    `StepId` int NOT NULL,
+    `Status` int NOT NULL,
+    `StartDate` datetime(6) NULL,
+    `DueDate` datetime(6) NULL,
+    `AssetId` bigint unsigned NOT NULL,
+    `CategoryId` int NOT NULL,
+    `CreateDate` datetime(6) NOT NULL,
+    `UpdateDate` datetime(6) NULL,
+    `RowVersion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    CONSTRAINT `PK_AssetProjectStatus` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_AssetProjectStatus_Assets_AssetId` FOREIGN KEY (`AssetId`) REFERENCES `Assets` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_AssetProjectStatus_Categories_CategoryId` FOREIGN KEY (`CategoryId`) REFERENCES `Categories` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_AssetProjectStatus_Steps_StepId` FOREIGN KEY (`StepId`) REFERENCES `Steps` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+
+CREATE TABLE `AccountableAssetProjectStatus` (
+    `AssetStatusPerAccountableId` bigint unsigned NOT NULL,
+    `AssigneesId` bigint unsigned NOT NULL,
+    CONSTRAINT `PK_AccountableAssetProjectStatus` PRIMARY KEY (`AssetStatusPerAccountableId`, `AssigneesId`),
+    CONSTRAINT `FK_AccountableAssetProjectStatus_Accountables_AssigneesId` FOREIGN KEY (`AssigneesId`) REFERENCES `Accountables` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_AccountableAssetProjectStatus_AssetProjectStatus_AssetStatus~` FOREIGN KEY (`AssetStatusPerAccountableId`) REFERENCES `AssetProjectStatus` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4;
+
 CREATE TABLE `Attachments` (
     `Id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `Size` int NOT NULL,
@@ -286,13 +292,13 @@ CREATE TABLE `Attachments` (
 CREATE TABLE `Comments` (
     `Id` bigint unsigned NOT NULL AUTO_INCREMENT,
     `Content` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
-    `UserId` varchar(255) CHARACTER SET utf8mb4 NULL,
+    `UserId` bigint unsigned NULL,
     `AssetStatusId` bigint unsigned NULL,
     `CreateDate` datetime(6) NOT NULL,
     `UpdateDate` datetime(6) NULL,
     `RowVersion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     CONSTRAINT `PK_Comments` PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_Comments_ApplicationUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `ApplicationUsers` (`Id`),
+    CONSTRAINT `FK_Comments_Accountables_UserId` FOREIGN KEY (`UserId`) REFERENCES `Accountables` (`Id`),
     CONSTRAINT `FK_Comments_AssetProjectStatus_AssetStatusId` FOREIGN KEY (`AssetStatusId`) REFERENCES `AssetProjectStatus` (`Id`)
 ) CHARACTER SET=utf8mb4;
 
@@ -308,50 +314,52 @@ CREATE TABLE `Logs` (
 ) CHARACTER SET=utf8mb4;
 
 INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
-VALUES ('b97c49d6-8186-4129-a7cd-92d88df5eea0', 'c48c74fd-c2ab-4811-a888-6ad40195c229', 'Administrador do sistema', 'Administrator', 'ADMINISTRATOR');
+VALUES ('80f63171-af03-47bc-9431-7a00344bddfa', '154ba7a7-b4fc-43ff-ab8a-27aaceac780f', 'Administrador do sistema', 'Administrator', 'ADMINISTRATOR');
 INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
-VALUES ('d9beec0c-0596-4ce1-8157-93934530e91c', '02c65148-083a-4fc7-8c7f-2967f11bd77f', 'Usuário comum do sistema', 'User', 'USER');
+VALUES ('bb915378-e77f-4de1-92b2-caaf59576d7f', '86c05f8d-a97c-4ae7-b0a1-3c13d0f4f1a9', 'Usuário comum do sistema', 'User', 'USER');
 
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (1, TIMESTAMP '2022-11-23 14:00:54', 'Civil', NULL);
+VALUES (1, TIMESTAMP '2022-11-25 15:55:13', 'Civil', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (2, TIMESTAMP '2022-11-23 14:00:54', 'Eletromecânico', NULL);
+VALUES (2, TIMESTAMP '2022-11-25 15:55:13', 'Eletromecânico', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (3, TIMESTAMP '2022-11-23 14:00:54', 'Aterramento', NULL);
+VALUES (3, TIMESTAMP '2022-11-25 15:55:13', 'Aterramento', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (4, TIMESTAMP '2022-11-23 14:00:54', 'Projeto', NULL);
+VALUES (4, TIMESTAMP '2022-11-25 15:55:13', 'Projeto', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (5, TIMESTAMP '2022-11-23 14:00:54', 'Painéis', NULL);
+VALUES (5, TIMESTAMP '2022-11-25 15:55:13', 'Painéis', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (6, TIMESTAMP '2022-11-23 14:00:54', 'Equipamentos', NULL);
+VALUES (6, TIMESTAMP '2022-11-25 15:55:13', 'Equipamentos', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (7, TIMESTAMP '2022-11-23 14:00:54', 'Interligações', NULL);
+VALUES (7, TIMESTAMP '2022-11-25 15:55:13', 'Interligações', NULL);
 INSERT INTO `Categories` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (8, TIMESTAMP '2022-11-23 14:00:54', 'SPCS', NULL);
+VALUES (8, TIMESTAMP '2022-11-25 15:55:13', 'SPCS', NULL);
 
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (1, TIMESTAMP '2022-11-23 14:00:54', 'Planejamento', NULL);
+VALUES (1, TIMESTAMP '2022-11-25 15:55:13', 'Planejamento', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (2, TIMESTAMP '2022-11-23 14:00:54', 'TAC Equip. Interlig.', NULL);
+VALUES (2, TIMESTAMP '2022-11-25 15:55:13', 'TAC Equip. Interlig.', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (3, TIMESTAMP '2022-11-23 14:00:54', 'TAF SPCS', NULL);
+VALUES (3, TIMESTAMP '2022-11-25 15:55:13', 'TAF SPCS', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (4, TIMESTAMP '2022-11-23 14:00:54', 'TAC SPCS', NULL);
+VALUES (4, TIMESTAMP '2022-11-25 15:55:13', 'TAC SPCS', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (5, TIMESTAMP '2022-11-23 14:00:54', 'Energização', NULL);
+VALUES (5, TIMESTAMP '2022-11-25 15:55:13', 'Energização', NULL);
 INSERT INTO `Steps` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (6, TIMESTAMP '2022-11-23 14:00:54', 'SAP', NULL);
+VALUES (6, TIMESTAMP '2022-11-25 15:55:13', 'SAP', NULL);
 
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (1, TIMESTAMP '2022-11-23 14:00:54', 'Informativo', NULL);
+VALUES (1, TIMESTAMP '2022-11-25 15:55:13', 'Informativo', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (2, TIMESTAMP '2022-11-23 14:00:54', 'Acompanhamento', NULL);
+VALUES (2, TIMESTAMP '2022-11-25 15:55:13', 'Acompanhamento', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (3, TIMESTAMP '2022-11-23 14:00:54', 'Pendência não impeditiva', NULL);
+VALUES (3, TIMESTAMP '2022-11-25 15:55:13', 'Pendência não impeditiva', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (4, TIMESTAMP '2022-11-23 14:00:54', 'Pendência impeditiva', NULL);
+VALUES (4, TIMESTAMP '2022-11-25 15:55:13', 'Pendência impeditiva', NULL);
 INSERT INTO `Types` (`Id`, `CreateDate`, `Name`, `UpdateDate`)
-VALUES (5, TIMESTAMP '2022-11-23 14:00:54', 'Não conformidade', NULL);
+VALUES (5, TIMESTAMP '2022-11-25 15:55:13', 'Não conformidade', NULL);
+
+CREATE INDEX `IX_AccountableAssetProjectStatus_AssigneesId` ON `AccountableAssetProjectStatus` (`AssigneesId`);
 
 CREATE INDEX `IX_AccountableTaskItem_AssigneesId` ON `AccountableTaskItem` (`AssigneesId`);
 
@@ -373,19 +381,23 @@ CREATE INDEX `IX_AspNetUserLogins_UserId` ON `AspNetUserLogins` (`UserId`);
 
 CREATE INDEX `IX_AspNetUserRoles_RoleId` ON `AspNetUserRoles` (`RoleId`);
 
-CREATE INDEX `IX_AssetProject_ProjectsId` ON `AssetProject` (`ProjectsId`);
-
 CREATE UNIQUE INDEX `IX_AssetProjectStatus_AssetId` ON `AssetProjectStatus` (`AssetId`);
+
+CREATE INDEX `IX_AssetProjectStatus_CategoryId` ON `AssetProjectStatus` (`CategoryId`);
 
 CREATE INDEX `IX_AssetProjectStatus_StepId` ON `AssetProjectStatus` (`StepId`);
 
 CREATE UNIQUE INDEX `IX_Assets_Code` ON `Assets` (`Code`);
 
+CREATE INDEX `IX_Assets_ProjectId` ON `Assets` (`ProjectId`);
+
+CREATE INDEX `IX_Assets_TaskItemId` ON `Assets` (`TaskItemId`);
+
 CREATE INDEX `IX_Assets_TypeId` ON `Assets` (`TypeId`);
 
-CREATE INDEX `IX_AssetTaskItem_TasksId` ON `AssetTaskItem` (`TasksId`);
-
 CREATE UNIQUE INDEX `IX_AssetTypes_Name` ON `AssetTypes` (`Name`);
+
+CREATE INDEX `IX_AssetTypeStep_AssetTypesId` ON `AssetTypeStep` (`AssetTypesId`);
 
 CREATE INDEX `IX_Attachments_AssetStatusId` ON `Attachments` (`AssetStatusId`);
 
@@ -422,134 +434,7 @@ CREATE INDEX `IX_TaskItems_TypeId` ON `TaskItems` (`TypeId`);
 CREATE UNIQUE INDEX `IX_Types_Name` ON `Types` (`Name`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20221123170055_InitialMigration', '6.0.7');
-
-COMMIT;
-
-START TRANSACTION;
-
-DELETE FROM `ApplicationRoles`
-WHERE `Id` = 'b97c49d6-8186-4129-a7cd-92d88df5eea0';
-SELECT ROW_COUNT();
-
-
-DELETE FROM `ApplicationRoles`
-WHERE `Id` = 'd9beec0c-0596-4ce1-8157-93934530e91c';
-SELECT ROW_COUNT();
-
-
-CREATE TABLE `AssetTypeStep` (
-    `AllowedStepsId` int NOT NULL,
-    `AssetTypesId` bigint unsigned NOT NULL,
-    CONSTRAINT `PK_AssetTypeStep` PRIMARY KEY (`AllowedStepsId`, `AssetTypesId`),
-    CONSTRAINT `FK_AssetTypeStep_AssetTypes_AssetTypesId` FOREIGN KEY (`AssetTypesId`) REFERENCES `AssetTypes` (`Id`) ON DELETE CASCADE,
-    CONSTRAINT `FK_AssetTypeStep_Steps_AllowedStepsId` FOREIGN KEY (`AllowedStepsId`) REFERENCES `Steps` (`Id`) ON DELETE CASCADE
-) CHARACTER SET=utf8mb4;
-
-INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
-VALUES ('159f96e4-1ecb-4bf5-8172-f2686c658bb8', 'de391e89-54b4-4514-a6ab-04273f91ad57', 'Administrador do sistema', 'Administrator', 'ADMINISTRATOR');
-INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
-VALUES ('77902611-8080-4f8b-b103-3e39814d4e7c', '24586352-88a1-471f-ae22-3e8c1a173c3e', 'Usuário comum do sistema', 'User', 'USER');
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 1;
-SELECT ROW_COUNT();
-
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 2;
-SELECT ROW_COUNT();
-
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 3;
-SELECT ROW_COUNT();
-
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 4;
-SELECT ROW_COUNT();
-
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 5;
-SELECT ROW_COUNT();
-
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 6;
-SELECT ROW_COUNT();
-
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 7;
-SELECT ROW_COUNT();
-
-
-UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 8;
-SELECT ROW_COUNT();
-
-
-UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 1;
-SELECT ROW_COUNT();
-
-
-UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 2;
-SELECT ROW_COUNT();
-
-
-UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 3;
-SELECT ROW_COUNT();
-
-
-UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 4;
-SELECT ROW_COUNT();
-
-
-UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 5;
-SELECT ROW_COUNT();
-
-
-UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 6;
-SELECT ROW_COUNT();
-
-
-UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 1;
-SELECT ROW_COUNT();
-
-
-UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 2;
-SELECT ROW_COUNT();
-
-
-UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 3;
-SELECT ROW_COUNT();
-
-
-UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 4;
-SELECT ROW_COUNT();
-
-
-UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-23 15:33:44'
-WHERE `Id` = 5;
-SELECT ROW_COUNT();
-
-
-CREATE INDEX `IX_AssetTypeStep_AssetTypesId` ON `AssetTypeStep` (`AssetTypesId`);
-
-INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20221123183345_AddAllowedSteps', '6.0.7');
+VALUES ('20221125185513_InitialMigration', '6.0.7');
 
 COMMIT;
 

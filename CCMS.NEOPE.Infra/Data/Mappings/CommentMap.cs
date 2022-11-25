@@ -15,7 +15,8 @@ public class CommentMap : IEntityTypeConfiguration<Comment>
 
         builder.Property(e => e.Content).IsRequired().HasMaxLength(256);
         builder.HasOne(e => e.AssetStatus).WithMany(e => e.Comments);
-        builder.HasOne<ApplicationUser>(e => e.User as ApplicationUser).WithMany(e => e.Comments);
+        builder.HasOne<Accountable>(e => e.User).WithMany(e => e.CommentsPerAccountable);
+
         builder.ToTable("Comments");
     }
 }

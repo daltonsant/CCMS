@@ -4,8 +4,10 @@ using CCMS.NEOPE.Application.Interfaces;
 using CCMS.NEOPE.Application.ViewModels.Assets;
 using CCMS.NEOPE.Domain.Core.Interfaces;
 using CCMS.NEOPE.Domain.Entities;
+using CCMS.NEOPE.Domain.Enums;
 using CCMS.NEOPE.Domain.Interfaces;
 using CCMS.NEOPE.Infra.Customs;
+using CCMS.NEOPE.Infra.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,12 +21,18 @@ public class AssetService : IAssetService
     private readonly IMapper _mapper;
     private readonly IProjectRepository _projectRepository;
     private readonly ITaskRepository _taskRepository;
+    private readonly ITaskStepRepository _stepRepository;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly IAccountableRepository _accountableRepository;
 
     public AssetService(
         IAssetRepository assetRepository,
         IProjectRepository projectRepository,
         IAssetTypeRepository assetTypeRepository,
         ITaskRepository taskRepository,
+        ITaskStepRepository stepRepository,
+        ICategoryRepository categoryRepository,
+        IAccountableRepository accountableRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper)
     {
@@ -33,6 +41,9 @@ public class AssetService : IAssetService
         _taskRepository = taskRepository;
         _assetTypeRepository = assetTypeRepository;
         _unitOfWork = unitOfWork;
+        _stepRepository = stepRepository;
+        _categoryRepository = categoryRepository;
+        _accountableRepository = accountableRepository;
         _mapper = mapper;
     }
     
@@ -53,9 +64,13 @@ public class AssetService : IAssetService
              assetType = _assetTypeRepository.Get(model.TypeId.Value);
         asset.Type = assetType;
 
-
-        //here insert the default status configuration for task mgnt
-
+        var status = new AssetProjectStatus()
+        {
+            CreateDate = DateTime.Now,
+            Status = Domain.Enums.Status.NotStarted,
+            Asset = asset
+        };
+        asset.Status = status;
         
         _assetRepository.Save(asset);
         
@@ -112,10 +127,6 @@ public class AssetService : IAssetService
                 assetType = _assetTypeRepository.Get(model.TypeId.Value) ;
             asset.Type = assetType;
             
-            //here verify if there is change in the type to update the status allowed steps
-            
-        
-            
             _assetRepository.Update(asset);
         }
         
@@ -169,4 +180,70 @@ public class AssetService : IAssetService
         
         return model;
     }
+
+    public ActivityModel GetActivity(ulong assetId)
+    {
+        var assetStatus = _assetRepository.Entities
+            .Include(x => x.Status).Where(x => x.Id == assetId)
+            .Select(x => x.Status)
+            .Include(x => x.Assignees)
+            .Include(x => x.Attachments)
+            .Include(x => x.Step)
+            .Include(x => x.Category)
+            .Include(x => x.Logs)
+            .Include(x => x.Asset)
+            .ThenInclude(x => x.Type)
+            .ThenInclude(x => x.AllowedSteps)
+            .FirstOrDefault();
+
+        if(assetStatus != null)
+        {
+            var model = _mapper.Map<ActivityModel>(assetStatus);
+
+            model.Assignees = GetAssigneesSelectList(model.AssigneeIds);
+
+            model.Categories = GetCategoriesSelectList(model.SelectedCategory);
+
+            model.Status = GetStatusSelectList(model.SelectedStatus);
+
+            model.Steps = GetStepsSelectList(model.StepId, assetStatus.Asset.Type);
+
+            return model;
+        }
+
+        return null;
+    }
+
+    private SelectList GetStatusSelectList(Status? status)
+    {
+        var types = new List<SelectListItem>();
+        types.AddRange(Enum.GetValues<Status>()
+            .Select(x => new SelectListItem() { Text = EnumHelper<Status>.GetDisplayValue(x), Value = x.ToString() }));
+        return new SelectList(types, "Value","Text", status);
+    }
+    private MultiSelectList GetAssigneesSelectList(ICollection<ulong>? ids)
+    {
+        var types = new List<SelectListItem>();
+        types.AddRange(_accountableRepository.Entities.ToList()
+            .Select(x => new SelectListItem() { Text = x.DisplayName, Value = x.Id.ToString() }));
+        return new MultiSelectList(types, "Value","Text", ids);
+    }
+    private SelectList GetStepsSelectList(int? stepId, AssetType assetType)
+    {
+        var types = new List<SelectListItem>()
+            { new SelectListItem() { Text = "" } };
+        types.AddRange(_stepRepository.Entities.Where(x => !assetType.AllowedSteps.Select(x => x.Id).Any() || 
+            assetType.AllowedSteps.Select(x => x.Id).Any(id => id == x.Id) || x.Id == stepId ).ToList()
+            .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+        return new SelectList(types, "Value","Text", stepId);
+    }
+    private SelectList GetCategoriesSelectList(int? categoryId)
+    {
+        var types = new List<SelectListItem>()
+            { new SelectListItem() { Text = "" } };
+        types.AddRange(_categoryRepository.Entities.ToList()
+            .Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }));
+        return new SelectList(types, "Value","Text", categoryId);
+    }
+
 }

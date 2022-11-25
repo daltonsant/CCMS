@@ -255,28 +255,25 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Assets",
+                name: "AssetTypeStep",
                 columns: table => new
                 {
-                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TypeId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                    AllowedStepsId = table.Column<int>(type: "int", nullable: false),
+                    AssetTypesId = table.Column<ulong>(type: "bigint unsigned", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Assets", x => x.Id);
+                    table.PrimaryKey("PK_AssetTypeStep", x => new { x.AllowedStepsId, x.AssetTypesId });
                     table.ForeignKey(
-                        name: "FK_Assets_AssetTypes_TypeId",
-                        column: x => x.TypeId,
+                        name: "FK_AssetTypeStep_AssetTypes_AssetTypesId",
+                        column: x => x.AssetTypesId,
                         principalTable: "AssetTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AssetTypeStep_Steps_AllowedStepsId",
+                        column: x => x.AllowedStepsId,
+                        principalTable: "Steps",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -455,65 +452,6 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AssetProject",
-                columns: table => new
-                {
-                    AssetsId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    ProjectsId = table.Column<ulong>(type: "bigint unsigned", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AssetProject", x => new { x.AssetsId, x.ProjectsId });
-                    table.ForeignKey(
-                        name: "FK_AssetProject_Assets_AssetsId",
-                        column: x => x.AssetsId,
-                        principalTable: "Assets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AssetProject_Projects_ProjectsId",
-                        column: x => x.ProjectsId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AssetProjectStatus",
-                columns: table => new
-                {
-                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    StepId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    AssetId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AssetProjectStatus", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AssetProjectStatus_Assets_AssetId",
-                        column: x => x.AssetId,
-                        principalTable: "Assets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AssetProjectStatus_Steps_StepId",
-                        column: x => x.StepId,
-                        principalTable: "Steps",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AccountableTaskItem",
                 columns: table => new
                 {
@@ -539,27 +477,43 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AssetTaskItem",
+                name: "Assets",
                 columns: table => new
                 {
-                    AssetsId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    TasksId = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TypeId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    ProjectId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    TaskItemId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AssetTaskItem", x => new { x.AssetsId, x.TasksId });
+                    table.PrimaryKey("PK_Assets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AssetTaskItem_Assets_AssetsId",
-                        column: x => x.AssetsId,
-                        principalTable: "Assets",
+                        name: "FK_Assets_AssetTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "AssetTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AssetTaskItem_TaskItems_TasksId",
-                        column: x => x.TasksId,
+                        name: "FK_Assets_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Assets_TaskItems_TaskItemId",
+                        column: x => x.TaskItemId,
                         principalTable: "TaskItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -646,6 +600,72 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AssetProjectStatus",
+                columns: table => new
+                {
+                    Id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    StepId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    AssetId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    RowVersion = table.Column<DateTime>(type: "timestamp(6)", rowVersion: true, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssetProjectStatus", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AssetProjectStatus_Assets_AssetId",
+                        column: x => x.AssetId,
+                        principalTable: "Assets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AssetProjectStatus_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AssetProjectStatus_Steps_StepId",
+                        column: x => x.StepId,
+                        principalTable: "Steps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AccountableAssetProjectStatus",
+                columns: table => new
+                {
+                    AssetStatusPerAccountableId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    AssigneesId = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountableAssetProjectStatus", x => new { x.AssetStatusPerAccountableId, x.AssigneesId });
+                    table.ForeignKey(
+                        name: "FK_AccountableAssetProjectStatus_Accountables_AssigneesId",
+                        column: x => x.AssigneesId,
+                        principalTable: "Accountables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccountableAssetProjectStatus_AssetProjectStatus_AssetStatus~",
+                        column: x => x.AssetStatusPerAccountableId,
+                        principalTable: "AssetProjectStatus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Attachments",
                 columns: table => new
                 {
@@ -681,8 +701,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Content = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
                     AssetStatusId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -693,9 +712,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_ApplicationUsers_UserId",
+                        name: "FK_Comments_Accountables_UserId",
                         column: x => x.UserId,
-                        principalTable: "ApplicationUsers",
+                        principalTable: "Accountables",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Comments_AssetProjectStatus_AssetStatusId",
@@ -735,8 +754,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "b97c49d6-8186-4129-a7cd-92d88df5eea0", "c48c74fd-c2ab-4811-a888-6ad40195c229", "Administrador do sistema", "Administrator", "ADMINISTRATOR" },
-                    { "d9beec0c-0596-4ce1-8157-93934530e91c", "02c65148-083a-4fc7-8c7f-2967f11bd77f", "Usuário comum do sistema", "User", "USER" }
+                    { "80f63171-af03-47bc-9431-7a00344bddfa", "154ba7a7-b4fc-43ff-ab8a-27aaceac780f", "Administrador do sistema", "Administrator", "ADMINISTRATOR" },
+                    { "bb915378-e77f-4de1-92b2-caaf59576d7f", "86c05f8d-a97c-4ae7-b0a1-3c13d0f4f1a9", "Usuário comum do sistema", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -744,14 +763,14 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(485), "Civil", null },
-                    { 2, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(532), "Eletromecânico", null },
-                    { 3, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(534), "Aterramento", null },
-                    { 4, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(535), "Projeto", null },
-                    { 5, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(536), "Painéis", null },
-                    { 6, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(537), "Equipamentos", null },
-                    { 7, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(539), "Interligações", null },
-                    { 8, new DateTime(2022, 11, 23, 14, 0, 54, 740, DateTimeKind.Local).AddTicks(540), "SPCS", null }
+                    { 1, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8927), "Civil", null },
+                    { 2, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8934), "Eletromecânico", null },
+                    { 3, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8936), "Aterramento", null },
+                    { 4, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8938), "Projeto", null },
+                    { 5, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8939), "Painéis", null },
+                    { 6, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8941), "Equipamentos", null },
+                    { 7, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8943), "Interligações", null },
+                    { 8, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(8944), "SPCS", null }
                 });
 
             migrationBuilder.InsertData(
@@ -759,12 +778,12 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9863), "Planejamento", null },
-                    { 2, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9875), "TAC Equip. Interlig.", null },
-                    { 3, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9876), "TAF SPCS", null },
-                    { 4, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9877), "TAC SPCS", null },
-                    { 5, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9878), "Energização", null },
-                    { 6, new DateTime(2022, 11, 23, 14, 0, 54, 718, DateTimeKind.Local).AddTicks(9879), "SAP", null }
+                    { 1, new DateTime(2022, 11, 25, 15, 55, 13, 184, DateTimeKind.Local).AddTicks(6328), "Planejamento", null },
+                    { 2, new DateTime(2022, 11, 25, 15, 55, 13, 184, DateTimeKind.Local).AddTicks(6341), "TAC Equip. Interlig.", null },
+                    { 3, new DateTime(2022, 11, 25, 15, 55, 13, 184, DateTimeKind.Local).AddTicks(6343), "TAF SPCS", null },
+                    { 4, new DateTime(2022, 11, 25, 15, 55, 13, 184, DateTimeKind.Local).AddTicks(6343), "TAC SPCS", null },
+                    { 5, new DateTime(2022, 11, 25, 15, 55, 13, 184, DateTimeKind.Local).AddTicks(6344), "Energização", null },
+                    { 6, new DateTime(2022, 11, 25, 15, 55, 13, 184, DateTimeKind.Local).AddTicks(6345), "SAP", null }
                 });
 
             migrationBuilder.InsertData(
@@ -772,12 +791,17 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9716), "Informativo", null },
-                    { 2ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9728), "Acompanhamento", null },
-                    { 3ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9730), "Pendência não impeditiva", null },
-                    { 4ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9731), "Pendência impeditiva", null },
-                    { 5ul, new DateTime(2022, 11, 23, 14, 0, 54, 739, DateTimeKind.Local).AddTicks(9732), "Não conformidade", null }
+                    { 1ul, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(7432), "Informativo", null },
+                    { 2ul, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(7448), "Acompanhamento", null },
+                    { 3ul, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(7450), "Pendência não impeditiva", null },
+                    { 4ul, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(7451), "Pendência impeditiva", null },
+                    { 5ul, new DateTime(2022, 11, 25, 15, 55, 13, 210, DateTimeKind.Local).AddTicks(7453), "Não conformidade", null }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccountableAssetProjectStatus_AssigneesId",
+                table: "AccountableAssetProjectStatus",
+                column: "AssigneesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountableTaskItem_AssigneesId",
@@ -834,15 +858,15 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssetProject_ProjectsId",
-                table: "AssetProject",
-                column: "ProjectsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AssetProjectStatus_AssetId",
                 table: "AssetProjectStatus",
                 column: "AssetId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssetProjectStatus_CategoryId",
+                table: "AssetProjectStatus",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AssetProjectStatus_StepId",
@@ -856,20 +880,30 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Assets_ProjectId",
+                table: "Assets",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Assets_TaskItemId",
+                table: "Assets",
+                column: "TaskItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Assets_TypeId",
                 table: "Assets",
                 column: "TypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AssetTaskItem_TasksId",
-                table: "AssetTaskItem",
-                column: "TasksId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AssetTypes_Name",
                 table: "AssetTypes",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssetTypeStep_AssetTypesId",
+                table: "AssetTypeStep",
+                column: "AssetTypesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attachments_AssetStatusId",
@@ -963,6 +997,9 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AccountableAssetProjectStatus");
+
+            migrationBuilder.DropTable(
                 name: "AccountableTaskItem");
 
             migrationBuilder.DropTable(
@@ -981,10 +1018,7 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AssetProject");
-
-            migrationBuilder.DropTable(
-                name: "AssetTaskItem");
+                name: "AssetTypeStep");
 
             migrationBuilder.DropTable(
                 name: "Attachments");
@@ -1014,10 +1048,16 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "Labels");
 
             migrationBuilder.DropTable(
-                name: "TaskItems");
+                name: "AssetProjectStatus");
 
             migrationBuilder.DropTable(
-                name: "AssetProjectStatus");
+                name: "Assets");
+
+            migrationBuilder.DropTable(
+                name: "AssetTypes");
+
+            migrationBuilder.DropTable(
+                name: "TaskItems");
 
             migrationBuilder.DropTable(
                 name: "Accountables");
@@ -1029,16 +1069,10 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Types");
-
-            migrationBuilder.DropTable(
-                name: "Assets");
-
-            migrationBuilder.DropTable(
                 name: "Steps");
 
             migrationBuilder.DropTable(
-                name: "AssetTypes");
+                name: "Types");
         }
     }
 }

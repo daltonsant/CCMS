@@ -32,12 +32,11 @@
                             </div>
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <select asp-for="ProjectIds" asp-items="@Model.Projects" class="validate" id="Projects">
+                                    <select asp-for="SelectedProject" asp-items="@Model.Projects" class="validate" id="SelectedProject">
                                     </select>
-                                    <label asp-for="ProjectIds" id="Projects"></label>
-                                    <span asp-validation-for="ProjectIds" class="red-text text-darken-4"></span>
+                                    <label asp-for="SelectedProject" id="Projects"></label>
+                                    <span asp-validation-for="SelectedProject" class="red-text text-darken-4"></span>
                                 </div>
-                
                             </div>
                             <div class="row">
                                 <div class="input-field col s6">

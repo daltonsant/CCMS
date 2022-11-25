@@ -12,4 +12,5 @@ public interface IAssetService
     void Delete(ulong Id);
     EditAssetModel? Get(ulong id);
     AddAssetModel GetAddAssetModel();
+    ActivityModel GetActivity(ulong assetId);
 }

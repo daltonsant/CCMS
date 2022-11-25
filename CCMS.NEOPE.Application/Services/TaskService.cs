@@ -11,7 +11,7 @@ using CCMS.NEOPE.Infra.Helpers;
 using CCMS.NEOPE.Infra.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
+using Status = CCMS.NEOPE.Domain.Enums.Status;
 
 namespace CCMS.NEOPE.Application.Services;
 
@@ -57,7 +57,7 @@ public class TaskService : ITaskService
     {
         var task = _mapper.Map<TaskItem>(model);
 
-        var hasErrors = model.SelectedStatus == TaskStatus.Done && IsToBlockDoneStatus(model.LinkedTasks);
+        var hasErrors = model.SelectedStatus == Status.Done && IsToBlockDoneStatus(model.LinkedTasks);
         
         if(hasErrors) model.Errors.Add("SelectedStatus", "Esta atividade pussui dependência em atividade não concluida.");
 
@@ -225,7 +225,7 @@ public class TaskService : ITaskService
 
         if (task != null)
         {
-            bool hasValidationErros = model.SelectedStatus == TaskStatus.Done &&
+            bool hasValidationErros = model.SelectedStatus == Status.Done &&
                                       HasBlockingLink(task, model.LinkedTasks);
             
             if(hasValidationErros) model.Errors.Add("SelectedStatus", "Esta atividade pussui dependência em atividade não concluida.");
@@ -378,7 +378,7 @@ public class TaskService : ITaskService
                 .FirstOrDefault(x => x.Id == link.ObjectTaskId);
 
             if (subjectTask != null && objectTask != null &&
-                objectTask.Id == task.Id && subjectTask.Status != TaskStatus.Done)
+                objectTask.Id == task.Id && subjectTask.Status != Status.Done)
             {
                 hasError = true;
                 break;
@@ -395,7 +395,7 @@ public class TaskService : ITaskService
         {
             var subjectTask =  _taskRepository.Entities
                 .FirstOrDefault(x => x.Id == link.SubjectTaskId);
-            if (subjectTask != null && subjectTask.Status != TaskStatus.Done)
+            if (subjectTask != null && subjectTask.Status != Status.Done)
             {
                 hasError = true;
                 break;
@@ -595,11 +595,11 @@ public class TaskService : ITaskService
             .Select(x => new SelectListItem() { Text = EnumHelper<TaskPriority>.GetDisplayValue(x), Value = x.ToString() }));
         return new SelectList(types, "Value","Text", priority);
     }
-    private SelectList GetStatusSelectList(TaskStatus? status)
+    private SelectList GetStatusSelectList(Status? status)
     {
         var types = new List<SelectListItem>();
-        types.AddRange(Enum.GetValues<TaskStatus>()
-            .Select(x => new SelectListItem() { Text = EnumHelper<TaskStatus>.GetDisplayValue(x), Value = x.ToString() }));
+        types.AddRange(Enum.GetValues<Status>()
+            .Select(x => new SelectListItem() { Text = EnumHelper<Status>.GetDisplayValue(x), Value = x.ToString() }));
         return new SelectList(types, "Value","Text", status);
     }
 }

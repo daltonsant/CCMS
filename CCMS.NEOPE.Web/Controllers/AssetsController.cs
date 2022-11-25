@@ -91,6 +91,22 @@ public class AssetsController : Controller
         return RedirectToAction("Index", "Assets");
     }
 
+    [HttpGet]
+    public IActionResult Activity(ulong id)
+    {
+        var model = new ActivityModel();
+        model = _assetService.GetActivity(id);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public IActionResult Activity(object model)
+    {
+        return View();
+    }
+
+
     [HttpDelete]
     public IActionResult Delete(ulong id)
     {

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using CCMS.NEOPE.Application.ViewModels.LinkedTasks;
 using CCMS.NEOPE.Domain.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
+using Status = CCMS.NEOPE.Domain.Enums.Status;
 
 namespace CCMS.NEOPE.Application.ViewModels.Tasks;
 
@@ -46,7 +46,7 @@ public class EditTaskModel
     
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [Display(Name = "Status")]
-    public TaskStatus SelectedStatus { get; set; }
+    public Status SelectedStatus { get; set; }
     public SelectList? Status { get; set; }
 
     [Display(Name = "Prioridade")]

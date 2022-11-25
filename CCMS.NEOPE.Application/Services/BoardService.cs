@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CCMS.NEOPE.Infra.Helpers;
-using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
+using Status = CCMS.NEOPE.Domain.Enums.Status;
 
 namespace CCMS.NEOPE.Application.Services;
 
@@ -46,8 +46,8 @@ public class BoardService : IBoardService
 
     private decimal GetAdherence(IQueryable<TaskItem> entities)
     {
-        var totalTasks = entities.Count(x => x.Status != TaskStatus.Done);
-        var scheduledTasks = entities.Count(x => x.Status != TaskStatus.Done &&
+        var totalTasks = entities.Count(x => x.Status != Status.Done);
+        var scheduledTasks = entities.Count(x => x.Status != Status.Done &&
                                                  (!x.DueDate.HasValue || x.DueDate.Value < DateTime.Now));
         return totalTasks != decimal.Zero ? 1.0M-((decimal)scheduledTasks / totalTasks) : decimal.One;
     }
@@ -87,7 +87,7 @@ public class BoardService : IBoardService
     private decimal GetProgress(IQueryable<TaskItem> entities)
     {
         var totalTasks = entities.Count();
-        var doneTasks = entities.Where(x => x.Status == Domain.Enums.TaskStatus.Done).Count();
+        var doneTasks = entities.Where(x => x.Status == Domain.Enums.Status.Done).Count();
         return totalTasks != decimal.Zero ? (decimal)doneTasks / totalTasks : decimal.Zero;
     }
     
@@ -125,11 +125,11 @@ public class BoardService : IBoardService
             .Select(x => new
         {
             Name = x.FirstOrDefault()!.Step.Name,
-            NotStarted = x.Count(e => e.Status == TaskStatus.NotStarted),
-            InProgress = x.Count(e => e.Status == TaskStatus.InProgress),
-            InReview = x.Count(e => e.Status == TaskStatus.InReview),
-            Done = x.Count(e => e.Status == TaskStatus.Done),
-            Priority = x.Count(e => e.Status != TaskStatus.Done)
+            NotStarted = x.Count(e => e.Status == Status.NotStarted),
+            InProgress = x.Count(e => e.Status == Status.InProgress),
+            InReview = x.Count(e => e.Status == Status.InReview),
+            Done = x.Count(e => e.Status == Status.Done),
+            Priority = x.Count(e => e.Status != Status.Done)
         }).OrderByDescending(x => x.Priority).ToList();
 
         var resultValues = new List<object[]>();
@@ -201,11 +201,11 @@ public class BoardService : IBoardService
             .Select(x => new
             {
                 Name = x.FirstOrDefault()!.Category.Name,
-                NotStarted = x.Count(e => e.Status == TaskStatus.NotStarted),
-                InProgress = x.Count(e => e.Status == TaskStatus.InProgress),
-                InReview = x.Count(e => e.Status == TaskStatus.InReview),
-                Done = x.Count(e => e.Status == TaskStatus.Done),
-                Priority = x.Count(e => e.Status != TaskStatus.Done)
+                NotStarted = x.Count(e => e.Status == Status.NotStarted),
+                InProgress = x.Count(e => e.Status == Status.InProgress),
+                InReview = x.Count(e => e.Status == Status.InReview),
+                Done = x.Count(e => e.Status == Status.Done),
+                Priority = x.Count(e => e.Status != Status.Done)
             }).OrderByDescending(x => x.Priority).ToList();
         
         var resultValues = new List<object[]>();
@@ -269,11 +269,11 @@ public class BoardService : IBoardService
             .Select(x => new
             {
                 Name = x.FirstOrDefault()!.Type.Name,
-                NotStarted = x.Count(e => e.Status == TaskStatus.NotStarted),
-                InProgress = x.Count(e => e.Status == TaskStatus.InProgress),
-                InReview = x.Count(e => e.Status == TaskStatus.InReview),
-                Done = x.Count(e => e.Status == TaskStatus.Done),
-                Priority = x.Count(e => e.Status != TaskStatus.Done)
+                NotStarted = x.Count(e => e.Status == Status.NotStarted),
+                InProgress = x.Count(e => e.Status == Status.InProgress),
+                InReview = x.Count(e => e.Status == Status.InReview),
+                Done = x.Count(e => e.Status == Status.Done),
+                Priority = x.Count(e => e.Status != Status.Done)
             }).OrderByDescending(x => x.Priority).ToList();
         
         var resultValues = new List<object[]>();
@@ -324,7 +324,7 @@ public class BoardService : IBoardService
         {
             
         };
-        var taskStatus = Enum.GetValues<TaskStatus>()
+        var taskStatus = Enum.GetValues<Status>()
             .GroupBy(x => x)
             .ToDictionary(k => k.Key, v => 0);
         
@@ -348,8 +348,8 @@ public class BoardService : IBoardService
             resultValues = resultValues.Append(
                 new object[]
                 {
-                    EnumHelper<TaskStatus>.GetDisplayValue(entry.Key) + 
-                    (entry.Key is TaskStatus.Done or TaskStatus.NotStarted ? "s" : string.Empty), 
+                    EnumHelper<Status>.GetDisplayValue(entry.Key) + 
+                    (entry.Key is Status.Done or Status.NotStarted ? "s" : string.Empty), 
                     entry.Value
                 }).ToList();
         }

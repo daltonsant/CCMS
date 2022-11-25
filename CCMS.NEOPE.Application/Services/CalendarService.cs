@@ -2,7 +2,7 @@
 using CCMS.NEOPE.Application.Interfaces;
 using CCMS.NEOPE.Application.ViewModels.Calendar;
 using CCMS.NEOPE.Domain.Interfaces;
-using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
+using Status = CCMS.NEOPE.Domain.Enums.Status;
 
 
 namespace CCMS.NEOPE.Application.Services
@@ -21,7 +21,7 @@ namespace CCMS.NEOPE.Application.Services
         public ICollection<ViewCalendarModel> List()
         {
             var scheduledTasks = _taskRepository.Entities
-                .Where(x => x.Status != TaskStatus.Done && (x.StartDate.HasValue || x.DueDate.HasValue));
+                .Where(x => x.Status != Status.Done && (x.StartDate.HasValue || x.DueDate.HasValue));
             List<ViewCalendarModel> calendar = new List<ViewCalendarModel>();
 
             foreach (var task in scheduledTasks)

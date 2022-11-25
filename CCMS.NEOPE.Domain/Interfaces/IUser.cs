@@ -10,8 +10,6 @@ public interface IUser
     string? Photo { get; set; }
     
     bool IsActive { get; set; }
-    
-    ICollection<Comment> Comments { get; set; }
 
     ulong AccountableId { get; set; }
     Accountable Accountable { get; set; }

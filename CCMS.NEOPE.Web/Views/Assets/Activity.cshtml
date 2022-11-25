@@ -1,0 +1,123 @@
+@model CCMS.NEOPE.Application.ViewModels.Assets.ActivityModel
+@{
+    Layout = "_Layout";
+}
+
+@section Styles
+{
+    <link href="/lib/materialize-select2/select2-materialize.css" rel="stylesheet" />
+}
+
+<div class="section container">
+    <div class="no-padding white">
+        <div class="section-header">
+            <h5 class="section-title">Atualizar status de comissionamento do ativo</h5>    
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div >
+                    <form  asp-controller="Tasks" asp-action="Add" method="POST">
+                        <div class="card">
+                            <div class="fields">
+                                <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
+                            </div>
+                    
+                            <div class="row">
+                                <div class="col m9">
+                                    <div class="row">
+                                        <div class="input-field col s9">
+                                            <input asp-for="Title" class="validate" id="Title"/>
+                                            <label asp-for="Title" id="TitleLabel"></label>
+                                            <span asp-validation-for="Title" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s4">
+                                            <select asp-for="StepId" asp-items="@Model.Steps" class="validate" id="StepId">Selecione uma etapa</select>
+                                            <label asp-for="StepId" id="StepIdLabel"></label>
+                                            <span asp-validation-for="StepId" class="red-text text-darken-4"></span>
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <select asp-for="SelectedCategory" asp-items="@Model.Categories" class="validate" id="SelectedCategory">Selecione uma categoria</select>
+                                            <label asp-for="SelectedCategory" id="SelectedCategoryLabel"></label>
+                                            <span asp-validation-for="SelectedCategory" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row" style="display: none;">
+                                        <h6 class="col s12">
+                                            Comentário
+                                            <div class="divider"></div>
+                                        </h6>
+                    
+                                    </div>
+                                    <div class="row" style="display: none;">
+                                        <h6 class="col s12">
+                                            Logs
+                                            <div class="divider"></div>
+                                        </h6>
+                                    </div>
+                                </div>
+                    
+                                <div class="col m3">
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <select asp-for="SelectedStatus" asp-items="@Model.Status" class="validate" id="SelectedStatus">Selecione um status</select>
+                                            <label asp-for="SelectedStatus" id="SelectedStatusLabel"></label>
+                                            <span asp-validation-for="SelectedStatus" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <input asp-for="Project" class="validate" id="Project"/>
+                                            <label asp-for="Project" id="TitleLabel"></label>
+                                            <span asp-validation-for="Project" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <select asp-for="AssigneeIds" asp-items="@Model.Assignees" class="validate" id="AssigneeIds">Selecione um status</select>
+                                            <label asp-for="AssigneeIds" id="AssigneeIdsLabel"></label>
+                                            <span asp-validation-for="AssigneeIds" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="startdatefield" class="input-field col s12">
+                                            <input asp-for="StartDate" type="date" class="validate" id="StartDate"/>
+                                            <label asp-for="StartDate" id="StartDateLabel"></label>
+                                            <span asp-validation-for="StartDate" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <input asp-for="DueDate" type="date" class="validate" id="DueDate"/>
+                                            <label asp-for="DueDate" id="DueDateLabel"></label>
+                                            <span asp-validation-for="DueDate" class="red-text text-darken-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                        </div>
+                                
+                        <div class="buttons right">
+                            <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
+                            <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
+                        </div>
+                    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/select2/js/select2.full.js"></script>
+    <script src="~/lib/materialize-select2/select2-materialize.js"></script>
+    <script src="~/lib/select2/js/i18n/pt-BR.js"></script>
+    <script src="~/js/Tasks/linkedtasks.common.js"></script>
+}

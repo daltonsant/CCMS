@@ -1,7 +1,7 @@
 using CCMS.NEOPE.Domain.Core.Models;
 using CCMS.NEOPE.Domain.Enums;
 using CCMS.NEOPE.Domain.Interfaces;
-using TaskStatus = CCMS.NEOPE.Domain.Enums.TaskStatus;
+using Status = CCMS.NEOPE.Domain.Enums.Status;
 
 
 namespace CCMS.NEOPE.Domain.Entities;
@@ -18,7 +18,7 @@ public class TaskItem : Entity<ulong>
     public TaskPriority? Priority { get; set; }
     public string? Description { get; set; } = string.Empty;
     public Type Type { get; set; }
-    public TaskStatus Status { get; set; }
+    public Status Status { get; set; }
     public Step Step { get; set; } = null;
     public TaskItem? ParentTask { get; set; } = null;
     public virtual ICollection<TaskItem> ChildTasks { get; set; } = new List<TaskItem>();
