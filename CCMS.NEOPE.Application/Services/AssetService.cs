@@ -24,6 +24,7 @@ public class AssetService : IAssetService
     private readonly ITaskStepRepository _stepRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IAccountableRepository _accountableRepository;
+    private readonly IAssetProjectStatusRepository _assetProjectStatusRepository;
 
     public AssetService(
         IAssetRepository assetRepository,
@@ -33,6 +34,7 @@ public class AssetService : IAssetService
         ITaskStepRepository stepRepository,
         ICategoryRepository categoryRepository,
         IAccountableRepository accountableRepository,
+        IAssetProjectStatusRepository assetProjectStatusRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper)
     {
@@ -44,6 +46,7 @@ public class AssetService : IAssetService
         _stepRepository = stepRepository;
         _categoryRepository = categoryRepository;
         _accountableRepository = accountableRepository;
+        _assetProjectStatusRepository = assetProjectStatusRepository;
         _mapper = mapper;
     }
     
@@ -183,19 +186,21 @@ public class AssetService : IAssetService
 
     public ActivityModel GetActivity(ulong assetId)
     {
-        var assetStatus = _assetRepository.Entities
-            .Include(x => x.Status).Where(x => x.Id == assetId)
-            .Select(x => x.Status)
-            .Include(x => x.Assignees)
-            .Include(x => x.Attachments)
-            .Include(x => x.Step)
-            .Include(x => x.Category)
-            .Include(x => x.Logs)
+        var assetStatus = _assetProjectStatusRepository.Entities
             .Include(x => x.Asset)
             .ThenInclude(x => x.Type)
             .ThenInclude(x => x.AllowedSteps)
+            .Include(x => x.Asset)
+            .ThenInclude(x => x.Project)
+            .Include(x => x.Assignees)
+            .Include(x => x.Attachments)
+            .Include(x => x.Category)
+            .Include(x => x.Step)
+            .Include(x => x.Logs)
+            .Include(x => x.Comments)
+            .Where(x => x.Asset.Id == assetId)
             .FirstOrDefault();
-
+            
         if(assetStatus != null)
         {
             var model = _mapper.Map<ActivityModel>(assetStatus);
