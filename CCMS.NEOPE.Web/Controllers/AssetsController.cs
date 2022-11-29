@@ -101,7 +101,7 @@ public class AssetsController : Controller
     }
 
     [HttpPost]
-    public IActionResult Activity(object model)
+    public IActionResult Activity(ActivityModel model)
     {
         return View();
     }

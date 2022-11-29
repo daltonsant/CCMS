@@ -1,14 +1,9 @@
 @model CCMS.NEOPE.Application.ViewModels.Assets.ActivityModel
 @{
-    Layout = "_Layout";
+    Layout = null;
 }
 
-@section Styles
-{
-    <link href="~/lib/materialize-select2/select2-materialize.css" rel="stylesheet" />
-}
-
-<div class="section container">
+<div>
     <div class="no-padding white">
         <div class="section-header">
             <h5 class="section-title">Atualizar status de comissionamento do ativo</h5>    
@@ -16,7 +11,7 @@
         <div class="row">
             <div class="col s12">
                 <div >
-                    <form  asp-controller="Assets" asp-action="Activity" method="POST">
+                    <form id="activity" asp-controller="Assets" asp-action="Activity" method="POST">
                         <div class="card">
                             <div class="fields">
                                 <div class="red-text text-darken-4" asp-validation-summary="ModelOnly"></div>
@@ -99,25 +94,10 @@
                                     </div>
                                 </div>
                             </div>
-                    
                         </div>
-                                
-                        <div class="buttons right">
-                            <a class="waves-effect waves-light btn grey" asp-action="Index">Cancelar</a>
-                            <button type="submit" class="waves-effect waves-light btn green darken-4">Salvar</button>
-                        </div>
-                    
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts
-{
-    <script src="~/lib/select2/js/select2.full.js"></script>
-    <script src="~/lib/materialize-select2/select2-materialize.js"></script>
-    <script src="~/lib/select2/js/i18n/pt-BR.js"></script>
-    <script src="~/js/Tasks/linkedtasks.common.js"></script>
-}

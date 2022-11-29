@@ -388,7 +388,7 @@ var dragula = require('dragula');
       if (typeof nodeItem === 'string') {
         nodeItem = self.element.querySelector('[data-eid="' + el + '"]')
       }
-      nodeItem.innerHTML = element.title
+      nodeItem.innerHTML = __buildItemTitle(element.title);
       // add function
       nodeItem.clickfn = element.click
       nodeItem.dragfn = element.drag

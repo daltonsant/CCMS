@@ -1,32 +1,233 @@
 (function ($) {
 
-    function getCard({ id, title, project, duedate, status } )
+    function getCardText({ title, project, duedate, isLate, status } )
     {
-        let cardStr = "<div>";
+        //create the element that will be inserted on the kanban item
+        let cardEl = document.createElement('div');
 
-        cardStr += "<div class='text-bold' stype='padding-bottom:10px; font-weight: bold;'>"+title+"</div>"
+        //create the title div
+        let titleEl = document.createElement('div');
+        titleEl.classList.add("text-bold");
+        titleEl.style.paddingBottom = '20px';
+        titleEl.style.paddingLeft = '10px';
+        titleEl.style.fontWeight = 'bold';
+        titleEl.style.fontSize = '16px';
+        titleEl.style.paddingRight = '10px';
+        titleEl.style.marginLeft = '20px';
+        
+        titleEl.innerText = title;
+        cardEl.appendChild(titleEl);
 
+        //create the body content div
+        let cardBody = document.createElement('div');
+        cardEl.appendChild(cardBody);
 
-        cardStr += "</div>"
-        return cardStr;
+        //create project div
+        let projectDiv = document.createElement('div');
+        let spanProj = document.createElement('span');
+        spanProj.style.fontSize = '14px';
+        spanProj.style.fontWeight = 'bold';
+        spanProj.innerText = project;
+        projectDiv.appendChild(spanProj);
+        cardBody.appendChild(projectDiv);
+
+        //create duedate div
+        let dueDateDiv = document.createElement('div');
+        let spanDue = document.createElement('span');
+        spanDue.style.fontSize = '12px';
+        spanDue.style.fontWeight = 'bold';
+
+        if(isLate === undefined || isLate == false)
+            spanDue.style.color = '#61A60E';
+        else
+            spanDue.style.color = '#ff0f0f';
+
+        spanDue.innerText = duedate;
+
+        dueDateDiv.appendChild(spanDue);
+        cardBody.appendChild(dueDateDiv);
+
+        let statusDiv = document.createElement('div');
+        statusDiv.innerText = status;
+        cardBody.appendChild(statusDiv);
+
+        return cardEl.innerHTML;
     }
 
+    function clickCallback(el, kanbanBoards) {
+        let id = el.dataset.eid;
+        
+        let modal = document.getElementById('modal_task_content');
+        modal.innerHTML = '';
+        
+        let modalContent = document.createElement("div");
 
+        modalContent.classList.add("modal-content");
+        modal.appendChild(modalContent);
+
+        $.ajax({
+          method: "GET",
+          url: "Board/Status",
+          async: false,
+          data: { id: id }
+        })
+        .done(function( msg ) {
+          modalContent.innerHTML = msg;
+          $('select').not('.disabled').not('.js-is-select2').formSelect();
+          M.updateTextFields();
+        });
+
+        let modalFooter = document.createElement("div");
+        modalFooter.classList.add("modal-footer");
+
+        let buttonsDiv = document.createElement("div");
+        buttonsDiv.classList.add("buttons");
+        buttonsDiv.classList.add("right");
+        modalFooter.appendChild(buttonsDiv);
+
+        let element = document.createElement("a");
+        element.classList.add("waves-effect");
+        element.classList.add("waves-light");
+        element.classList.add("btn");
+        element.classList.add("grey");
+        element.classList.add("modal-close");
+        element.href = '#!';
+        element.innerHTML = 'Cancelar';
+        buttonsDiv.appendChild(element);
+
+        element = document.createElement("button");
+        element.classList.add("waves-effect");
+        element.classList.add("waves-light");
+        element.classList.add("btn");
+        element.classList.add("green");
+        element.classList.add("darken-4");
+        element.innerHTML = 'Salvar';
+        element.style.marginLeft = '5px';
+        buttonsDiv.appendChild(element);
+
+        modal.appendChild(modalFooter);
+        
+        let instanceM = M.Modal.getInstance(modal);
+        instanceM.open();
+        
+        //configure the actionbutton
+        kanbanBoards.replaceElement(id, {
+          id: 1,
+          title: getCardText({ title:"72T2", project: "Araripina II", duedate: "22/11/2022",isLate: true, status: "Concluída" }),
+          class: ["card"]
+
+        });
+        
+    }
 
     $(document).ready(function (){
-        var KanbanTest = new jKanban({
+
+        let cards = {
+            planejamento: [
+                {
+                  id: "_test_delete",
+                  title: "Try drag this (Look the console)",
+                  drag: function(el, source) {
+                    console.log("START DRAG: " + el.dataset.eid);
+                  },
+                  dragend: function(el) {
+                    console.log("END DRAG: " + el.dataset.eid);
+                  },
+                  drop: function(el) {
+                    console.log("DROPPED: " + el.dataset.eid);
+                  },
+                  class: ["card"]
+                },
+                {
+                  title: "Try Click This!",
+                  click: function(el) {
+                    alert("click");
+                  },
+                  context: function(el, e){
+                    alert("right-click at (" + `${e.pageX}` + "," + `${e.pageX}` + ")")
+                  },
+                  class: ["card"]
+                }
+              ],
+            inspecao: [
+                {
+                  id: 1,
+                  title: getCardText({ title:"72T2", project: "Araripina II", duedate: "22/11/2022", status: "Em andamento" }),
+                  class: ["card"]
+                },
+                {
+                  title: "Run?",
+                  class: ["card"]
+                }
+              ],
+            tacequip: [
+                {
+                  title: "Do Something!",
+                  class: ["card"]
+                },
+                {
+                  title: "Run?",
+                  class: ["card"]
+                }
+              ],
+            tafspcs: [
+                {
+                  title: "All right",
+                  class: ["card"]
+                },
+                {
+                  title: "Ok!",
+                  class: ["card"]
+                }
+              ],
+            tacspcs: [
+                {
+                  title: "All right",
+                  class: ["card"]
+                },
+                {
+                  title: "Ok!",
+                  class: ["card"]
+                }
+              ],
+            energizacao: [
+                {
+                  title: "All right",
+                  class: ["card"]
+                },
+                {
+                  title: "Ok!",
+                  class: ["card"]
+                }
+              ],
+            sap: [
+                {
+                  title: "All right",
+                  class: ["card"]
+                },
+                {
+                  title: "Ok!",
+                  class: ["card"]
+                }
+              ]
+        };
+
+        let KanbanTest = new jKanban({
             element: "#myKanban",
             gutter: "10px",
-            widthBoard: "450px",
+            widthBoard: "300px",
             dragBoards: false,      
             itemHandleOptions:{
               enabled: true,
+              handleClass         : "item_handle",
+              customCssHandler    : "drag_handler",
+              customCssIconHandler: "drag_handler_icon", 
             },
             click: function(el) {
-              console.log("Trigger on all items click!");
+              clickCallback(el, KanbanTest);
             },
             context: function(el, e) {
-              console.log("Trigger on all items right-click!");
+             
             },
             dropEl: function(el, target, source, sibling){
               console.log(target.parentElement.getAttribute('data-id'));
@@ -58,115 +259,49 @@
               {
                 id: "_plan",
                 title: "PLANEJAMENTO",
-                class: "info,good",
+                class: "kanban-board-header",
                 //dragTo: ["_tac_equip"],
-                item: [
-                  {
-                    id: "_test_delete",
-                    title: "Try drag this (Look the console)",
-                    drag: function(el, source) {
-                      console.log("START DRAG: " + el.dataset.eid);
-                    },
-                    dragend: function(el) {
-                      console.log("END DRAG: " + el.dataset.eid);
-                    },
-                    drop: function(el) {
-                      console.log("DROPPED: " + el.dataset.eid);
-                    }
-                  },
-                  {
-                    title: "Try Click This!",
-                    click: function(el) {
-                      alert("click");
-                    },
-                    context: function(el, e){
-                      alert("right-click at (" + `${e.pageX}` + "," + `${e.pageX}` + ")")
-                    },
-                    class: ["peppe", "bello"]
-                  }
-                ]
+                item: cards.planejamento
               },
               {
                 id: "_inspecao",
                 title: "INSPEÇÃO",
-                class: "cyan",
-                item: [
-                  {
-                    title: getCard({id:1,title:"Ola mundo"})
-                  },
-                  {
-                    title: "Run?"
-                  }
-                ]
+                class: "kanban-board-header",
+                item: cards.inspecao,
               },
               {
                 id: "_tac_equip",
                 title: "TAC EQUIP. INTERLIG.",
-                class: "warning",
-                item: [
-                  {
-                    title: "Do Something!"
-                  },
-                  {
-                    title: "Run?"
-                  }
-                ]
+                class: "kanban-board-header",
+                item: cards.tacequip,
               },
               {
                 id: "_taf_spcs",
                 title: "TAF SPCS",
-                class: "success",
+                class: "kanban-board-header",
                 
-                item: [
-                  {
-                    title: "All right"
-                  },
-                  {
-                    title: "Ok!"
-                  }
-                ]
+                item: cards.tafspcs
               },
               {
                 id: "_tac_spcs",
                 title: "TAC SPCS",
-                class: "success",
+                class: "kanban-board-header",
                 
-                item: [
-                  {
-                    title: "All right"
-                  },
-                  {
-                    title: "Ok!"
-                  }
-                ]
+                item: cards.tacspcs,
               },
               {
                 id: "_energizacao",
                 title: "Energização",
-                class: "success",
+                class: "kanban-board-header",
                // dragTo: ["_tac_spcs"],
-                item: [
-                  {
-                    title: "All right"
-                  },
-                  {
-                    title: "Ok!"
-                  }
-                ]
+                item: cards.energizacao,
               },
               {
                 id: "_sap",
                 title: "SAP",
-                class: "success",
+                class: "kanban-board-header",
                // dragTo: ["_tac_spcs"],
-                item: [
-                  {
-                    title: "All right"
-                  },
-                  {
-                    title: "Ok!"
-                  }
-                ]
+                item: cards.sap,
               }
             ]
           });

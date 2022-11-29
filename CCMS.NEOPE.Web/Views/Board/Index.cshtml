@@ -4,6 +4,7 @@
 }
 @section Styles
 {
+    <link href="~/lib/materialize-select2/select2-materialize.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/jkanban/dist/jkanban.min.css">
     <link rel="stylesheet" href="~/css/Board/board.css">
 
@@ -24,9 +25,20 @@
     </div>
 </div>
 
+<div class="modal modal-fixed-footer" id="modal_task_content">
+    <div class="modal-content">
+      
+    </div>
+    <div class="modal-footer">
+     
+    </div>
+</div>
+
 @section Scripts
 {
     <script src="~/lib/jkanban/dist/jkanban.min.js"></script>
     <script src="~/js/Boards/board.js"></script>
-
+    <script src="~/lib/select2/js/select2.full.js"></script>
+    <script src="~/lib/materialize-select2/select2-materialize.js"></script>
+    <script src="~/lib/select2/js/i18n/pt-BR.js"></script>
 }
