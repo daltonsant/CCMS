@@ -1,5 +1,18 @@
 (function ($) {
 
+    function getStatusString(status) {
+      let statusStr = 'Não iniciada';
+      if(status == 'InProgress') {
+        statusStr = 'Em andamento';
+      } else if (status == 'InReview'){
+        statusStr = 'Em revisão';
+      } else if (status == 'Done'){
+        statusStr = 'Concluída';
+      } 
+
+      return statusStr;
+    }
+
     function getCardText({ title, project, duedate, isLate, status } )
     {
         //create the element that will be inserted on the kanban item
@@ -102,21 +115,82 @@
         element.classList.add("green");
         element.classList.add("darken-4");
         element.innerHTML = 'Salvar';
+        element.setAttribute("id","btnSaveStatus")
         element.style.marginLeft = '5px';
         buttonsDiv.appendChild(element);
 
         modal.appendChild(modalFooter);
+
+        $("#btnSaveStatus").on("click", function() {
+            
+            $.ajax({
+              method: "POST",
+              url: "Board/Status",
+              async: false,
+              data: $("#activity").serialize()
+            })
+            .done(function( data ) {
+              if(data.isJson === undefined || data.isJson == false)
+              {
+                modalContent.innerHTML = data;
+                $('select').not('.disabled').not('.js-is-select2').formSelect();
+                M.updateTextFields();
+              } else {
+                if(data.status == 'Done')
+                {
+                  kanbanBoards.removeElement(data.assetId);
+                }
+                else
+                {
+                  let correctBoard = "_plan";
+                  if(data.stepId == 2){
+                    correctBoard = "_inspecao";
+                  } else if( data.stepId == 3) {
+                    correctBoard = "_tac_equip";
+
+                  } else if( data.stepId == 4) {
+                    correctBoard = "_taf_spcs";
+
+                  } else if( data.stepId == 5) {
+                    correctBoard = "_tac_spcs";
+                    
+                  } else if( data.stepId == 6) {
+                    correctBoard = "_energizacao";
+                    
+                  } else if( data.stepId == 7) {
+                    correctBoard = "_sap";
+                  }
+
+                  kanbanBoards.removeElement(data.assetId);
+                  kanbanBoards.addElement(correctBoard, {
+                    id: data.assetId,
+                    title: getCardText({ title: data.name, project: data.project, duedate: data.duedate, islate: data.islate, status: getStatusString(data.status) }),
+                    class: ["card"]
+
+                  });
+
+
+                  // //configure the actionbutton
+                  // kanbanBoards.replaceElement(data.assetId, {
+                  //   id: data.assetId,
+                  //   title: getCardText({ title: data.name, project: data.project, duedate: data.duedate, islate: data.islate, status: getStatusString(data.status) }),
+                  //   class: ["card"]
+
+                  // });
+
+                }
+
+              }
+            });
+          
+
+
+         });
         
         let instanceM = M.Modal.getInstance(modal);
         instanceM.open();
         
-        //configure the actionbutton
-        kanbanBoards.replaceElement(id, {
-          id: 1,
-          title: getCardText({ title:"72T2", project: "Araripina II", duedate: "22/11/2022",isLate: true, status: "Concluída" }),
-          class: ["card"]
-
-        });
+        
         
     }
 

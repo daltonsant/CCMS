@@ -36,7 +36,9 @@ public class BoardController : Controller
     [HttpPost]
     public IActionResult Status(ActivityModel model)
     {
-        return View();
+        if(ModelState.IsValid)
+            return Json(new {  });
+        return View(model);
     }
 
 }

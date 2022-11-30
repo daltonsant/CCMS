@@ -488,6 +488,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TypeId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
                     ProjectId = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    AttachmentsLink = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     TaskItemId = table.Column<ulong>(type: "bigint unsigned", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -752,8 +754,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "51126545-470a-4697-a70c-f88508e2d910", "d811b36d-1720-4025-a318-2f4803b4fc58", "Administrador do sistema", "Administrator", "ADMINISTRATOR" },
-                    { "73b0f8ea-feee-422c-b7b9-b95115f3115e", "f3f0bbb3-dbf8-436e-a042-fd76fdf758be", "Usuário comum do sistema", "User", "USER" }
+                    { "17400699-da3a-4ecc-b09b-428cee8cf43f", "31461aa2-3479-4e32-99c6-40fde4360573", "Administrador do sistema", "Administrator", "ADMINISTRATOR" },
+                    { "d37ca026-1499-4ca4-812c-f1da3b551e6a", "96080756-7521-44bb-b857-8bd9f9b6a2fe", "Usuário comum do sistema", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -761,14 +763,14 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2705), "Civil", null },
-                    { 2, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2708), "Eletromecânico", null },
-                    { 3, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2710), "Aterramento", null },
-                    { 4, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2711), "Projeto", null },
-                    { 5, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2712), "Painéis", null },
-                    { 6, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2713), "Equipamentos", null },
-                    { 7, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2715), "Interligações", null },
-                    { 8, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2716), "SPCS", null }
+                    { 1, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8710), "Civil", null },
+                    { 2, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8716), "Eletromecânico", null },
+                    { 3, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8718), "Aterramento", null },
+                    { 4, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8719), "Projeto", null },
+                    { 5, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8721), "Painéis", null },
+                    { 6, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8723), "Equipamentos", null },
+                    { 7, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8724), "Interligações", null },
+                    { 8, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(8727), "SPCS", null }
                 });
 
             migrationBuilder.InsertData(
@@ -776,12 +778,13 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 11, 25, 16, 19, 7, 88, DateTimeKind.Local).AddTicks(3869), "Planejamento", null },
-                    { 2, new DateTime(2022, 11, 25, 16, 19, 7, 88, DateTimeKind.Local).AddTicks(3880), "TAC Equip. Interlig.", null },
-                    { 3, new DateTime(2022, 11, 25, 16, 19, 7, 88, DateTimeKind.Local).AddTicks(3882), "TAF SPCS", null },
-                    { 4, new DateTime(2022, 11, 25, 16, 19, 7, 88, DateTimeKind.Local).AddTicks(3927), "TAC SPCS", null },
-                    { 5, new DateTime(2022, 11, 25, 16, 19, 7, 88, DateTimeKind.Local).AddTicks(3929), "Energização", null },
-                    { 6, new DateTime(2022, 11, 25, 16, 19, 7, 88, DateTimeKind.Local).AddTicks(3930), "SAP", null }
+                    { 1, new DateTime(2022, 11, 30, 8, 29, 46, 718, DateTimeKind.Local).AddTicks(8230), "Planejamento", null },
+                    { 2, new DateTime(2022, 11, 30, 8, 29, 46, 718, DateTimeKind.Local).AddTicks(8241), "Inspeção", null },
+                    { 3, new DateTime(2022, 11, 30, 8, 29, 46, 718, DateTimeKind.Local).AddTicks(8242), "TAC Equip. Interlig.", null },
+                    { 4, new DateTime(2022, 11, 30, 8, 29, 46, 718, DateTimeKind.Local).AddTicks(8243), "TAF SPCS", null },
+                    { 5, new DateTime(2022, 11, 30, 8, 29, 46, 718, DateTimeKind.Local).AddTicks(8244), "TAC SPCS", null },
+                    { 6, new DateTime(2022, 11, 30, 8, 29, 46, 718, DateTimeKind.Local).AddTicks(8245), "Energização", null },
+                    { 7, new DateTime(2022, 11, 30, 8, 29, 46, 718, DateTimeKind.Local).AddTicks(8245), "SAP", null }
                 });
 
             migrationBuilder.InsertData(
@@ -789,11 +792,11 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                 columns: new[] { "Id", "CreateDate", "Name", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1ul, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2034), "Informativo", null },
-                    { 2ul, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2047), "Acompanhamento", null },
-                    { 3ul, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2048), "Pendência não impeditiva", null },
-                    { 4ul, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2049), "Pendência impeditiva", null },
-                    { 5ul, new DateTime(2022, 11, 25, 16, 19, 7, 107, DateTimeKind.Local).AddTicks(2051), "Não conformidade", null }
+                    { 1ul, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(7449), "Informativo", null },
+                    { 2ul, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(7465), "Acompanhamento", null },
+                    { 3ul, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(7467), "Pendência não impeditiva", null },
+                    { 4ul, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(7468), "Pendência impeditiva", null },
+                    { 5ul, new DateTime(2022, 11, 30, 8, 29, 46, 743, DateTimeKind.Local).AddTicks(7470), "Não conformidade", null }
                 });
 
             migrationBuilder.CreateIndex(

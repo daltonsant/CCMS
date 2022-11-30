@@ -28,29 +28,35 @@ public class StepMap : IEntityTypeConfiguration<Step>
             {
                 Id = 2,
                 CreateDate = DateTime.Now,
-                Name = "TAC Equip. Interlig."
+                Name = "Inspeção"
             },
             new Step()
             {
                 Id = 3,
                 CreateDate = DateTime.Now,
-                Name = "TAF SPCS"
+                Name = "TAC Equip. Interlig."
             },
             new Step()
             {
                 Id = 4,
                 CreateDate = DateTime.Now,
-                Name = "TAC SPCS"
+                Name = "TAF SPCS"
             },
             new Step()
             {
                 Id = 5,
                 CreateDate = DateTime.Now,
-                Name = "Energização"
+                Name = "TAC SPCS"
             },
             new Step()
             {
                 Id = 6,
+                CreateDate = DateTime.Now,
+                Name = "Energização"
+            },
+            new Step()
+            {
+                Id = 7,
                 CreateDate = DateTime.Now,
                 Name = "SAP"
             }

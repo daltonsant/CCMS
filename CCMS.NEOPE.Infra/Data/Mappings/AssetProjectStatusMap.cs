@@ -11,6 +11,7 @@ public class AssetProjectStatusMap : IEntityTypeConfiguration<AssetProjectStatus
         builder.Property(e => e.Id).ValueGeneratedOnAdd();
         builder.Property(e => e.CreateDate).IsRequired();
         builder.Property(e => e.UpdateDate);
+        
 
         builder.HasMany(e => e.Comments).WithOne(e => e.AssetStatus);
         builder.HasMany(e => e.Attachments).WithOne(e => e.AssetStatus);

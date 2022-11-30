@@ -15,4 +15,5 @@ public class AssetProjectStatus : Entity<ulong>
     public virtual ICollection<Accountable> Assignees { get; set; } = new List<Accountable>();
     public virtual Asset Asset { get; set; }
     public virtual Category? Category { get; set; }
+    
 }

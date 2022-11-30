@@ -13,6 +13,7 @@ public class AssetMap : IEntityTypeConfiguration<Asset>
         builder.Property(e => e.UpdateDate);
         builder.Property(e => e.Code).IsRequired().HasMaxLength(64);
         builder.HasIndex(e => e.Code).IsUnique();
+        builder.Property(e => e.AttachmentsLink);
 
         builder.Property(e => e.Description).HasMaxLength(256);
 

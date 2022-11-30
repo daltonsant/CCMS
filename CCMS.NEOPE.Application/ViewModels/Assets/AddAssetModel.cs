@@ -12,7 +12,7 @@ public class AddAssetModel
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [StringLength(32, ErrorMessage = "Use menos caracteres")]
-    [Display(Name = "Código PM")]
+    [Display(Name = "Loc. Instal.")]
     public string Code { get; set; } = string.Empty;
     
     [Display(Name = "Tipo")]
