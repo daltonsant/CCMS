@@ -14,5 +14,6 @@ namespace CCMS.NEOPE.Application.ViewModels.Calendar
         public string start { get; set; }
         public string end { get; set; }
         public string className { get; set; }
+        public bool istask { get; set; }
     }
 }

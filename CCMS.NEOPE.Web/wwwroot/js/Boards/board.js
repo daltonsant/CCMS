@@ -173,15 +173,10 @@
 
               }
             });
-          
-
-
          });
         
         let instanceM = M.Modal.getInstance(modal);
         instanceM.open();
-        
-        
         
     }
 
@@ -310,7 +305,6 @@
           cards.energizacao = getEl(data.energizacao);
           cards.sap = getEl(data.sap);
         });
-
 
         let KanbanTest = new jKanban({
             element: "#myKanban",

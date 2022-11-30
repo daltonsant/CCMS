@@ -28,8 +28,6 @@ public class TasksController : Controller
     [HttpPost]
     public IActionResult GetTasks()
     {
-        int totalRecord = 0;
-        int filterRecord = 0;
         var draw = Request.Form["draw"].FirstOrDefault();
         var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
         var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
