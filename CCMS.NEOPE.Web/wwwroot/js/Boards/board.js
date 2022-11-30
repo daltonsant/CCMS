@@ -50,7 +50,7 @@
         spanDue.style.fontSize = '12px';
         spanDue.style.fontWeight = 'bold';
 
-        if(islate === undefined || islate == false)
+        if(islate === undefined || islate == 'false')
             spanDue.style.color = '#61A60E';
         else
             spanDue.style.color = '#ff0f0f';
@@ -260,102 +260,62 @@
       
     }
 
-    $(document).ready(function (){
+    function getEl(data){
+      let ar = [];
+      data.forEach(element => ar.push({ 
+        id: element.assetId,
+        title: getCardText({ title: element.name, project: element.project, duedate: element.duedate, islate: element.islate, status: getStatusString(element.status) }),
+        class: ["card"]
+      }));
+      return ar;
+    }
 
+    $(document).ready(function (){
+      
         let cards = {
-            planejamento: [
-                {
-                  id: "_test_delete",
-                  title: "Try drag this (Look the console)",
-                  drag: function(el, source) {
-                    console.log("START DRAG: " + el.dataset.eid);
-                  },
-                  dragend: function(el) {
-                    console.log("END DRAG: " + el.dataset.eid);
-                  },
-                  drop: function(el) {
-                    console.log("DROPPED: " + el.dataset.eid);
-                  },
-                  class: ["card"]
-                },
-                {
-                  title: "Try Click This!",
-                  click: function(el) {
-                    alert("click");
-                  },
-                  context: function(el, e){
-                    alert("right-click at (" + `${e.pageX}` + "," + `${e.pageX}` + ")")
-                  },
-                  class: ["card"]
-                }
-              ],
-            inspecao: [
-                {
-                  id: 1,
-                  title: getCardText({ title:"72T2", project: "Araripina II", duedate: "22/11/2022", status: "Em andamento" }),
-                  class: ["card"]
-                },
-                {
-                  title: "Run?",
-                  class: ["card"]
-                }
-              ],
-            tacequip: [
-                {
-                  title: "Do Something!",
-                  class: ["card"]
-                },
-                {
-                  title: "Run?",
-                  class: ["card"]
-                }
-              ],
-            tafspcs: [
-                {
-                  title: "All right",
-                  class: ["card"]
-                },
-                {
-                  title: "Ok!",
-                  class: ["card"]
-                }
-              ],
-            tacspcs: [
-                {
-                  title: "All right",
-                  class: ["card"]
-                },
-                {
-                  title: "Ok!",
-                  class: ["card"]
-                }
-              ],
-            energizacao: [
-                {
-                  title: "All right",
-                  class: ["card"]
-                },
-                {
-                  title: "Ok!",
-                  class: ["card"]
-                }
-              ],
-            sap: [
-                {
-                  title: "All right",
-                  class: ["card"]
-                },
-                {
-                  title: "Ok!",
-                  class: ["card"]
-                }
-              ]
-        };
+              planejamento: [
+
+                ],
+              inspecao: [
+                
+                ],
+              tacequip: [
+                  
+                ],
+              tafspcs: [
+                  
+                ],
+              tacspcs: [
+                  
+                ],
+              energizacao: [
+                  
+                ],
+              sap: [
+                
+                ]
+          };
+
+        $.ajax({
+          method: "GET",
+          url: "Board/GetActivities",
+          async: false,
+        })
+        .done(function( data ) {
+          cards.planejamento = getEl(data.planejamento);
+          cards.inspecao = getEl(data.inspecao);
+          cards.tacequip = getEl(data.tacequip);
+          cards.tafspcs = getEl(data.tafspcs);
+          cards.tacspcs = getEl(data.tacspcs);
+          cards.energizacao = getEl(data.energizacao);
+          cards.sap = getEl(data.sap);
+        });
+
 
         let KanbanTest = new jKanban({
             element: "#myKanban",
             gutter: "10px",
-            widthBoard: "300px",
+            widthBoard: "250px",
             dragBoards: false,      
             itemHandleOptions:{
               enabled: true,

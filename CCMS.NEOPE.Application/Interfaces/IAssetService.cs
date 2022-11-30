@@ -16,4 +16,5 @@ public interface IAssetService
     Dictionary<string, string> SaveActivity(ActivityModel model);
 
     Dictionary<string, string> MoveActivity(ulong sourceStepId, ulong targetStepId, ulong assetId);
+    Dictionary<string, ICollection<Dictionary<string, string>>> GetActivities();
 }

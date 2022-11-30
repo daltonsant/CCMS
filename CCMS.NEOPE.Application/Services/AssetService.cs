@@ -390,4 +390,85 @@ public class AssetService : IAssetService
 
         return objectJson;
     }
+
+
+    private Dictionary<string, string> GetDict(Asset asset)
+    {
+        Dictionary<string, string> objectJson = new Dictionary<string, string>();
+        var status = asset.Status;
+
+        objectJson.Add("isJson","true");
+        objectJson.Add("status","Done");
+        objectJson.Add("moved","none");
+        objectJson.Add("stepId","");
+        objectJson.Add("duedate","");
+        objectJson.Add("assetId", status.Asset.Id.ToString());
+         if(status.Status != null)
+            objectJson["status"] = status.Status.ToString();
+
+        if(status.Step != null)
+            objectJson["stepId"] = status.Step.Id.ToString();
+
+        objectJson.Add("name", status.Asset.Code);
+
+        objectJson.Add("project", status.Asset.Project.Name);
+
+        if(status.DueDate.HasValue)
+            objectJson["duedate"] = status.DueDate.Value.ToString("dd/MM/yyyy");
+
+        objectJson.Add("islate","false");
+        if(status.DueDate.HasValue && status.DueDate.Value < DateTime.Now)
+            objectJson["islate"] = "true";
+        return objectJson;
+    }
+
+    public Dictionary<string, ICollection<Dictionary<string, string>>> GetActivities()
+    {
+        Dictionary<string, ICollection<Dictionary<string, string>>> cards = new Dictionary<string, ICollection<Dictionary<string, string>>>();
+        cards.Add("planejamento",new List<Dictionary<string, string>>());
+        cards.Add("inspecao",new List<Dictionary<string, string>>());
+        cards.Add("tacequip",new List<Dictionary<string, string>>());
+        cards.Add("tafspcs",new List<Dictionary<string, string>>());
+        cards.Add("tacspcs",new List<Dictionary<string, string>>());
+        cards.Add("energizacao",new List<Dictionary<string, string>>());
+        cards.Add("sap",new List<Dictionary<string, string>>());
+
+        var assets = _assetRepository.Entities.Include(x => x.Type)
+        .Include(x => x.Project)
+        .Include(x=> x.Status).ThenInclude(x => x.Step)
+        .Where(x => x.Status.Status != Status.Done).ToList();
+
+        foreach(var asset in assets) 
+        {
+            if(asset.Status.Step == null || asset.Status.Step.Id == 1){
+                cards["planejamento"].Add(GetDict(asset));
+            } 
+            else if(asset.Status.Step.Id == 2) 
+            {
+                cards["inspecao"].Add(GetDict(asset));
+            }
+            else if(asset.Status.Step.Id == 3) 
+            {
+                cards["tacequip"].Add(GetDict(asset));
+            }
+            else if(asset.Status.Step.Id == 4) 
+            {
+                cards["tafspcs"].Add(GetDict(asset));
+            }
+            else if(asset.Status.Step.Id == 5) 
+            {
+                cards["tacspcs"].Add(GetDict(asset));
+            }
+            else if(asset.Status.Step.Id == 6) 
+            {
+                cards["energizacao"].Add(GetDict(asset));
+            }
+            else if(asset.Status.Step.Id == 7) 
+            {
+                cards["sap"].Add(GetDict(asset));
+            }
+        }
+
+        return cards;
+    }
 }

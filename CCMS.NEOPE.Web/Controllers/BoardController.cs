@@ -62,7 +62,11 @@ public class BoardController : Controller
 
     public IActionResult GetActivities() 
     {
-        return Json("oi");
+        
+        var cards = _assetService.GetActivities();
+        
+        
+        return Json(cards);
     }
 
 }

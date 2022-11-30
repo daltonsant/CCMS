@@ -1,5 +1,6 @@
 .board--content {
     overflow-y: scroll;
+    overflow-x: scroll;
 }
 
 .kanban-board-header {
@@ -8,5 +9,11 @@
 }
 
 #board_main_container {
-    
+    max-width: 3200px;
+    max-height: 640px;
+    min-height: 640px;
+}
+#board_content {
+    min-height: 640px;
+    max-height: 640px;
 }
