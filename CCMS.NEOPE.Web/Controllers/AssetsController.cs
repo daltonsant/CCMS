@@ -103,7 +103,21 @@ public class AssetsController : Controller
     [HttpPost]
     public IActionResult Activity(ActivityModel model)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            var dbmodel = _assetService.GetActivity(model.AssetId);
+
+            if (dbmodel == null) return NotFound();
+            
+            _mapper.Map<ActivityModel, ActivityModel>(model, dbmodel);
+            
+            return View(dbmodel);
+        }
+
+        var dic = _assetService.SaveActivity(model);
+        //get the json to send back to the view and finish the request
+        
+        return RedirectToAction("Index", "Assets");
     }
 
 

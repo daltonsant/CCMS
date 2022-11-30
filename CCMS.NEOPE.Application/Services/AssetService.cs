@@ -218,6 +218,88 @@ public class AssetService : IAssetService
 
         return null;
     }
+    public Dictionary<string, string> SaveActivity(ActivityModel model) 
+    {
+        using var transaction = _unitOfWork.BeginTransaction();
+        var statusAsset = _assetRepository.Entities
+        .Include(x => x.Project).Include(x => x.Status).ThenInclude(x => x.Assignees)
+        .Include(x => x.Status).ThenInclude(x => x.Category)
+        .Include(x=> x.Status).ThenInclude(x => x.Step)
+        .FirstOrDefault(x => x.Id == model.AssetId);
+
+        Dictionary<string, string> objectJson = new Dictionary<string, string>();
+
+        var status = statusAsset.Status;
+
+        objectJson.Add("isJson","true");
+
+        if(status != null)
+        {
+            objectJson.Add("assetId", status.Asset.Id.ToString());
+
+            status.Status = model.SelectedStatus;
+            status.StartDate = model.StartDate;
+            status.DueDate = model.DueDate;
+            status.UpdateDate = DateTime.Now;
+
+            Category? category = null;
+            if (model.SelectedCategory.HasValue)
+            {
+                category = _categoryRepository.Get(model.SelectedCategory.Value);
+            }
+            status.Category = category;
+
+            Step? taskStep = null;
+            if (model.StepId.HasValue)
+            {
+                taskStep = _stepRepository.Get(model.StepId.Value);
+            }
+            status.Step = taskStep;
+            status.Assignees.Clear();
+            if (model.AssigneeIds.Any())
+            {
+                foreach (var id in model.AssigneeIds)
+                {
+                    ulong assigneeId = id;
+                    
+                    if(assigneeId != 0)
+                    {
+                        var assignee = _accountableRepository.Entities.FirstOrDefault(x => x.Id == assigneeId);
+                        if (assignee != null)
+                        {
+                            status.Assignees.Add(assignee);
+                        }
+                    }
+                }
+            }
+
+            objectJson.Add("status","");
+            if(status.Status != null)
+                objectJson["status"] = status.Status.ToString();
+
+            objectJson.Add("stepId","");
+            if(status.Step != null)
+                objectJson["stepId"] = status.Step.Id.ToString();
+
+            objectJson.Add("name", status.Asset.Code);
+
+            objectJson.Add("project", status.Asset.Project.Name);
+
+            objectJson.Add("duedate","");
+            if(status.DueDate.HasValue)
+                objectJson["duedate"] = status.DueDate.Value.ToString("dd/MM/yyyy");
+
+            objectJson.Add("islate","false");
+            if(status.DueDate.HasValue && status.DueDate.Value < DateTime.Now)
+                objectJson["islate"] = "true";
+
+            _assetRepository.Update(statusAsset);
+            transaction.Commit();
+        }
+
+        return objectJson;
+    }
+
 
     private SelectList GetStatusSelectList(Status? status)
     {
@@ -251,4 +333,61 @@ public class AssetService : IAssetService
         return new SelectList(types, "Value","Text", categoryId);
     }
 
+    public Dictionary<string, string> MoveActivity(ulong sourceStepId, ulong targetStepId, ulong assetId)
+    {
+        Dictionary<string, string> objectJson = new Dictionary<string, string>();
+        
+        using var transaction = _unitOfWork.BeginTransaction();
+        var statusAsset = _assetRepository.Entities
+        .Include(x => x.Type).ThenInclude(x => x.AllowedSteps)
+        .Include(x => x.Project).Include(x => x.Status).ThenInclude(x => x.Assignees)
+        .Include(x => x.Status).ThenInclude(x => x.Category)
+        .Include(x=> x.Status).ThenInclude(x => x.Step)
+        .FirstOrDefault(x => x.Id == assetId);
+
+        var status = statusAsset.Status;
+
+        objectJson.Add("isJson","true");
+        objectJson.Add("status","Done");
+        objectJson.Add("moved","none");
+        objectJson.Add("stepId","");
+        objectJson.Add("duedate","");
+
+        if(status != null)
+        {
+            objectJson.Add("assetId", status.Asset.Id.ToString());
+
+            Step? taskStep = null;
+            
+            taskStep = _stepRepository.Get((int)targetStepId);
+            if(taskStep != null && !statusAsset.Type.AllowedSteps.Any() || statusAsset.Type.AllowedSteps.Where(x => x.Id == taskStep.Id).Any())        
+            {
+                status.Step = taskStep;
+                objectJson["moved"] = "true";
+                status.UpdateDate = DateTime.Now;
+            }
+
+            if(status.Status != null)
+                objectJson["status"] = status.Status.ToString();
+
+            if(status.Step != null)
+                objectJson["stepId"] = status.Step.Id.ToString();
+
+            objectJson.Add("name", status.Asset.Code);
+
+            objectJson.Add("project", status.Asset.Project.Name);
+
+            if(status.DueDate.HasValue)
+                objectJson["duedate"] = status.DueDate.Value.ToString("dd/MM/yyyy");
+
+            objectJson.Add("islate","false");
+            if(status.DueDate.HasValue && status.DueDate.Value < DateTime.Now)
+                objectJson["islate"] = "true";
+
+            _assetRepository.Update(statusAsset);
+            transaction.Commit();
+        }
+
+        return objectJson;
+    }
 }

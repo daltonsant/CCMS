@@ -36,9 +36,33 @@ public class BoardController : Controller
     [HttpPost]
     public IActionResult Status(ActivityModel model)
     {
-        if(ModelState.IsValid)
-            return Json(new {  });
-        return View(model);
+        if (!ModelState.IsValid)
+        {
+            var dbmodel = _assetService.GetActivity(model.AssetId);
+
+            if (dbmodel == null) return NotFound();
+            
+            _mapper.Map<ActivityModel, ActivityModel>(model, dbmodel);
+            
+            return View(dbmodel);
+        }
+
+        var dic = _assetService.SaveActivity(model);
+        
+        return Json(dic);
+    }
+
+    [HttpPost]
+    public IActionResult MoveAsset(ulong sourceId, ulong targetId, ulong assetId)
+    {
+        var dic = _assetService.MoveActivity(sourceId, targetId, assetId);
+        
+        return Json(dic);
+    }
+
+    public IActionResult GetActivities() 
+    {
+        return Json("oi");
     }
 
 }

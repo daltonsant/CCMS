@@ -208,7 +208,7 @@ CREATE TABLE `Assets` (
     `Code` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
     `TypeId` bigint unsigned NOT NULL,
     `ProjectId` bigint unsigned NOT NULL,
-    `AttachmentsLink` longtext CHARACTER SET utf8mb4 NOT NULL,
+    `AttachmentsLink` longtext CHARACTER SET utf8mb4 NULL,
     `TaskItemId` bigint unsigned NULL,
     `CreateDate` datetime(6) NOT NULL,
     `UpdateDate` datetime(6) NULL,
@@ -438,6 +438,130 @@ CREATE UNIQUE INDEX `IX_Types_Name` ON `Types` (`Name`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
 VALUES ('20221130112947_InitialMigration', '6.0.7');
+
+COMMIT;
+
+START TRANSACTION;
+
+DELETE FROM `ApplicationRoles`
+WHERE `Id` = '17400699-da3a-4ecc-b09b-428cee8cf43f';
+SELECT ROW_COUNT();
+
+
+DELETE FROM `ApplicationRoles`
+WHERE `Id` = 'd37ca026-1499-4ca4-812c-f1da3b551e6a';
+SELECT ROW_COUNT();
+
+
+ALTER TABLE `Assets` MODIFY COLUMN `AttachmentsLink` longtext CHARACTER SET utf8mb4 NULL;
+
+INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
+VALUES ('19fcaecb-dc72-4661-b738-e06351877baf', '955cbe55-dfa5-41b7-81a2-d175c973e9dd', 'Administrador do sistema', 'Administrator', 'ADMINISTRATOR');
+INSERT INTO `ApplicationRoles` (`Id`, `ConcurrencyStamp`, `Description`, `Name`, `NormalizedName`)
+VALUES ('be1f683b-1ee1-49bf-b779-06d95ec9f44d', 'dcec7e73-a2f2-4069-904b-7285eab135b5', 'Usuário comum do sistema', 'User', 'USER');
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 1;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 2;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 3;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 4;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 5;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 6;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 7;
+SELECT ROW_COUNT();
+
+
+UPDATE `Categories` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 8;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 1;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 2;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 3;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 4;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 5;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 6;
+SELECT ROW_COUNT();
+
+
+UPDATE `Steps` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 7;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 1;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 2;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 3;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 4;
+SELECT ROW_COUNT();
+
+
+UPDATE `Types` SET `CreateDate` = TIMESTAMP '2022-11-30 08:42:32'
+WHERE `Id` = 5;
+SELECT ROW_COUNT();
+
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20221130114233_AllowNullOnAssetLink', '6.0.7');
 
 COMMIT;
 

@@ -13,4 +13,7 @@ public interface IAssetService
     EditAssetModel? Get(ulong id);
     AddAssetModel GetAddAssetModel();
     ActivityModel GetActivity(ulong assetId);
+    Dictionary<string, string> SaveActivity(ActivityModel model);
+
+    Dictionary<string, string> MoveActivity(ulong sourceStepId, ulong targetStepId, ulong assetId);
 }

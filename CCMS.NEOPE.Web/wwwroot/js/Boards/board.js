@@ -13,7 +13,7 @@
       return statusStr;
     }
 
-    function getCardText({ title, project, duedate, isLate, status } )
+    function getCardText({ title, project, duedate, islate, status } )
     {
         //create the element that will be inserted on the kanban item
         let cardEl = document.createElement('div');
@@ -50,7 +50,7 @@
         spanDue.style.fontSize = '12px';
         spanDue.style.fontWeight = 'bold';
 
-        if(isLate === undefined || isLate == false)
+        if(islate === undefined || islate == false)
             spanDue.style.color = '#61A60E';
         else
             spanDue.style.color = '#ff0f0f';
@@ -169,15 +169,6 @@
 
                   });
 
-
-                  // //configure the actionbutton
-                  // kanbanBoards.replaceElement(data.assetId, {
-                  //   id: data.assetId,
-                  //   title: getCardText({ title: data.name, project: data.project, duedate: data.duedate, islate: data.islate, status: getStatusString(data.status) }),
-                  //   class: ["card"]
-
-                  // });
-
                 }
 
               }
@@ -192,6 +183,81 @@
         
         
         
+    }
+
+    function getIdForBoard(boardId){
+      let id = 1;
+      
+      if(boardId == '_plan')
+        id = 1;
+      else if(boardId == '_inspecao')
+        id = 2;
+      else if(boardId == '_tac_equip')
+        id = 3;
+      else if(boardId == '_taf_spcs')
+        id = 4;
+      else if (boardId == '_tac_spcs')
+        id = 5;
+      else if (boardId == '_energizacao')
+        id = 6;
+      else if (boardId == '_sap')
+        id = 7;
+      return id;
+    }
+
+    function dropElCallback(el, target, source, sibling, kanbanBoards) {
+      
+      let sourceId = getIdForBoard(source.parentElement.getAttribute('data-id'));
+      let targetId = getIdForBoard(target.parentElement.getAttribute('data-id'));
+      let assetId = el.dataset.eid;
+
+      $.ajax({
+        method: "POST",
+        url: "Board/MoveAsset",
+        async: true,
+        data: { sourceId: sourceId, targetId: targetId, assetId: assetId }
+      })
+      .done(function( data ) {
+        if(data.moved === undefined || data.moved == 'none') {
+          if(data.status == 'Done')
+          {
+            kanbanBoards.removeElement(data.assetId);
+          }
+          else
+          {
+            let correctBoard = "_plan";
+            if(data.stepId == 2){
+              correctBoard = "_inspecao";
+            } else if( data.stepId == 3) {
+              correctBoard = "_tac_equip";
+
+            } else if( data.stepId == 4) {
+              correctBoard = "_taf_spcs";
+
+            } else if( data.stepId == 5) {
+              correctBoard = "_tac_spcs";
+              
+            } else if( data.stepId == 6) {
+              correctBoard = "_energizacao";
+              
+            } else if( data.stepId == 7) {
+              correctBoard = "_sap";
+            }
+
+            kanbanBoards.removeElement(data.assetId);
+            kanbanBoards.addElement(correctBoard, {
+              id: data.assetId,
+              title: getCardText({ title: data.name, project: data.project, duedate: data.duedate, islate: data.islate, status: getStatusString(data.status) }),
+              class: ["card"]
+            });
+          }
+        }
+      });
+
+      // return json { status: none/ok }
+      //if ok deixa do jeito que esta..
+      //if not ok mover o elemento novamente para o status anterior.
+      
     }
 
     $(document).ready(function (){
@@ -303,9 +369,8 @@
             context: function(el, e) {
              
             },
-            dropEl: function(el, target, source, sibling){
-              console.log(target.parentElement.getAttribute('data-id'));
-              console.log(el, target, source, sibling)
+            dropEl: function(el, target, source, sibling) {
+              dropElCallback(el, target, source, sibling, KanbanTest);
             },
             buttonClick: function(el, boardId) {
               console.log(el);
@@ -379,51 +444,6 @@
               }
             ]
           });
-    
-        //   var toDoButton = document.getElementById("addToDo");
-        //   toDoButton.addEventListener("click", function() {
-        //     KanbanTest.addElement("_plan", {
-        //       title: "Test Add"
-        //     });
-        //   });
-    
-        //   var toDoButtonAtPosition = document.getElementById("addToDoAtPosition");
-        //   toDoButtonAtPosition.addEventListener("click", function() {
-        //     KanbanTest.addElement("_plan", {
-        //       title: "Test Add at Pos"
-        //     }, 1);
-        //   });
-    
-        //   var addBoardDefault = document.getElementById("addDefault");
-        //   addBoardDefault.addEventListener("click", function() {
-        //     KanbanTest.addBoards([
-        //       {
-        //         id: "_default",
-        //         title: "Kanban Default",
-        //         item: [
-        //           {
-        //             title: "Default Item"
-        //           },
-        //           {
-        //             title: "Default Item 2"
-        //           },
-        //           {
-        //             title: "Default Item 3"
-        //           }
-        //         ]
-        //       }
-        //     ]);
-        //   });
-    
-        //   var removeBoard = document.getElementById("removeBoard");
-        //   removeBoard.addEventListener("click", function() {
-        //     KanbanTest.removeBoard("_taf_spcs");
-        //   });
-    
-        //   var removeElement = document.getElementById("removeElement");
-        //   removeElement.addEventListener("click", function() {
-        //     KanbanTest.removeElement("_test_delete");
-        //   });
     
           var allEle = KanbanTest.getBoardElements("_plan");
           allEle.forEach(function(item, index) {

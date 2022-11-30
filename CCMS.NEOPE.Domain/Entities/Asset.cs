@@ -11,5 +11,5 @@ public class Asset : Entity<ulong>
 
     public AssetProjectStatus Status { get; set; }
     public virtual Project Project { get; set; }
-    public virtual string AttachmentsLink { get; set; }
+    public virtual string? AttachmentsLink { get; set; }
 }
