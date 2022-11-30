@@ -106,29 +106,22 @@
                 <li class="waves-effect"><a class="collapsible-header" tabindex="0">Comissionamentos<i class="material-icons chevron">chevron_left</i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a asp-action="Index" asp-controller="Projects" class="waves-effect">Listar Comissionamentos<i class="material-icons">list</i></a></li>
+                            <li><a asp-action="Index" asp-controller="Projects" class="waves-effect">Comissionamentos<i class="material-icons">settings_input_component</i></a></li>
                         </ul>
                         <ul>
-                            <li><a asp-action="Add" asp-controller="Projects" class="waves-effect">Criar novo comissionamento<i class="material-icons">show_chart</i></a></li>
+                            <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Pêndencias<i class="material-icons">error_outline</i></a></li>
                         </ul>
                         <ul>
-                            <li id="backlog"><a asp-action="Index" asp-controller="Tasks" class="waves-effect">Listar pêndencias<i class="material-icons">list</i></a></li>
+                            <li><a asp-action="Index" asp-controller="Assets" class="waves-effect">Ativos<i class="material-icons">videogame_asset</i></a></li>
                         </ul>
                         <ul>
-                            <li><a asp-action="Add" asp-controller="Tasks" class="waves-effect">Criar pendências<i class="material-icons">show_chart</i></a></li>
+                            <li><a asp-action="Index" asp-controller="AssetTypes" class="waves-effect">Tipos de ativos<i class="material-icons">type_specimen</i></a></li>
                         </ul>
-                        
-                        <ul>
-                            <li><a asp-action="Index" asp-controller="AssetTypes" class="waves-effect">Listar tipos de ativos<i class="material-icons">list</i></a></li>
-                        </ul>
-                        <ul>
-                            <li><a asp-action="Add" asp-controller="AssetTypes" class="waves-effect">Criar tipo de ativo<i class="material-icons">show_chart</i></a></li>
-                        </ul>
-
                     </div>
                 </li>
 
                 <li id="cronograma"><a asp-action="Index" asp-controller="Calendar" class="waves-effect">Calendário<i class="material-icons">calendar_month</i></a></li>
+                <li id="board"><a asp-action="Index" asp-controller="Board" class="waves-effect">Kanban<i class="material-icons">view_kanban</i></a></li>
                 
                 <li class="bold waves-effect"><a class="collapsible-header" tabindex="0">Dashboards<i class="material-icons chevron">chevron_left</i></a>
                     <div class="collapsible-body">
