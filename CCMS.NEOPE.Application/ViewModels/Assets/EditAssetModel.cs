@@ -27,7 +27,9 @@ public class EditAssetModel
     public ulong? SelectedProject { get; set; }
 
     public SelectList? Projects { get; set; } 
-
+    
+    [Display(Name = "Link Compartilhamento de Documentos")]
+    public string? AttachmentsLink { get; set; }
     public EditAssetModel()
     {
         Projects = new SelectList(new List<SelectListItem>(), "Value", "Text", SelectedProject);

@@ -19,7 +19,9 @@ public class AddAssetModel
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public ulong? TypeId { get; set; }
     public SelectList? Types { get; set; }
-
+    
+    [Display(Name = "Link Compartilhamento de Documentos")]
+    public string? AttachmentsLink { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [Display(Name = "Comissionamento")]

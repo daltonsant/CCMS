@@ -120,7 +120,8 @@
         buttonsDiv.appendChild(element);
 
         modal.appendChild(modalFooter);
-
+        let instanceM = M.Modal.getInstance(modal);
+        
         $("#btnSaveStatus").on("click", function() {
             
             $.ajax({
@@ -170,12 +171,11 @@
                   });
 
                 }
-
+                instanceM.close();
               }
             });
          });
         
-        let instanceM = M.Modal.getInstance(modal);
         instanceM.open();
         
     }

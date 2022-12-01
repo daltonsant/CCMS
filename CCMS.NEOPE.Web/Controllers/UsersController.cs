@@ -13,13 +13,16 @@ public class UsersController : Controller
 {
     private readonly IUserService _userService;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public UsersController(
         IUserService userService,
-        IWebHostEnvironment webHostEnvironment)
+        IWebHostEnvironment webHostEnvironment, 
+        UserManager<ApplicationUser> userManager)
     {
         _userService = userService;
         _webHostEnvironment = webHostEnvironment;
+        _userManager = userManager;
     }
     
     // GET
@@ -140,6 +143,30 @@ public class UsersController : Controller
     public async Task<IActionResult> Profile()
     {
         return View();
+    }
+
+    [Authorize]
+    public async Task<IActionResult> ResetUserPassword(string username)
+    {
+        var userIdentity = User?.Identity;
+        if (userIdentity?.Name == null)
+            return Unauthorized();
+
+        var loggedUser = await _userService.GetUserByUserName(userIdentity.Name);
+
+        if (loggedUser == null || !await _userManager.IsInRoleAsync(loggedUser, "Administrator"))
+            return Unauthorized();
+
+        var user = await _userService.GetUserByUserName(username);
+
+        if (user == null)
+            return NotFound();
+
+        user = await _userService.GetUserByUserName(username);
+
+        await _userService.UpdateUserPassword(user, "Abcd*1234");
+
+        return Ok("Abcd*1234");
     }
     
     [Authorize]

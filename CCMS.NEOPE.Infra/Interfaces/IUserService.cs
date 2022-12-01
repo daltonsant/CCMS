@@ -14,4 +14,5 @@ public interface IUserService
     Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword);
     Task<IdentityResult> UpdateUser(ApplicationUser user);
     IQueryable<ApplicationUser> Users { get; }
+    Task<IdentityResult> UpdateUserPassword(ApplicationUser user, string password);
 }

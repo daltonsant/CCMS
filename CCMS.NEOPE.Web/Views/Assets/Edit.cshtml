@@ -37,12 +37,22 @@
                                     <label asp-for="SelectedProject" id="Projects"></label>
                                     <span asp-validation-for="SelectedProject" class="red-text text-darken-4"></span>
                                 </div>
+                                <div class="input-field col s6">
+                                    <input asp-for="AttachmentsLink" class="validate" id="AttachmentsLink"/>
+                                    <label asp-for="AttachmentsLink" id="AttachmentsLinkLabel"></label>
+                                    <span asp-validation-for="AttachmentsLink" class="red-text text-darken-4"></span>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="input-field col s6">
                                     <select asp-for="TypeId" asp-items="@Model.Types" class="validate" id="Types"></select>
                                     <label asp-for="TypeId" id="Types"></label>
                                     <span asp-validation-for="TypeId" class="red-text text-darken-4"></span>
+                                </div>
+                                <div class="input-field col s6">
+                                    <div class="center">
+                                        <a asp-controller="Assets" asp-action="Activity" asp-route-id="@Model.Id" class="waves-effect waves-light btn-large grey darken-1">Status do comissionamento</a>
+                                    </div>
                                 </div>
                             </div>
                 

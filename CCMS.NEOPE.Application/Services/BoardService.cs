@@ -18,37 +18,50 @@ public class BoardService : IBoardService
     private readonly ITaskStepRepository _stepRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ITaskTypeRepository _taskTypeRepository;
+    private readonly IAssetRepository _assetRepository;
 
     public BoardService(
         ITaskRepository taskRepository,
         ITaskStepRepository stepRepository,
         ICategoryRepository categoryRepository,
-        ITaskTypeRepository taskTypeRepository)
+        ITaskTypeRepository taskTypeRepository, 
+        IAssetRepository assetRepository)
     {
         _taskRepository = taskRepository;
         _stepRepository = stepRepository;
         _categoryRepository = categoryRepository;
         _taskTypeRepository = taskTypeRepository;
+        _assetRepository = assetRepository;
     }
 
     public decimal GetAdherence(ulong? projectId)
     {
         var entities = _taskRepository.Entities
             .Include(x => x.Project)
-            .Include(x => x.Type)
             .AsQueryable();
 
         if (projectId.HasValue)
             entities = entities.Where(x => x.Project.Id == projectId.Value);
+
+        var assets = _assetRepository.Entities
+            .Include(x => x.Project)
+            .Include(x => x.Status)
+            .AsQueryable();
         
-        return GetAdherence(entities);
+        if (projectId.HasValue)
+            assets = assets.Where(x => x.Project.Id == projectId.Value);
+        
+        return GetAdherence(entities, assets);
     }
 
-    private decimal GetAdherence(IQueryable<TaskItem> entities)
+    private decimal GetAdherence(IQueryable<TaskItem> entities, IQueryable<Asset> assets)
     {
-        var totalTasks = entities.Count(x => x.Status != Status.Done);
+        var totalTasks = entities.Count(x => x.Status != Status.Done) + 
+                         assets.Count(x => x.Status.Status != Status.Done);
         var scheduledTasks = entities.Count(x => x.Status != Status.Done &&
-                                                 (!x.DueDate.HasValue || x.DueDate.Value < DateTime.Now));
+                                                 (!x.DueDate.HasValue || x.DueDate.Value < DateTime.Now)) +
+                             assets.Count(x => x.Status.Status != Status.Done &&
+                                                 (!x.Status.DueDate.HasValue || x.Status.DueDate.Value < DateTime.Now));
         return totalTasks != decimal.Zero ? 1.0M-((decimal)scheduledTasks / totalTasks) : decimal.One;
     }
 
@@ -61,15 +74,23 @@ public class BoardService : IBoardService
 
         if (projectId.HasValue)
             entities = entities.Where(x => x.Project.Id == projectId.Value);
+        
+        var assets = _assetRepository.Entities
+            .Include(x => x.Project)
+            .Include(x => x.Status)
+            .AsQueryable();
+        
+        if (projectId.HasValue)
+            assets = assets.Where(x => x.Project.Id == projectId.Value);
 
-        return GetConformity(entities);
+        return GetConformity(entities, assets);
     }
     
-    private decimal GetConformity(IQueryable<TaskItem> entities)
+    private decimal GetConformity(IQueryable<TaskItem> entities, IQueryable<Asset> assets)
     {
-        var totalTasks = entities.Count();
-        var commonTasks = entities.Where(x => !x.Type.Name.ToLower().Contains("pendência")).Count();
-        return totalTasks != decimal.Zero ? (decimal)commonTasks / totalTasks : decimal.Zero;
+        var totalTasks = entities.Count() + assets.Count();
+        var commonTasks = assets.Count();//entities.Where(x => !x.Type.Name.ToLower().Contains("pendência")).Count();
+        return totalTasks != decimal.Zero ? (decimal)commonTasks / totalTasks : decimal.One;
     }
 
     public decimal GetProgress(ulong? projectId = null)
@@ -81,13 +102,22 @@ public class BoardService : IBoardService
         if (projectId.HasValue)
             entities = entities.Where(x => x.Project.Id == projectId.Value);
         
-        return GetProgress(entities);
+        var assets = _assetRepository.Entities
+            .Include(x => x.Project)
+            .Include(x => x.Status)
+            .AsQueryable();
+        
+        if (projectId.HasValue)
+            assets = assets.Where(x => x.Project.Id == projectId.Value);
+        
+        return GetProgress(entities, assets);
     }
     
-    private decimal GetProgress(IQueryable<TaskItem> entities)
+    private decimal GetProgress(IQueryable<TaskItem> entities, IQueryable<Asset> assets)
     {
-        var totalTasks = entities.Count();
-        var doneTasks = entities.Where(x => x.Status == Domain.Enums.Status.Done).Count();
+        var totalTasks = entities.Count() + assets.Count();
+        var doneTasks = entities.Count(x => x.Status == Domain.Enums.Status.Done) +
+                                       assets.Count(x =>x.Status.Status == Status.Done);
         return totalTasks != decimal.Zero ? (decimal)doneTasks / totalTasks : decimal.Zero;
     }
     
@@ -253,6 +283,17 @@ public class BoardService : IBoardService
             .GroupBy(x => x.Name)
             .ToDictionary(k => k.Key, v => false);
         
+        if(!types.ContainsKey("Ativos"))
+            types.Add("Ativos", false);
+        
+        var assets = _assetRepository.Entities
+            .Include(x => x.Project)
+            .Include(x => x.Status)
+            .AsQueryable();
+        
+        if (projectId.HasValue)
+            assets = assets.Where(x => x.Project.Id == projectId.Value);
+        
         if (projectId.HasValue)
             progressPerType = progressPerType.Where(x => x.Project.Id == projectId.Value);
         
@@ -263,8 +304,8 @@ public class BoardService : IBoardService
                 "Type", "Não iniciada", "Em andamento", "Em revisão", "Concluída"
             }
         };
-        
-        var grouped = progressPerType
+
+        var pgrs = progressPerType
             .GroupBy(x => x.Type.Id)
             .Select(x => new
             {
@@ -274,8 +315,19 @@ public class BoardService : IBoardService
                 InReview = x.Count(e => e.Status == Status.InReview),
                 Done = x.Count(e => e.Status == Status.Done),
                 Priority = x.Count(e => e.Status != Status.Done)
-            }).OrderByDescending(x => x.Priority).ToList();
+            }).ToList();
+        pgrs.Add( new
+        {
+            Name = "Ativos",
+            NotStarted = assets.Count(e => e.Status.Status == Status.NotStarted),
+            InProgress = assets.Count(e => e.Status.Status == Status.InProgress),
+            InReview = assets.Count(e => e.Status.Status == Status.InReview),
+            Done = assets.Count(e => e.Status.Status == Status.Done),
+            Priority = assets.Count(e => e.Status.Status != Status.Done)
+        });
         
+        var grouped = pgrs.OrderByDescending(x => x.Priority).ToList();
+
         var resultValues = new List<object[]>();
         
         foreach (var entry in grouped)
@@ -320,6 +372,14 @@ public class BoardService : IBoardService
         if (projectId.HasValue)
             progressPerProjects = progressPerProjects.Where(x => x.Project.Id == projectId.Value);
         
+        var assets = _assetRepository.Entities
+            .Include(x => x.Project)
+            .Include(x => x.Status)
+            .AsQueryable();
+        
+        if (projectId.HasValue)
+            assets = assets.Where(x => x.Project.Id == projectId.Value);
+        
         var result = new List<object[]>
         {
             
@@ -336,11 +396,24 @@ public class BoardService : IBoardService
                 Count = x.Count()
             }).ToList();
         
+        var groupedAssets = assets
+            .GroupBy(x => x.Status.Status)
+            .Select(x => new
+            {
+                Status = x.Key,
+                Count = x.Count()
+            }).ToList();
+        
         var resultValues = new List<object[]>();
         
         foreach (var entry in grouped)
         {
             taskStatus[entry.Status] = entry.Count;
+        }
+
+        foreach (var entry in groupedAssets)
+        {
+            taskStatus[entry.Status] += entry.Count;
         }
         
         foreach (var entry in taskStatus)

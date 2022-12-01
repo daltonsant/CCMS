@@ -68,4 +68,15 @@ public class UserService : IUserService
             return _context.Set<ApplicationUser>().AsQueryable();
         }
     }
+
+    public async Task<IdentityResult> UpdateUserPassword(ApplicationUser user, string password)
+    {
+        if (!string.IsNullOrEmpty(password))
+        {
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _userManager.ResetPasswordAsync(user, token, password);
+        }
+        
+        return await _userManager.UpdateAsync(user);
+    }
 }
