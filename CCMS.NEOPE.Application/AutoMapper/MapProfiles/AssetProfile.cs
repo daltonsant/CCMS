@@ -49,6 +49,7 @@ public class AssetProfile : Profile
             .ForMember(dest => dest.Status, opt => opt.Ignore())
             .ForMember(dest => dest.Steps, opt => opt.Ignore())
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Asset.Code))
+            .ForMember(dest => dest.AttachmentsLink, opt => opt.MapFrom(src => src.Asset.AttachmentsLink))
             ;
 
     }

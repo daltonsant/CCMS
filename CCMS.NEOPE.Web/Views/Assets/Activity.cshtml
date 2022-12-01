@@ -43,7 +43,19 @@
                                             <span asp-validation-for="SelectedCategory" class="red-text text-darken-4"></span>
                                         </div>
                                     </div>
-                                    
+                                    <div class="row" >
+                                        <h6 class="col s12">
+                                            Documentos
+                                            <div class="divider"></div>
+                                        </h6>
+                                        <div class="col s12">
+                                            @if (Model.AttachmentsLink != null)
+                                            {
+                                                <a class="waves-effect waves-light btn grey" href="@Model.AttachmentsLink" target="_blank" rel="noopener noreferrer">Link de Compartilhamento</a>
+                                            }
+                                        </div>
+                                        
+                                    </div>
                                     <div class="row" style="display: none;">
                                         <h6 class="col s12">
                                             Comentário

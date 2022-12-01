@@ -48,7 +48,9 @@ public class ActivityModel
     public MultiSelectList Assignees { get; set; }
     
     public Dictionary<string, string> Errors = new Dictionary<string, string>();
-
+    
+    public string? AttachmentsLink { get; set; }
+    
     public ActivityModel()
     {
         Assignees = new MultiSelectList(new List<SelectListItem>(), "Value", "Text", AssigneeIds);
