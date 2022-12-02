@@ -107,7 +107,8 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         .HasColumnType("bigint unsigned");
 
                     b.Property<string>("AttachmentsLink")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(384)
+                        .HasColumnType("varchar(384)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -304,49 +305,49 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6470),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8316),
                             Name = "Civil"
                         },
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6477),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8320),
                             Name = "Eletromecânico"
                         },
                         new
                         {
                             Id = 3,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6479),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8321),
                             Name = "Aterramento"
                         },
                         new
                         {
                             Id = 4,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6481),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8322),
                             Name = "Projeto"
                         },
                         new
                         {
                             Id = 5,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6482),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8323),
                             Name = "Painéis"
                         },
                         new
                         {
                             Id = 6,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6484),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8324),
                             Name = "Equipamentos"
                         },
                         new
                         {
                             Id = 7,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6488),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8325),
                             Name = "Interligações"
                         },
                         new
                         {
                             Id = 8,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(6490),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(8327),
                             Name = "SPCS"
                         });
                 });
@@ -584,43 +585,43 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 91, DateTimeKind.Local).AddTicks(7929),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 8, DateTimeKind.Local).AddTicks(4598),
                             Name = "Planejamento"
                         },
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 91, DateTimeKind.Local).AddTicks(7941),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 8, DateTimeKind.Local).AddTicks(4612),
                             Name = "Inspeção"
                         },
                         new
                         {
                             Id = 3,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 91, DateTimeKind.Local).AddTicks(7943),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 8, DateTimeKind.Local).AddTicks(4614),
                             Name = "TAC Equip. Interlig."
                         },
                         new
                         {
                             Id = 4,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 91, DateTimeKind.Local).AddTicks(7944),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 8, DateTimeKind.Local).AddTicks(4615),
                             Name = "TAF SPCS"
                         },
                         new
                         {
                             Id = 5,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 91, DateTimeKind.Local).AddTicks(7946),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 8, DateTimeKind.Local).AddTicks(4616),
                             Name = "TAC SPCS"
                         },
                         new
                         {
                             Id = 6,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 91, DateTimeKind.Local).AddTicks(7947),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 8, DateTimeKind.Local).AddTicks(4617),
                             Name = "Energização"
                         },
                         new
                         {
                             Id = 7,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 91, DateTimeKind.Local).AddTicks(7948),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 8, DateTimeKind.Local).AddTicks(4619),
                             Name = "SAP"
                         });
                 });
@@ -743,31 +744,31 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                         new
                         {
                             Id = 1ul,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(5279),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(7567),
                             Name = "Informativo"
                         },
                         new
                         {
                             Id = 2ul,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(5294),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(7580),
                             Name = "Acompanhamento"
                         },
                         new
                         {
                             Id = 3ul,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(5296),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(7582),
                             Name = "Pendência não impeditiva"
                         },
                         new
                         {
                             Id = 4ul,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(5298),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(7583),
                             Name = "Pendência impeditiva"
                         },
                         new
                         {
                             Id = 5ul,
-                            CreateDate = new DateTime(2022, 11, 30, 8, 42, 32, 116, DateTimeKind.Local).AddTicks(5299),
+                            CreateDate = new DateTime(2022, 12, 2, 9, 14, 30, 31, DateTimeKind.Local).AddTicks(7584),
                             Name = "Não conformidade"
                         });
                 });
@@ -806,16 +807,16 @@ namespace CCMS.NEOPE.Infra.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "19fcaecb-dc72-4661-b738-e06351877baf",
-                            ConcurrencyStamp = "955cbe55-dfa5-41b7-81a2-d175c973e9dd",
+                            Id = "ece2b104-3d0e-49ba-9ac4-969911b8cfc6",
+                            ConcurrencyStamp = "4e45f1e8-55e5-4a07-af6f-ff14107c1724",
                             Description = "Administrador do sistema",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "be1f683b-1ee1-49bf-b779-06d95ec9f44d",
-                            ConcurrencyStamp = "dcec7e73-a2f2-4069-904b-7285eab135b5",
+                            Id = "bc96ce98-6da2-4433-85ad-88bf228bb4bb",
+                            ConcurrencyStamp = "24debfdc-24ea-4dc3-bcdd-9d277891b447",
                             Description = "Usuário comum do sistema",
                             Name = "User",
                             NormalizedName = "USER"
