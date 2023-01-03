@@ -19,6 +19,8 @@ public class AssetProfile : Profile
             .ForMember(model => model.TypeName,
                 opt => 
                     opt.MapFrom(source => source.Type.Name))
+            .ForMember(model => model.ProjectCode,
+                opt => opt.MapFrom(source => source.Project.Code))
             .ReverseMap()
             ;
 

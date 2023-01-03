@@ -30,6 +30,7 @@
                 columns: [
                     { data: "id", name: "Id" },
                     { data: "code", name: "Code" },
+                    { data: "projectCode", name: "ProjectCode"},
                     { data: "description", name: "Description" },
                     { data: "typeName", name: "TypeName" },
                 ],

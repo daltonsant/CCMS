@@ -9,6 +9,8 @@ public class ViewAssetModel
     public ulong Id { get; set; }
 
     public string Code { get; set; } = string.Empty;
+    
+    public string ProjectCode { get; set; } = string.Empty;
 
     public string Description { get; set; } = string.Empty;
     

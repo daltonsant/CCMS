@@ -27,7 +27,8 @@ namespace CCMS.NEOPE.Application.Services
                 .Where(x => x.Status != Status.Done && (x.StartDate.HasValue || x.DueDate.HasValue));
             List<ViewCalendarModel> calendar = new List<ViewCalendarModel>();
 
-            var assetStatus = _assetRepository.Entities.Include(x => x.Status).Where(x => x.Status.Status != Status.Done);
+            var assetStatus = _assetRepository.Entities.Include(x => x.Project)
+                .Include(x => x.Status).Where(x => x.Status.Status != Status.Done);
 
             foreach (var task in scheduledTasks)
             {
@@ -73,7 +74,7 @@ namespace CCMS.NEOPE.Application.Services
                 var taskEvent = new ViewCalendarModel()
                 {
                      id = "assetId_"+asset.Id,
-                     title = asset.Code,
+                     title = asset.Project.Code +"-"+ asset.Code,
                 };
 
                 if(task.StartDate.HasValue && !task.DueDate.HasValue)

@@ -82,7 +82,7 @@ public class AssetService : IAssetService
 
     public IPagedList<ViewAssetModel> List(string? searchString, int skip, int pageSize)
     {
-        var data = _assetRepository.Entities.Include(c => c.Type).AsQueryable();
+        var data = _assetRepository.Entities.Include(x => x.Project).Include(c => c.Type).AsQueryable();
         
         var totalRecord = data.Count();
         
